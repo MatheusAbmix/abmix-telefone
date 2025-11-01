@@ -275,6 +275,96 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // === VOIP NUMBERS ROUTES ===
+
+  // Get all VoIP numbers
+  app.get("/api/voip-numbers", (req, res) => {
+    try {
+      const numbers = queries.getAllVoipNumbers.all();
+      res.json(numbers);
+    } catch (error) {
+      console.error('[VOIP_NUMBERS] Error getting numbers:', error);
+      res.status(500).json({ message: "Failed to get VoIP numbers", error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
+  // Get default VoIP number
+  app.get("/api/voip-numbers/default", (req, res) => {
+    try {
+      const defaultNumber = queries.getDefaultVoipNumber.get();
+      res.json(defaultNumber || null);
+    } catch (error) {
+      console.error('[VOIP_NUMBERS] Error getting default number:', error);
+      res.status(500).json({ message: "Failed to get default VoIP number", error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
+  // Add VoIP number
+  app.post("/api/voip-numbers", (req, res) => {
+    try {
+      const { name, number, provider, sipUsername, sipPassword, sipServer, isDefault } = req.body;
+      
+      if (!name || !number || !provider) {
+        return res.status(400).json({ error: "Name, number and provider are required" });
+      }
+
+      // If this is marked as default, unset any other default
+      if (isDefault) {
+        queries.setDefaultVoipNumber.run(-1); // Unset all defaults first
+      }
+
+      const info = queries.addVoipNumber.run(
+        name, 
+        number, 
+        provider, 
+        sipUsername || null, 
+        sipPassword || null, 
+        sipServer || null, 
+        isDefault ? 1 : 0,
+        'active'
+      );
+      
+      const newNumber = queries.getVoipNumberById.get(info.lastInsertRowid);
+      
+      console.log(`[VOIP_NUMBERS] Added number: ${name} - ${number} (${provider})`);
+      res.json(newNumber);
+    } catch (error) {
+      console.error('[VOIP_NUMBERS] Error adding number:', error);
+      res.status(500).json({ message: "Failed to add VoIP number", error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
+  // Set default VoIP number
+  app.put("/api/voip-numbers/:id/default", (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      queries.setDefaultVoipNumber.run(parseInt(id));
+      const updatedNumber = queries.getVoipNumberById.get(parseInt(id));
+      
+      console.log(`[VOIP_NUMBERS] Set default number: ${id}`);
+      res.json(updatedNumber);
+    } catch (error) {
+      console.error('[VOIP_NUMBERS] Error setting default:', error);
+      res.status(500).json({ message: "Failed to set default VoIP number", error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
+  // Delete VoIP number
+  app.delete("/api/voip-numbers/:id", (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      queries.deleteVoipNumber.run(parseInt(id));
+      
+      console.log(`[VOIP_NUMBERS] Deleted number: ${id}`);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('[VOIP_NUMBERS] Error deleting number:', error);
+      res.status(500).json({ message: "Failed to delete VoIP number", error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
   // === SETTINGS ROUTES ===
 
   // Get settings

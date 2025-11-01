@@ -249,7 +249,7 @@ class ElevenLabsService extends EventEmitter {
         throw new Error(`ElevenLabs API error: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data: any = await response.json();
       return data.voices || [];
 
     } catch (error) {

@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { useState, useEffect } from "react";
 import Home from "@/pages/Home";
+import VoIPNumbersPage from "@/pages/VoIPNumbersPage";
 import NotFound from "@/pages/not-found";
 import { SetupModal } from "@/components/SetupModal";
 
@@ -31,6 +32,7 @@ function Router() {
     <WouterRouter base={baseUrl}>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/meus-numeros" component={VoIPNumbersPage} />
         <Route path="~/*" component={NotFound} />
       </Switch>
     </WouterRouter>

@@ -4,7 +4,27 @@
 
 Abmix is a comprehensive AI-powered telephony system designed for managing intelligent voice calls with real-time transcription, AI agent control, and advanced call management features. The system provides a unified interface for handling outbound calls, managing AI conversation flow, live prompt injection, and real-time Portuguese transcription. Built as a modern web application, it integrates Twilio for telephony services, Respeecher for voice modification, and Deepgram for speech-to-text transcription to create a complete conversational AI telephony solution.
 
-## Recent Changes (August 15, 2025)
+## Recent Changes (November 01, 2025)
+
+### VoIP Number Management System - COMPLETE ✅
+- ✅ **Multi-Provider Architecture**: ProviderFactory supporting both Twilio and SobreIP providers
+- ✅ **VoIP Numbers CRUD**: Full database schema with secure credential handling
+- ✅ **Security Hardening**: SIP passwords stored ONLY in environment variables (SOBREIP_PASSWORD)
+- ✅ **Visual Interface**: Complete VoIPNumbers component with add/remove/set-default functionality
+- ✅ **Dedicated Page**: /meus-numeros route for VoIP number management
+- ✅ **Call Integration**: Dynamic provider selection in DialerCard based on selected VoIP number
+- ✅ **API Security**: GET /api/voip-numbers strips sensitive credentials; POST validates env vars
+- ✅ **Default Number**: SP Principal (+5511951944022) seeded with SobreIP configuration
+- ✅ **Independent from Twilio**: System fully operational without Twilio credentials
+
+### Security Implementation
+- 🔒 **No Credentials in Database**: sip_password column stores NULL - passwords only in env vars
+- 🔒 **API Response Sanitization**: All API responses strip sensitive credential fields
+- 🔒 **Runtime Validation**: ProviderFactory validates SOBREIP_PASSWORD exists before creating provider
+- 🔒 **UI Guidance**: Security banner in UI instructs users about environment variable requirements
+- 🔒 **Seed Script**: Aligned with security model - no placeholder passwords in database
+
+## Previous Changes (August 15, 2025)
 
 ### Complete Backend Implementation - FINAL
 - ✅ **SQLite Database**: Full local persistence with better-sqlite3 - recordings, calls, favorites, settings tables
@@ -67,9 +87,10 @@ The server implements an Express.js REST API with WebSocket support for real-tim
 
 **Key Backend Decisions:**
 - **Express + TypeScript**: Provides robust HTTP server capabilities with type safety
-- **Provider Pattern**: Abstracted telephony providers (Vapi, Retell, Twilio) behind common interface for easy switching
+- **Provider Pattern**: ProviderFactory dynamically selects telephony providers (SobreIP, Twilio) based on VoIP number configuration
+- **SQLite Database**: Local persistence with better-sqlite3 for VoIP numbers, calls, recordings, favorites
+- **Security-First Credentials**: All sensitive credentials stored exclusively in environment variables, never in database
 - **WebSocket Server**: Real-time communication layer for call state updates and live transcription
-- **Memory Storage**: In-memory data storage for development, with interfaces designed for future database integration
 - **Modular Services**: Separated concerns for STT, TTS, and telephony providers
 
 ### Data Storage Solutions
@@ -94,10 +115,10 @@ WebSocket integration provides bi-directional communication for:
 ## External Dependencies
 
 ### Telephony Providers
-- **Vapi**: Primary AI voice platform for managed voice conversations with built-in AI capabilities
-- **Retell AI**: Alternative AI voice provider with similar managed conversation features
-- **Twilio**: Granular telephony control with Media Streams for custom AI integration
-- **Neon Database**: PostgreSQL hosting service for production data storage
+- **SobreIP**: Primary Brazilian VoIP provider (voz.sobreip.com.br) for telephony services via SIP protocol
+- **Twilio**: Alternative provider for granular telephony control with Media Streams (optional)
+- **Vapi**: AI voice platform for managed voice conversations (future integration)
+- **Retell AI**: Alternative AI voice provider (future integration)
 
 ### AI and Speech Services
 - **ElevenLabs**: Primary TTS/STT service for Portuguese voice synthesis and transcription with WebSocket streaming

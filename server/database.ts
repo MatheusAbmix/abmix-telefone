@@ -78,6 +78,23 @@ export function initDatabase() {
     )
   `);
 
+  // VoIP Numbers table for managing multiple phone numbers
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS voip_numbers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      number TEXT NOT NULL UNIQUE,
+      provider TEXT NOT NULL CHECK(provider IN ('twilio', 'sobreip')),
+      sip_username TEXT,
+      sip_password TEXT,
+      sip_server TEXT,
+      is_default BOOLEAN DEFAULT false,
+      status TEXT DEFAULT 'active' CHECK(status IN ('active', 'inactive')),
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   // Insert default settings if they don't exist
   const defaultSettings = [
     { key: 'VOZ_MASC_ID', value: 'pNInz6obpgDQGcFmaJgB' }, // Default ElevenLabs voice
@@ -133,5 +150,15 @@ export const queries = {
   
   // Prompts
   addPrompt: db.prepare('INSERT INTO prompts (call_sid, prompt_text, applied) VALUES (?, ?, ?)'),
-  getPromptsByCallSid: db.prepare('SELECT * FROM prompts WHERE call_sid = ? ORDER BY created_at DESC')
+  getPromptsByCallSid: db.prepare('SELECT * FROM prompts WHERE call_sid = ? ORDER BY created_at DESC'),
+  
+  // VoIP Numbers
+  getAllVoipNumbers: db.prepare('SELECT * FROM voip_numbers ORDER BY is_default DESC, name ASC'),
+  getVoipNumberById: db.prepare('SELECT * FROM voip_numbers WHERE id = ?'),
+  getVoipNumberByNumber: db.prepare('SELECT * FROM voip_numbers WHERE number = ?'),
+  getDefaultVoipNumber: db.prepare('SELECT * FROM voip_numbers WHERE is_default = true LIMIT 1'),
+  addVoipNumber: db.prepare('INSERT INTO voip_numbers (name, number, provider, sip_username, sip_password, sip_server, is_default, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'),
+  updateVoipNumber: db.prepare('UPDATE voip_numbers SET name = ?, number = ?, provider = ?, sip_username = ?, sip_password = ?, sip_server = ?, status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?'),
+  setDefaultVoipNumber: db.prepare('UPDATE voip_numbers SET is_default = CASE WHEN id = ? THEN true ELSE false END'),
+  deleteVoipNumber: db.prepare('DELETE FROM voip_numbers WHERE id = ?')
 };

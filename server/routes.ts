@@ -8,6 +8,7 @@ import fetch from "node-fetch";
 import multer from "multer";
 import { promises as fs } from "fs";
 import path from "path";
+import { ProviderFactory } from "./providers/providerFactory";
 
 // Environment variables
 const {
@@ -201,34 +202,73 @@ export async function registerRoutes(app: Express) {
 
   // === CALL CONTROL ROUTES ===
 
+  // Store active calls with their providers
+  const activeCallProviders = new Map<string, any>();
+
   // Dial endpoint
   app.post("/api/call/dial", async (req, res) => {
     try {
-      const { phoneNumber } = req.body;
+      const { phoneNumber, voipNumberId, voiceType } = req.body;
       
       if (!phoneNumber) {
         return res.status(400).json({ error: "Phone number is required" });
       }
 
-      console.log(`[CALL] Dialing ${phoneNumber}`);
+      console.log(`[CALL] Initiating call to ${phoneNumber}`);
       
-      // For demo purposes, simulate call initiation
+      // Get the appropriate provider based on VoIP number
+      const { provider, voipNumber } = ProviderFactory.getProviderForCall(voipNumberId);
+      
+      console.log(`[CALL] Using ${voipNumber.provider} provider (${voipNumber.name})`);
+      console.log(`[CALL] From: ${voipNumber.number} → To: ${phoneNumber}`);
+      
+      // Start the call
+      const result = await provider.startCall(phoneNumber, voiceType || 'masc');
+      
+      // Store the provider for this call
+      activeCallProviders.set(result.callId, provider);
+      
       res.json({
         success: true,
-        message: `Calling ${phoneNumber}...`,
-        callId: `call_${Date.now()}`,
-        status: 'dialing'
+        message: `Calling ${phoneNumber} via ${voipNumber.provider}...`,
+        callId: result.callId,
+        callSid: result.callId,
+        status: result.status,
+        provider: voipNumber.provider,
+        fromNumber: voipNumber.number
       });
     } catch (error) {
       console.error('[CALL] Error dialing:', error);
-      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+      res.status(500).json({ 
+        error: error instanceof Error ? error.message : String(error),
+        success: false
+      });
     }
   });
 
   // Hangup endpoint
   app.post("/api/call/hangup", async (req, res) => {
     try {
-      console.log('[CALL] Hanging up call');
+      const { callSid } = req.body;
+      
+      if (!callSid) {
+        return res.status(400).json({ error: "Call SID is required" });
+      }
+
+      console.log(`[CALL] Hanging up call ${callSid}`);
+      
+      // Get the provider for this call
+      const provider = activeCallProviders.get(callSid);
+      
+      if (!provider) {
+        console.warn(`[CALL] No provider found for call ${callSid}, using default`);
+        // Try to get default provider as fallback
+        const { provider: defaultProvider } = ProviderFactory.getProviderForCall();
+        await defaultProvider.hangup(callSid);
+      } else {
+        await provider.hangup(callSid);
+        activeCallProviders.delete(callSid);
+      }
       
       res.json({
         success: true,
@@ -237,6 +277,35 @@ export async function registerRoutes(app: Express) {
       });
     } catch (error) {
       console.error('[CALL] Error hanging up:', error);
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
+  // DTMF endpoint
+  app.post("/api/call/dtmf", async (req, res) => {
+    try {
+      const { callSid, digits } = req.body;
+      
+      if (!callSid || !digits) {
+        return res.status(400).json({ error: "Call SID and digits are required" });
+      }
+
+      console.log(`[CALL] Sending DTMF ${digits} to call ${callSid}`);
+      
+      const provider = activeCallProviders.get(callSid);
+      
+      if (!provider) {
+        throw new Error('No active provider for this call');
+      }
+      
+      await provider.sendDTMF(callSid, digits);
+      
+      res.json({
+        success: true,
+        message: `DTMF ${digits} sent`
+      });
+    } catch (error) {
+      console.error('[CALL] Error sending DTMF:', error);
       res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
     }
   });

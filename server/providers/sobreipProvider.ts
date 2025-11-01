@@ -6,11 +6,16 @@ export class SobreIPProvider {
 
   constructor(sipUsername: string, sipPassword: string, sipServer: string, fromNumber: string) {
     this.sipUsername = sipUsername;
-    this.sipPassword = sipPassword;
+    // Use environment variable for password security
+    this.sipPassword = process.env.SOBREIP_PASSWORD || sipPassword;
     this.sipServer = sipServer;
     this.fromNumber = fromNumber;
     
-    console.log('[SOBREIP_PROVIDER] Initialized with server:', sipServer);
+    console.log('[SOBREIP_PROVIDER] Initialized');
+    console.log(`  Server: ${sipServer}`);
+    console.log(`  Username: ${sipUsername}`);
+    console.log(`  From Number: ${fromNumber}`);
+    console.log(`  Password Source: ${process.env.SOBREIP_PASSWORD ? 'Environment Variable (Secure)' : 'Database (Not Recommended)'}`);
   }
 
   async startCall(toNumber: string, voiceId?: string): Promise<{ callId: string; status: string }> {

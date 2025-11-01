@@ -20,9 +20,25 @@ Abmix is a comprehensive AI-powered telephony system designed for managing intel
 5. **✅ Painel de Gravações**: Área pronta para armazenar gravações de chamadas
 6. **✅ APIs Funcionais**: Deepgram (transcrição PT-BR), ElevenLabs (TTS), OpenAI (configurado)
 
-### Próximos Passos (Não Implementados):
-- ⚠️ **WebSocket Media Streams**: Necessário para chamadas reais com áudio
-- ⚠️ **Integração SIP Real**: SobreIPProvider atual é stub, precisa implementação completa
+### Configuração de Produção (Domínio Customizado) ✅
+- ✅ **Domínio**: telefoneinteligente.abmix.tech configurado
+- ✅ **IP Servidor**: 72.60.149.107
+- ✅ **Webhooks SobreIP**: 
+  - Media: `wss://telefoneinteligente.abmix.tech/media`
+  - Events: `https://telefoneinteligente.abmix.tech/events`
+- ✅ **Endpoint POST /events**: Recebe eventos da SobreIP (call.initiated, call.answered, call.ended)
+- ✅ **Variáveis de Ambiente**: BASE_URL, DOMAIN, SOBREIP_* configuradas
+- ✅ **Secret Segura**: SOBREIP_PASSWORD (3yxnn) armazenada no Replit
+
+### Próximos Passos (Deployment):
+- 📋 **Ver PRODUCTION_SETUP.md**: Instruções completas para DNS e deploy
+- ⏳ **Configurar DNS**: Adicionar registro A apontando para 72.60.149.107
+- ⏳ **Deploy Replit**: Publicar e adicionar domínio customizado
+- ⏳ **Configurar SobreIP**: Adicionar webhooks no painel voz.sobreip.com.br
+- ⏳ **Teste Real**: Fazer chamada e verificar eventos
+
+### Próximos Passos (Features Não Implementadas):
+- ⚠️ **Integração SIP Real**: SobreIPProvider atual é stub, precisa biblioteca SIP completa
 - ⚠️ **Fluxo de Chamadas**: Conectar discagem → transcrição → IA → resposta de voz
 - ⚠️ **Clonagem de Voz**: Interface existe, backend precisa ser implementado
 

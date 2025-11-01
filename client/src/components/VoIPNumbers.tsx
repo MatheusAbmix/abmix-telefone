@@ -15,11 +15,11 @@ interface VoIPNumber {
   number: string;
   provider: string;
   sip_username: string | null;
-  sip_password: string | null;
   sip_server: string | null;
   is_default: boolean;
   status: string;
   created_at: string;
+  // sip_password is NOT included - handled securely on server via environment variables
 }
 
 export function VoIPNumbers() {
@@ -31,9 +31,9 @@ export function VoIPNumbers() {
     number: '',
     provider: 'sobreip',
     sipUsername: '',
-    sipPassword: '',
     sipServer: 'voz.sobreip.com.br',
     isDefault: false
+    // sipPassword removed - must be configured as environment variable on server
   });
 
   const { data: numbers = [], isLoading } = useQuery({
@@ -101,7 +101,6 @@ export function VoIPNumbers() {
       number: '',
       provider: 'sobreip',
       sipUsername: '',
-      sipPassword: '',
       sipServer: 'voz.sobreip.com.br',
       isDefault: false
     });
@@ -275,6 +274,12 @@ export function VoIPNumbers() {
 
               {formData.provider === 'sobreip' && (
                 <>
+                  <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-blue-800 dark:text-blue-200">
+                      <strong>🔒 Segurança:</strong> A senha SobreIP deve ser configurada como variável de ambiente <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">SOBREIP_PASSWORD</code> nos secrets do Replit. Não armazenamos senhas no banco de dados.
+                    </p>
+                  </div>
+
                   <div className="grid gap-2">
                     <Label htmlFor="sipUsername">Login SIP</Label>
                     <Input
@@ -283,18 +288,6 @@ export function VoIPNumbers() {
                       value={formData.sipUsername}
                       onChange={(e) => setFormData({ ...formData, sipUsername: e.target.value })}
                       data-testid="input-sip-username"
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="sipPassword">Senha SIP</Label>
-                    <Input
-                      id="sipPassword"
-                      type="password"
-                      placeholder="••••••"
-                      value={formData.sipPassword}
-                      onChange={(e) => setFormData({ ...formData, sipPassword: e.target.value })}
-                      data-testid="input-sip-password"
                     />
                   </div>
 

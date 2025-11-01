@@ -23,12 +23,18 @@ export class ProviderFactory {
         return new TwilioProvider();
         
       case 'sobreip':
-        if (!voipNumber.sip_username || !voipNumber.sip_password || !voipNumber.sip_server) {
-          throw new Error('Credenciais SIP incompletas para SobreIP');
+        if (!voipNumber.sip_username || !voipNumber.sip_server) {
+          throw new Error('Configuração SIP incompleta: faltam username ou servidor');
         }
+        
+        // SECURITY: Password must come from environment variable
+        if (!process.env.SOBREIP_PASSWORD) {
+          throw new Error('SOBREIP_PASSWORD environment variable not configured');
+        }
+        
         return new SobreIPProvider(
           voipNumber.sip_username,
-          voipNumber.sip_password,
+          '', // Password will be read from env var inside provider
           voipNumber.sip_server,
           voipNumber.number
         );

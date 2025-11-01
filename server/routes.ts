@@ -346,11 +346,27 @@ export async function registerRoutes(app: Express) {
 
   // === VOIP NUMBERS ROUTES ===
 
-  // Get all VoIP numbers
+  // Get all VoIP numbers (WITHOUT sensitive credentials)
   app.get("/api/voip-numbers", (req, res) => {
     try {
-      const numbers = queries.getAllVoipNumbers.all();
-      res.json(numbers);
+      const numbers = queries.getAllVoipNumbers.all() as any[];
+      
+      // Remove sensitive fields before sending to client
+      const safeNumbers = numbers.map(num => ({
+        id: num.id,
+        name: num.name,
+        number: num.number,
+        provider: num.provider,
+        sip_username: num.sip_username,
+        sip_server: num.sip_server,
+        is_default: num.is_default,
+        status: num.status,
+        created_at: num.created_at,
+        updated_at: num.updated_at
+        // sip_password is intentionally omitted for security
+      }));
+      
+      res.json(safeNumbers);
     } catch (error) {
       console.error('[VOIP_NUMBERS] Error getting numbers:', error);
       res.status(500).json({ message: "Failed to get VoIP numbers", error: error instanceof Error ? error.message : String(error) });
@@ -368,13 +384,25 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Add VoIP number
+  // Add VoIP number (passwords NOT stored - must be in environment)
   app.post("/api/voip-numbers", (req, res) => {
     try {
-      const { name, number, provider, sipUsername, sipPassword, sipServer, isDefault } = req.body;
+      const { name, number, provider, sipUsername, sipServer, isDefault } = req.body;
       
       if (!name || !number || !provider) {
         return res.status(400).json({ error: "Name, number and provider are required" });
+      }
+
+      // SECURITY: Never store passwords in database
+      // Passwords must be configured as environment variables
+      // For SobreIP: use SOBREIP_PASSWORD environment variable
+      
+      if (provider.toLowerCase() === 'sobreip') {
+        if (!process.env.SOBREIP_PASSWORD) {
+          return res.status(400).json({ 
+            error: "SobreIP password must be configured in SOBREIP_PASSWORD environment variable" 
+          });
+        }
       }
 
       // If this is marked as default, unset any other default
@@ -387,16 +415,30 @@ export async function registerRoutes(app: Express) {
         number, 
         provider, 
         sipUsername || null, 
-        sipPassword || null, 
+        null, // Never store password in DB
         sipServer || null, 
         isDefault ? 1 : 0,
         'active'
       );
       
-      const newNumber = queries.getVoipNumberById.get(info.lastInsertRowid);
+      const newNumber = queries.getVoipNumberById.get(info.lastInsertRowid) as any;
+      
+      // Remove sensitive fields before sending to client
+      const safeNumber = {
+        id: newNumber.id,
+        name: newNumber.name,
+        number: newNumber.number,
+        provider: newNumber.provider,
+        sip_username: newNumber.sip_username,
+        sip_server: newNumber.sip_server,
+        is_default: newNumber.is_default,
+        status: newNumber.status,
+        created_at: newNumber.created_at,
+        updated_at: newNumber.updated_at
+      };
       
       console.log(`[VOIP_NUMBERS] Added number: ${name} - ${number} (${provider})`);
-      res.json(newNumber);
+      res.json(safeNumber);
     } catch (error) {
       console.error('[VOIP_NUMBERS] Error adding number:', error);
       res.status(500).json({ message: "Failed to add VoIP number", error: error instanceof Error ? error.message : String(error) });

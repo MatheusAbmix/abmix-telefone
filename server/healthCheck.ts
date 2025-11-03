@@ -2,40 +2,60 @@
 import { Request, Response } from 'express';
 
 export function setupHealthCheck(app: any) {
-  // Endpoint para verificar se as chaves estão configuradas
+  // Endpoint para verificar saúde do sistema (Docker health check)
   app.get('/api/health', (req: Request, res: Response) => {
+    // Health check simples para Docker/Kubernetes
+    res.status(200).json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      uptime: process.uptime()
+    });
+  });
+
+  // Endpoint detalhado para verificar configuração (uso interno)
+  app.get('/api/health/detailed', (req: Request, res: Response) => {
     const requiredEnvVars = [
       'ELEVENLABS_API_KEY',
+      'DEEPGRAM_API_KEY',
+      'FALEVONO_PASSWORD'
+    ];
+
+    const optionalEnvVars = [
+      'SOBREIP_PASSWORD',
       'TWILIO_ACCOUNT_SID', 
       'TWILIO_AUTH_TOKEN',
-      'TWILIO_NUMBER',
-      'DEEPGRAM_API_KEY'
+      'TWILIO_NUMBER'
     ];
 
     const envStatus: { [key: string]: boolean } = {};
-    const missingVars: string[] = [];
+    const missingRequired: string[] = [];
 
     requiredEnvVars.forEach(envVar => {
       const isPresent = !!process.env[envVar];
       envStatus[envVar] = isPresent;
       
       if (!isPresent) {
-        missingVars.push(envVar);
+        missingRequired.push(envVar);
       }
     });
 
-    const allPresent = missingVars.length === 0;
+    optionalEnvVars.forEach(envVar => {
+      envStatus[envVar] = !!process.env[envVar];
+    });
+
+    const isHealthy = missingRequired.length === 0;
 
     res.json({
-      status: allPresent ? 'healthy' : 'unhealthy',
+      status: isHealthy ? 'healthy' : 'unhealthy',
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
-      replit_domain: process.env.REPLIT_DEV_DOMAIN,
-      missing_variables: missingVars,
+      uptime: process.uptime(),
+      missing_required: missingRequired,
       variables_status: envStatus,
-      message: allPresent 
-        ? 'Todas as variáveis estão configuradas' 
-        : `${missingVars.length} variáveis faltando: ${missingVars.join(', ')}`
+      message: isHealthy 
+        ? 'Todas as variáveis obrigatórias estão configuradas' 
+        : `${missingRequired.length} variáveis obrigatórias faltando: ${missingRequired.join(', ')}`
     });
   });
 

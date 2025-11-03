@@ -4,6 +4,35 @@
 
 Abmix is an AI-powered telephony system for intelligent voice calls, offering real-time transcription, AI agent control, and advanced call management. It provides a unified interface for outbound calls, AI conversation flow management, live prompt injection, and real-time Portuguese transcription. The system integrates FaleVono for telephony, ElevenLabs for voice synthesis, and Deepgram for speech-to-text, forming a complete conversational AI telephony solution with a modern web application.
 
+## Recent Changes (November 03, 2025 - 23:09) 🚀 PREPARADO PARA DEPLOY VPS
+
+### DEPLOY EM VPS COM EASYPANEL - PRONTO PARA PRODUÇÃO 🎉
+- ✅ **Dockerfile Criado**: Multi-stage build otimizado para Node.js 20 Alpine
+- ✅ **docker-compose.yml**: Configuração completa com network mode host para SIP/UDP
+- ✅ **.dockerignore**: Otimização de build removendo arquivos desnecessários
+- ✅ **.env.example**: Template com todas as variáveis necessárias (FaleVono + AI services)
+- ✅ **Health Check Atualizado**: Endpoints /api/health (simples) e /api/health/detailed
+- ✅ **DEPLOY.md**: Guia passo-a-passo completo para EasyPanel
+- ⚠️ **Limitação Replit**: SIP/UDP não funciona no Replit (firewall bloqueia) - **deploy em VPS é obrigatório**
+
+### Arquivos de Deploy Criados:
+- `Dockerfile` - Container production-ready
+- `docker-compose.yml` - Orquestração com portas UDP (5060/6060)
+- `.dockerignore` - Otimização de build
+- `.env.example` - Template de variáveis
+- `DEPLOY.md` - Guia completo de deploy
+
+### Como Fazer Deploy:
+1. Fazer push do código para GitHub
+2. Criar app no EasyPanel conectando repositório
+3. Adicionar variáveis de ambiente (FALEVONO_PASSWORD, ELEVENLABS_API_KEY, DEEPGRAM_API_KEY)
+4. **IMPORTANTE**: Configurar Network Mode = `host` (permite SIP/UDP)
+5. Deploy (1 clique)
+
+Veja detalhes completos em: **DEPLOY.md**
+
+---
+
 ## Recent Changes (November 03, 2025 - 22:34) ✅ APROVADO PELO ARCHITECT
 
 ### CORREÇÃO CRÍTICA: CONFLITO DE ROTAS RESOLVIDO 🔧

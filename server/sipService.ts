@@ -240,6 +240,55 @@ export class SIPService {
     }
   }
 
+  private async reInviteWithAuth(call: SIPCall, authResponse: any): Promise<void> {
+    if (!call.dialog || !call.dialog.inviteRequest) {
+      console.error(`[SIP_SERVICE] ❌ No stored INVITE for re-authentication`);
+      call.status = 'failed';
+      call.error = 'Cannot re-authenticate without original INVITE';
+      call.endTime = new Date();
+      return;
+    }
+
+    console.log(`[SIP_SERVICE] 🔐 Re-sending INVITE with digest authentication...`);
+
+    try {
+      // Create auth session for this call
+      const callAuthSession: any = {};
+      
+      // Process the auth challenge
+      digest.challenge(callAuthSession, authResponse);
+      
+      // Clone the original INVITE request
+      const reInviteRequest: any = JSON.parse(JSON.stringify(call.dialog.inviteRequest));
+      
+      // Increment CSeq for the re-attempt
+      call.dialog.cseq++;
+      reInviteRequest.headers.cseq.seq = call.dialog.cseq;
+      
+      // Add digest authentication
+      const credentials = {
+        user: this.sipUsername,
+        password: this.sipPassword
+      };
+      
+      digest.signRequest(callAuthSession, reInviteRequest, credentials);
+      
+      // Update dialog state
+      call.dialog.inviteRequest = reInviteRequest;
+      
+      // Send authenticated INVITE
+      sip.send(reInviteRequest);
+      
+      console.log('[SIP_SERVICE] ✅ Authenticated INVITE sent');
+      call.status = 'ringing';
+    } catch (error) {
+      console.error('[SIP_SERVICE] ❌ Failed to re-send INVITE with auth:', error);
+      call.status = 'failed';
+      call.error = `Authentication failed: ${error}`;
+      call.endTime = new Date();
+    }
+  }
+
   async hangup(callId: string): Promise<boolean> {
     const call = this.activeCalls.get(callId);
     if (!call) {
@@ -392,12 +441,11 @@ export class SIPService {
           break;
         case 401:
         case 407:
-          console.log(`[SIP_SERVICE] 🔐 Call ${callId}: Auth required (${message.status})`);
-          // For INVITE auth challenges, would need to re-send INVITE with credentials
-          // This is more complex and may require provider-level implementation
-          call.status = 'failed';
-          call.error = `Authentication required (${message.status})`;
-          call.endTime = new Date();
+          if (message.headers.cseq.method === 'INVITE') {
+            console.log(`[SIP_SERVICE] 🔐 Call ${callId}: Auth challenge for INVITE (${message.status})`);
+            // Re-send INVITE with digest authentication
+            this.reInviteWithAuth(call, message);
+          }
           break;
         case 486:
           console.log(`[SIP_SERVICE] 📵 Call ${callId}: Busy`);

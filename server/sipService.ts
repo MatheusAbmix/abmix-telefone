@@ -433,7 +433,9 @@ export class SIPService {
             // Store the 200 OK response for later use
             if (call.dialog) {
               call.dialog.lastResponse = message;
-              call.dialog.remote = message.headers.from;
+              // CRITICAL: remote is 'To' header (callee with their tag), not 'From' (us)
+              call.dialog.remote = message.headers.to;
+              call.dialog.local = message.headers.from;
             }
             // Send ACK
             this.sendAck(call, message);

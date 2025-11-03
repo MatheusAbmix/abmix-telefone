@@ -1,9 +1,12 @@
+import { SIPService } from '../sipService';
+
 export class SobreIPProvider {
   private sipUsername: string;
   private sipPassword: string;
   private sipServer: string;
   private fromNumber: string;
   private providerType: string;
+  private sipService: SIPService;
 
   constructor(sipUsername: string, sipPassword: string, sipServer: string, fromNumber: string, providerType: string = 'SOBREIP') {
     this.sipUsername = sipUsername;
@@ -27,44 +30,58 @@ export class SobreIPProvider {
     const envVarName = providerType === 'FALEVONO' ? 'FALEVONO_PASSWORD' : 'SOBREIP_PASSWORD';
     const hasEnvVar = providerType === 'FALEVONO' ? process.env.FALEVONO_PASSWORD : process.env.SOBREIP_PASSWORD;
     console.log(`  Password Source: ${hasEnvVar ? `${envVarName} (Secure)` : 'Database (Not Recommended)'}`);
+    
+    // Initialize SIP service
+    this.sipService = new SIPService(
+      sipUsername,
+      this.sipPassword,
+      sipServer,
+      fromNumber,
+      5060
+    );
   }
 
   async startCall(toNumber: string, voiceId?: string): Promise<{ callId: string; status: string }> {
     try {
-      const callId = `sobreip_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
-      console.log('[SOBREIP_PROVIDER] Starting call...');
+      console.log(`[${this.providerType}_PROVIDER] Starting REAL SIP call...`);
       console.log(`  From: ${this.fromNumber} (via ${this.sipServer})`);
       console.log(`  To: ${toNumber}`);
       console.log(`  Voice: ${voiceId || 'default'}`);
-      console.log(`  Call ID: ${callId}`);
+      
+      // Initialize SIP service if needed
+      await this.sipService.initialize();
+      
+      // Make real SIP call
+      const callId = await this.sipService.makeCall(toNumber);
+      
+      console.log(`[${this.providerType}_PROVIDER] ✅ Call initiated - ID: ${callId}`);
       
       return {
         callId,
         status: 'initiated'
       };
     } catch (error) {
-      console.error('[SOBREIP_PROVIDER] Error starting call:', error);
+      console.error(`[${this.providerType}_PROVIDER] ❌ Error starting call:`, error);
       throw error;
     }
   }
 
   async hangup(callId: string): Promise<boolean> {
     try {
-      console.log(`[SOBREIP_PROVIDER] Hanging up call ${callId}`);
-      return true;
+      console.log(`[${this.providerType}_PROVIDER] Hanging up call ${callId}`);
+      return await this.sipService.hangup(callId);
     } catch (error) {
-      console.error('[SOBREIP_PROVIDER] Error hanging up call:', error);
+      console.error(`[${this.providerType}_PROVIDER] Error hanging up call:`, error);
       return false;
     }
   }
 
   async sendDTMF(callId: string, digits: string): Promise<boolean> {
     try {
-      console.log(`[SOBREIP_PROVIDER] Sending DTMF "${digits}" to call ${callId}`);
-      return true;
+      console.log(`[${this.providerType}_PROVIDER] Sending DTMF "${digits}" to call ${callId}`);
+      return await this.sipService.sendDTMF(callId, digits);
     } catch (error) {
-      console.error('[SOBREIP_PROVIDER] Error sending DTMF:', error);
+      console.error(`[${this.providerType}_PROVIDER] Error sending DTMF:`, error);
       return false;
     }
   }

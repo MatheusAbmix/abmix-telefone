@@ -2,7 +2,31 @@
 
 ## Overview
 
-Abmix is a comprehensive AI-powered telephony system designed for managing intelligent voice calls with real-time transcription, AI agent control, and advanced call management features. The system provides a unified interface for handling outbound calls, managing AI conversation flow, live prompt injection, and real-time Portuguese transcription. Built as a modern web application, it integrates Twilio for telephony services, Respeecher for voice modification, and Deepgram for speech-to-text transcription to create a complete conversational AI telephony solution.
+Abmix is a comprehensive AI-powered telephony system designed for managing intelligent voice calls with real-time transcription, AI agent control, and advanced call management features. The system provides a unified interface for handling outbound calls, managing AI conversation flow, live prompt injection, and real-time Portuguese transcription. Built as a modern web application, it integrates FaleVono (Brazilian VoIP provider) for telephony services, ElevenLabs for voice synthesis, and Deepgram for speech-to-text transcription to create a complete conversational AI telephony solution.
+
+## Recent Changes (November 03, 2025 - 22:00)
+
+### MIGRAÇÃO COMPLETA PARA FALEVONO ✅
+- ✅ **Provedor Anterior Removido**: Todos os dados da SobreIP foram limpos do sistema
+- ✅ **Novo Número FaleVono**: +55 11 92083-8833 (Felipe_Manieri @ vono2.me)
+- ✅ **Provider Factory Atualizado**: Suporte completo para FaleVono com senha em secret
+- ✅ **Banco de Dados Limpo**: Removido app.db antigo, criado novo com apenas FaleVono
+- ✅ **Secret Segura**: FALEVONO_PASSWORD=Fe120784! armazenada no Replit Secrets
+
+### Configuração FaleVono ATIVA:
+- 📞 **Número**: +55 11 92083-8833
+- 👤 **Usuário SIP**: Felipe_Manieri
+- 🔑 **Senha**: Fe120784! (armazenada em FALEVONO_PASSWORD secret)
+- 🌐 **Domínio**: vono2.me
+- 🔌 **Porta**: 5060
+- 📡 **IPs Autorizados**: 190.89.248.47, 190.89.248.48
+- ✅ **Status**: Ativo e configurado como padrão
+
+### Sistema Atualizado:
+1. **Provider Factory**: Case 'falevono' adicionado com validação de FALEVONO_PASSWORD
+2. **Database Schema**: Tabela voip_numbers agora aceita 'falevono' como provider
+3. **Seed Script**: Limpa números antigos e insere apenas FaleVono
+4. **SobreIPProvider**: Refatorado para suportar múltiplos providers (SOBREIP/FALEVONO)
 
 ## Recent Changes (November 01, 2025 - 21:00)
 

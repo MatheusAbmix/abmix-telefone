@@ -96,6 +96,9 @@ export class SIPService {
         this.handleIncomingRequest(request);
       });
 
+      // Wait for SIP stack to fully initialize (sip.send becomes available)
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       this.initialized = true;
       console.log('[SIP_SERVICE] ✅ SIP stack initialized successfully');
       

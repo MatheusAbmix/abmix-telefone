@@ -110,13 +110,20 @@ export class SIPService {
         });
 
         // Wait for SIP stack to fully initialize (sip.send becomes available)
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Increase delay to ensure sip.send is ready
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Verify sip.send is available
+        if (typeof sip.send !== 'function') {
+          throw new Error('SIP stack failed to initialize properly - sip.send not available');
+        }
+        
         globalSipStarted = true;
         console.log('[SIP_SERVICE] Global SIP stack started successfully');
       } else {
         console.log('[SIP_SERVICE] Reusing existing SIP stack');
         // Small delay to ensure previous messages are processed
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 200));
       }
 
       this.initialized = true;

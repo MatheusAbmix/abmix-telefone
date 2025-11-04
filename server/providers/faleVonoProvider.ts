@@ -1,6 +1,7 @@
 import { SIPService } from '../sipService.js';
 
 export interface FaleVonoProvider {
+  initialize(): Promise<void>;
   startCall(to: string): Promise<string>;
   hangup(callId: string): Promise<boolean>;
 }
@@ -34,6 +35,12 @@ export class FaleVonoProviderImpl implements FaleVonoProvider {
     console.log(`[FALEVONO_PROVIDER]   Username: ${sipUsername}`);
     console.log(`[FALEVONO_PROVIDER]   Server: ${sipServer}:${sipPort}`);
     console.log(`[FALEVONO_PROVIDER]   From Number: ${fromNumber}`);
+  }
+
+  async initialize(): Promise<void> {
+    console.log('[FALEVONO_PROVIDER] Starting SIP initialization and registration...');
+    await this.sipService.initialize();
+    console.log('[FALEVONO_PROVIDER] ✅ SIP initialization complete');
   }
 
   async startCall(to: string): Promise<string> {

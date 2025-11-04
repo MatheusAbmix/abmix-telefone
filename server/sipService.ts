@@ -81,12 +81,16 @@ export class SIPService {
       console.log(`[SIP_SERVICE] Server: ${this.sipServer}:${this.sipPort}`);
       console.log(`[SIP_SERVICE] Username: ${this.sipUsername}`);
       
+      // Get SIP client port from environment variable (default: 7060)
+      const clientPort = parseInt(process.env.FALEVONO_SIP_PORT || '7060', 10);
+      
       // Start SIP stack only once (singleton pattern)
       if (!globalSipStarted) {
         console.log('[SIP_SERVICE] Starting SIP stack for the first time...');
+        console.log(`[SIP_SERVICE] Client Port: ${clientPort}`);
         sip.start({
           publicAddress: this.localIP,
-          port: 6060, // Use port 6060 for client
+          port: clientPort,
           tcp: false,
           logger: {
             send: (message: any) => {

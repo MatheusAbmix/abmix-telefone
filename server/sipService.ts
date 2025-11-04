@@ -1,10 +1,13 @@
-// @ts-ignore - Module 'sip' has no type definitions
-import * as sip from 'sip';
-// @ts-ignore
-import * as digest from 'sip/digest.js';
+import { createRequire } from 'module';
 import { randomUUID } from 'crypto';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+
+const require = createRequire(import.meta.url);
+// @ts-ignore - Module 'sip' has no type definitions
+const sip = require('sip');
+// @ts-ignore
+const digest = require('sip/digest.js');
 
 const execAsync = promisify(exec);
 
@@ -112,6 +115,10 @@ export class SIPService {
       if (!globalSipStarted) {
         console.log('[SIP_SERVICE] Starting SIP stack for the first time...');
         console.log(`[SIP_SERVICE] Client Port: ${this.clientPort}`);
+        console.log(`[SIP_SERVICE] sip object type: ${typeof sip}`);
+        console.log(`[SIP_SERVICE] sip.start type: ${typeof sip.start}`);
+        console.log(`[SIP_SERVICE] sip.send before start: ${typeof sip.send}`);
+        
         sip.start({
           publicAddress: this.localIP,
           port: this.clientPort,
@@ -129,12 +136,18 @@ export class SIPService {
           this.handleIncomingRequest(request);
         });
 
+        console.log(`[SIP_SERVICE] sip.send after start (immediate): ${typeof sip.send}`);
+        
         // Wait for SIP stack to fully initialize (sip.send becomes available)
         // Increase delay to ensure sip.send is ready
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        console.log(`[SIP_SERVICE] sip.send after delay: ${typeof sip.send}`);
+        console.log(`[SIP_SERVICE] sip keys: ${Object.keys(sip).join(', ')}`);
         
         // Verify sip.send is available
         if (typeof sip.send !== 'function') {
+          console.error('[SIP_SERVICE] ❌ sip.send is not available! Available properties:', Object.keys(sip));
           throw new Error('SIP stack failed to initialize properly - sip.send not available');
         }
         

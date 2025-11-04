@@ -8,7 +8,6 @@ import type { ListenOptions } from "node:net";
 import { WebSocketServer } from "ws";
 import { setupTelephony } from "./telephony";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
 
 // Debug: verificar se as variáveis foram carregadas
 console.log('[ENV] Debug das variáveis de ambiente:');
@@ -47,7 +46,7 @@ app.use((req, res, next) => {
         logLine = logLine.slice(0, 79) + "…";
       }
 
-      log(logLine);
+      console.log(`[express] ${logLine}`);
     }
   });
 
@@ -75,8 +74,10 @@ app.use((req, res, next) => {
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
+    const { setupVite } = await import("./vite.js");
     await setupVite(app, server);
   } else {
+    const { serveStatic } = await import("./vite.js");
     serveStatic(app);
   }
 
@@ -93,6 +94,6 @@ app.use((req, res, next) => {
   }
 
   server.listen(listenOptions, () => {
-    log(`HTTP/WS on ${port}`);
+    console.log(`[express] HTTP/WS on ${port}`);
   });
 })();

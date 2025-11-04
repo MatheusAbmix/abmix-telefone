@@ -164,12 +164,12 @@ export function Settings() {
               Retell AI
             </Button>
             <Button
-              onClick={() => handleProviderChange('twilio')}
-              variant={selectedProvider === 'twilio' ? 'default' : 'outline'}
+              onClick={() => handleProviderChange('falevono')}
+              variant={selectedProvider === 'falevono' ? 'default' : 'outline'}
               size="sm"
-              className={selectedProvider === 'twilio' ? 'bg-abmix-green text-black' : 'border-border text-foreground'}
+              className={selectedProvider === 'falevono' ? 'bg-abmix-green text-black' : 'border-border text-foreground'}
             >
-              Twilio
+              FaleVono
             </Button>
           </div>
         </div>

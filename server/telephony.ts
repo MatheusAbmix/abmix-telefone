@@ -105,7 +105,7 @@ export function setupTelephony(app: Express, httpServer: Server) {
   const captionsWss = new WebSocketServer({ 
     server: httpServer, 
     path: captionsPath,
-    verifyClient: (info) => {
+    verifyClient: (info: any) => {
       console.log('[CAPTIONS_WS] Connection attempt from:', info.origin);
       return true; // Aceitar todas as conexões
     }
@@ -114,7 +114,7 @@ export function setupTelephony(app: Express, httpServer: Server) {
   const mediaWss = new WebSocketServer({ 
     server: httpServer, 
     path: mediaPath,
-    verifyClient: (info) => {
+    verifyClient: (info: any) => {
       console.log('[MEDIA_WS] Connection attempt from:', info.origin);
       console.log('[MEDIA_WS] Headers:', info.req.headers);
       return true; // Accept all connections

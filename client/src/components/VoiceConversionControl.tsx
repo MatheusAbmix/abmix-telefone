@@ -116,18 +116,18 @@ export function VoiceConversionControl({
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-dark-surface border-dark-border">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Settings className="h-4 w-4" />
-            <CardTitle className="text-sm">Conversão de Voz</CardTitle>
+            <Settings className="h-4 w-4 text-abmix-green" />
+            <CardTitle className="text-sm text-foreground">Conversão de Voz</CardTitle>
           </div>
-          <Badge variant={isEnabled ? "default" : "secondary"}>
+          <Badge variant={isEnabled ? "default" : "secondary"} className={isEnabled ? "bg-abmix-green text-black" : ""}>
             {isEnabled ? "Ativo" : "Inativo"}
           </Badge>
         </div>
-        <CardDescription className="text-xs">
+        <CardDescription className="text-xs text-muted-foreground">
           Modifique sua voz em tempo real durante a chamada
         </CardDescription>
       </CardHeader>
@@ -138,19 +138,19 @@ export function VoiceConversionControl({
           <div className="flex items-center space-x-2">
             {isInCall ? (
               <>
-                <Mic className="h-4 w-4 text-green-500" />
-                <span className="text-sm text-green-600">Em chamada</span>
+                <Mic className="h-4 w-4 text-abmix-green" />
+                <span className="text-sm text-abmix-green">Em chamada</span>
               </>
             ) : (
               <>
-                <MicOff className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-500">Sem chamada ativa</span>
+                <MicOff className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Sem chamada ativa</span>
               </>
             )}
           </div>
           
           {isInCall && callSid && (
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-muted-foreground">
               ID: {callSid.substring(0, 8)}...
             </div>
           )}
@@ -160,11 +160,11 @@ export function VoiceConversionControl({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             {isEnabled ? (
-              <Volume2 className="h-4 w-4 text-blue-500" />
+              <Volume2 className="h-4 w-4 text-abmix-green" />
             ) : (
-              <VolumeX className="h-4 w-4 text-gray-400" />
+              <VolumeX className="h-4 w-4 text-muted-foreground" />
             )}
-            <span className="text-sm">
+            <span className="text-sm text-foreground">
               {isEnabled ? "Voz Modificada" : "Voz Original"}
             </span>
           </div>
@@ -178,18 +178,18 @@ export function VoiceConversionControl({
 
         {/* Estatísticas de conversão */}
         {conversionStats && isEnabled && (
-          <div className="bg-gray-50 p-3 rounded-lg space-y-2">
-            <div className="text-xs font-medium text-gray-700">
+          <div className="bg-dark-bg p-3 rounded-lg space-y-2 border border-dark-border">
+            <div className="text-xs font-medium text-foreground">
               Estatísticas de Conversão
             </div>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div>
-                <span className="text-gray-500">Sessões Ativas:</span>
-                <span className="ml-1 font-medium">{conversionStats.activeSessions}</span>
+                <span className="text-muted-foreground">Sessões Ativas:</span>
+                <span className="ml-1 font-medium text-foreground">{conversionStats.activeSessions}</span>
               </div>
               <div>
-                <span className="text-gray-500">Latência Média:</span>
-                <span className="ml-1 font-medium">{conversionStats.averageLatency}ms</span>
+                <span className="text-muted-foreground">Latência Média:</span>
+                <span className="ml-1 font-medium text-foreground">{conversionStats.averageLatency}ms</span>
               </div>
             </div>
           </div>
@@ -197,20 +197,20 @@ export function VoiceConversionControl({
 
         {/* Instruções */}
         {!isInCall && (
-          <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
-            💡 <strong>Como usar:</strong> Inicie uma chamada para ativar a conversão de voz em tempo real
+          <div className="text-xs text-muted-foreground bg-dark-bg p-2 rounded border border-dark-border">
+            💡 <strong className="text-foreground">Como usar:</strong> Inicie uma chamada para ativar a conversão de voz em tempo real
           </div>
         )}
 
         {isInCall && !isEnabled && (
-          <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded">
-            🎤 <strong>Dica:</strong> Ative a conversão para que o destinatário ouça sua voz modificada
+          <div className="text-xs text-muted-foreground bg-dark-bg p-2 rounded border border-dark-border">
+            🎤 <strong className="text-foreground">Dica:</strong> Ative a conversão para que o destinatário ouça sua voz modificada
           </div>
         )}
 
         {isInCall && isEnabled && (
-          <div className="text-xs text-green-600 bg-green-50 p-2 rounded">
-            ✅ <strong>Ativo:</strong> Sua voz está sendo modificada em tempo real
+          <div className="text-xs text-foreground bg-abmix-green/10 p-2 rounded border border-abmix-green/30">
+            ✅ <strong className="text-abmix-green">Ativo:</strong> Sua voz está sendo modificada em tempo real
           </div>
         )}
       </CardContent>

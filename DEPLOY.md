@@ -69,23 +69,30 @@ Faça login com suas credenciais EasyPanel.
 1. Clique em **"+ Create"** ou **"New App"**
 2. Selecione **"GitHub"** (ou seu provedor Git)
 3. **Autorize** EasyPanel a acessar seus repositórios
-4. Selecione o repositório **`abmix-voip`**
+4. Selecione o repositório conforme abaixo
 
-### 2.3 - Configurações Básicas
+### 2.3 - Configurações Básicas (COPIE EXATAMENTE)
 
-**Service Name:**
+Preencha no EasyPanel exatamente como está aqui:
+
+**Proprietário:**
 ```
-abmix
+Abmix-tech-Programacao
 ```
 
-**Branch:**
+**Repositório:**
+```
+abmix-telefone
+```
+
+**Ramo:**
 ```
 main
 ```
 
-**Build Method:**
+**Caminho de Build:**
 ```
-Dockerfile
+/
 ```
 
 **Dockerfile Path:**

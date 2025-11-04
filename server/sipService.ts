@@ -31,6 +31,9 @@ interface SIPCall {
 // Global flag to track if SIP stack was started (singleton pattern)
 let globalSipStarted = false;
 
+// Global singleton instance of SIPService
+let globalSipServiceInstance: SIPService | null = null;
+
 export class SIPService {
   private initialized: boolean = false;
   private activeCalls: Map<string, SIPCall> = new Map();
@@ -47,7 +50,7 @@ export class SIPService {
   private registrationResolve: (() => void) | null = null;
   private registrationReject: ((error: Error) => void) | null = null;
 
-  constructor(
+  private constructor(
     sipUsername: string,
     sipPassword: string,
     sipServer: string,
@@ -60,6 +63,23 @@ export class SIPService {
     this.sipPort = sipPort;
     this.fromNumber = fromNumber;
     this.localIP = '172.31.70.162'; // Replit server IP
+  }
+
+  // Singleton getInstance method
+  static getInstance(
+    sipUsername: string,
+    sipPassword: string,
+    sipServer: string,
+    fromNumber: string,
+    sipPort: number = 5060
+  ): SIPService {
+    if (!globalSipServiceInstance) {
+      console.log('[SIP_SERVICE] Creating new global SIPService instance');
+      globalSipServiceInstance = new SIPService(sipUsername, sipPassword, sipServer, fromNumber, sipPort);
+    } else {
+      console.log('[SIP_SERVICE] Reusing existing global SIPService instance');
+    }
+    return globalSipServiceInstance;
   }
 
   async initialize(): Promise<void> {

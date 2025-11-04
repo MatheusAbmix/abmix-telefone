@@ -22,8 +22,8 @@ export class FaleVonoProviderImpl implements FaleVonoProvider {
       throw new Error('FALEVONO_PASSWORD environment variable is required');
     }
 
-    // Initialize SIP service with FaleVono credentials
-    this.sipService = new SIPService(
+    // Get or create singleton SIP service instance
+    this.sipService = SIPService.getInstance(
       sipUsername,
       sipPassword,
       sipServer,

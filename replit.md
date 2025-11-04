@@ -17,7 +17,7 @@ The client-side is a React with TypeScript application utilizing modern UI patte
 The system is built as an ESM (ECMAScript Modules) project.
 - **Frontend**: React with TypeScript, Zustand for state management, TanStack Query for server state, Wouter for routing, and WebSocket for real-time communication.
 - **Backend**: Express.js with TypeScript, providing a REST API and WebSocket support. It features a provider pattern for telephony services and modular service organization.
-- **Telephony Integration**: Full SIP protocol implementation for FaleVono, including Digest authentication, RFC-compliant dialogs (REGISTER, INVITE, ACK, BYE, CANCEL), and proper network addressing. The system uses port 5000 for web interface and port 6060 for SIP client (configurable via FALEVONO_SIP_PORT). SIP uses network mode `host` for UDP communication.
+- **Telephony Integration**: Full SIP protocol implementation for FaleVono with CommonJS module loading (createRequire), including Digest authentication, RFC-compliant dialogs (REGISTER, INVITE, ACK, BYE, CANCEL), and proper network addressing. The system uses port 5000 for web interface and port 6060 for SIP client (configurable via FALEVONO_SIP_PORT). **IMPORTANT**: SIP requires UDP communication which is **blocked in Replit development environment** - production deployment (EasyPanel/VPS) is required for full functionality. TCP fallback available via `SIP_USE_TCP=true`.
 - **Data Storage**: SQLite for local persistence of VoIP numbers, calls, recordings, and favorites. Drizzle ORM is configured for PostgreSQL with schema definitions for calls, transcripts, and prompts. Sensitive credentials are stored exclusively in environment variables.
 - **Real-time Communication**: WebSocket integration enables bi-directional communication for call state updates, live transcription streaming, AI agent status changes, latency monitoring, and error notifications.
 
@@ -32,9 +32,14 @@ The system is built as an ESM (ECMAScript Modules) project.
 The architecture emphasizes modularity, scalability, and ease of deployment. Key decisions include:
 - Exclusive use of FaleVono as the telephony provider for streamlined integration.
 - ESM for modern JavaScript development and compatibility with Vite.
+- CommonJS module loading for SIP library via createRequire (fixes "sip.send is not a function").
+- Singleton pattern for SIPService to prevent multiple stack instances.
 - Containerization with Docker for consistent deployment across environments.
 - Comprehensive `DEPLOY.md` documentation for simplified setup and troubleshooting.
 - Robust error handling and state management for SIP dialogues.
+
+### Known Limitations
+- **Replit Development Environment**: UDP ports are blocked, preventing SIP registration in development mode. The system will show timeout errors when attempting calls. **Solution**: Deploy to production (EasyPanel, VPS, or local Docker) where UDP traffic is allowed.
 
 ## External Dependencies
 

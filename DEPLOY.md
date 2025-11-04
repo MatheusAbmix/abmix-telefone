@@ -54,6 +54,36 @@ Antes de começar, tenha em mãos:
 
 ---
 
+## ⚠️ **IMPORTANTE: Limitação do Ambiente de Desenvolvimento**
+
+### Por Que Não Funciona no Replit?
+
+O **Replit bloqueia portas UDP** no ambiente de desenvolvimento por razões de segurança e gerenciamento de recursos. Isso impacta diretamente o SIP:
+
+- ✅ **SIP usa UDP** (porta 5060) por padrão para sinalização
+- ✅ **RTP usa UDP** (portas 10000-20000) para áudio em tempo real
+- ❌ **Replit bloqueia UDP** → Timeout nas tentativas de registro SIP
+
+### Como Testar no Desenvolvimento?
+
+Existem 3 opções:
+
+1. **TCP Fallback** (limitado) - Adicione `SIP_USE_TCP=true` nas variáveis de ambiente
+   - ⚠️ Nem todos providers SIP suportam TCP
+   - ⚠️ FaleVono pode não aceitar conexões TCP
+
+2. **Docker Local** - Execute `docker-compose up` na sua máquina
+   - ✅ UDP funciona normalmente
+   - ✅ Teste completo do sistema
+
+3. **Deploy em Produção** - A forma recomendada
+   - ✅ VPS/EasyPanel não tem restrições UDP
+   - ✅ Sistema funciona 100%
+
+**Recomendação:** Use Replit apenas para desenvolvimento do código. Para testar telefonia, faça deploy imediato no EasyPanel.
+
+---
+
 ## 📂 Etapa 1: Garantir Código no GitHub
 
 ### 1.1 - Verificar Repositório Atual

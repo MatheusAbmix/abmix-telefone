@@ -49,6 +49,7 @@ export class SIPService {
   private authSession: any = {};
   private registered: boolean = false;
   private clientPort: number = 6060;
+  private transport: 'TCP' | 'UDP' = 'UDP'; // Store active transport protocol
   private registrationPromise: Promise<void> | null = null;
   private registrationResolve: (() => void) | null = null;
   private registrationReject: ((error: Error) => void) | null = null;
@@ -111,18 +112,21 @@ export class SIPService {
       // Get SIP client port from environment variable (default: 6060)
       this.clientPort = parseInt(process.env.FALEVONO_SIP_PORT || '6060', 10);
       
+      // Determine transport protocol (UDP or TCP)
+      // NOTE: UDP is blocked in Replit development environment - use TCP or deploy to production
+      const useTCP = process.env.SIP_USE_TCP === 'true' || process.env.NODE_ENV === 'development';
+      this.transport = useTCP ? 'TCP' : 'UDP'; // Store for use in headers
+      
       // Start SIP stack only once (singleton pattern)
       if (!globalSipStarted) {
         console.log('[SIP_SERVICE] Starting SIP stack for the first time...');
+        console.log(`[SIP_SERVICE] Transport: ${this.transport} ${useTCP ? '(UDP blocked in Replit dev)' : ''}`);
         console.log(`[SIP_SERVICE] Client Port: ${this.clientPort}`);
-        console.log(`[SIP_SERVICE] sip object type: ${typeof sip}`);
-        console.log(`[SIP_SERVICE] sip.start type: ${typeof sip.start}`);
-        console.log(`[SIP_SERVICE] sip.send before start: ${typeof sip.send}`);
         
         sip.start({
           publicAddress: this.localIP,
           port: this.clientPort,
-          tcp: false,
+          tcp: useTCP,
           logger: {
             send: (message: any) => {
               console.log('[SIP_SERVICE] >>> SENT:', JSON.stringify(message, null, 2).substring(0, 500));
@@ -135,27 +139,20 @@ export class SIPService {
         }, (request: any) => {
           this.handleIncomingRequest(request);
         });
-
-        console.log(`[SIP_SERVICE] sip.send after start (immediate): ${typeof sip.send}`);
         
         // Wait for SIP stack to fully initialize (sip.send becomes available)
-        // Increase delay to ensure sip.send is ready
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        console.log(`[SIP_SERVICE] sip.send after delay: ${typeof sip.send}`);
-        console.log(`[SIP_SERVICE] sip keys: ${Object.keys(sip).join(', ')}`);
+        await new Promise(resolve => setTimeout(resolve, 1500));
         
         // Verify sip.send is available
         if (typeof sip.send !== 'function') {
-          console.error('[SIP_SERVICE] ❌ sip.send is not available! Available properties:', Object.keys(sip));
+          console.error('[SIP_SERVICE] ❌ sip.send is not available!');
           throw new Error('SIP stack failed to initialize properly - sip.send not available');
         }
         
         globalSipStarted = true;
-        console.log('[SIP_SERVICE] Global SIP stack started successfully');
+        console.log('[SIP_SERVICE] ✅ SIP stack started successfully');
       } else {
         console.log('[SIP_SERVICE] Reusing existing SIP stack');
-        // Small delay to ensure previous messages are processed
         await new Promise(resolve => setTimeout(resolve, 200));
       }
 
@@ -167,12 +164,24 @@ export class SIPService {
         this.registrationResolve = resolve;
         this.registrationReject = reject;
         
-        // Set timeout for registration (10 seconds)
+        // Set timeout for registration (15 seconds for TCP, 10 for UDP)
+        const timeout = useTCP ? 15000 : 10000;
         setTimeout(() => {
           if (!this.registered) {
-            reject(new Error('SIP registration timeout after 10 seconds'));
+            const env = process.env.NODE_ENV || 'production';
+            let errorMsg = `SIP registration timeout after ${timeout / 1000} seconds`;
+            
+            if (env === 'development') {
+              errorMsg += '\n\n⚠️  REPLIT LIMITATION: UDP ports are blocked in development.\n';
+              errorMsg += 'Solutions:\n';
+              errorMsg += '1. Set SIP_USE_TCP=true to try TCP (may not work with all providers)\n';
+              errorMsg += '2. Deploy to production (EasyPanel/VPS) where UDP works\n';
+              errorMsg += '3. Test locally with Docker\n';
+            }
+            
+            reject(new Error(errorMsg));
           }
-        }, 10000);
+        }, timeout);
       });
       
       // Register with server
@@ -196,6 +205,11 @@ export class SIPService {
     this.authSession.cseq = cseq;
     
     try {
+      // Build contact URI with transport parameter if using TCP
+      const contactUri = this.transport === 'TCP' 
+        ? `sip:${this.sipUsername}@${this.localIP}:${this.clientPort};transport=tcp`
+        : `sip:${this.sipUsername}@${this.localIP}:${this.clientPort}`;
+      
       const registerRequest: any = {
         method: 'REGISTER',
         uri: `sip:${this.sipServer}:${this.sipPort}`,
@@ -207,11 +221,13 @@ export class SIPService {
           },
           'call-id': callId,
           cseq: { method: 'REGISTER', seq: cseq },
-          contact: [{ uri: `sip:${this.sipUsername}@${this.localIP}:${this.clientPort}` }],
+          contact: [{ uri: contactUri }],
           expires: 3600,
           via: []
         }
       };
+      
+      console.log(`[SIP_SERVICE] REGISTER with transport=${this.transport}, contact=${contactUri}`);
 
       // Add digest authentication if we have a challenge
       if (authChallenge) {
@@ -279,6 +295,11 @@ export class SIPService {
     const sdp = this.createSDP();
     
     try {
+      // Build contact URI with transport parameter if using TCP
+      const contactUri = this.transport === 'TCP' 
+        ? `sip:${this.sipUsername}@${this.localIP}:${this.clientPort};transport=tcp`
+        : `sip:${this.sipUsername}@${this.localIP}:${this.clientPort}`;
+      
       const inviteRequest: any = {
         method: 'INVITE',
         uri: `sip:${cleanNumber}@${this.sipServer}:${this.sipPort}`,
@@ -290,11 +311,11 @@ export class SIPService {
           },
           'call-id': callId,
           cseq: { method: 'INVITE', seq: 1 },
-          contact: [{ uri: `sip:${this.sipUsername}@${this.localIP}:${this.clientPort}` }],
+          contact: [{ uri: contactUri }],
           'content-type': 'application/sdp',
           via: [{
             version: '2.0',
-            protocol: 'UDP',
+            protocol: this.transport, // Use configured transport (TCP or UDP)
             host: this.localIP,
             port: this.clientPort,
             params: { branch }
@@ -302,6 +323,8 @@ export class SIPService {
         },
         content: sdp
       };
+      
+      console.log(`[SIP_SERVICE] INVITE with transport=${this.transport}, contact=${contactUri}`);
 
       // Store invite request for later use in ACK/CANCEL
       if (!call.dialog) {

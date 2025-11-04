@@ -4,8 +4,8 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
-  // Configurar base URL para subpath em produção
-  base: process.env.NODE_ENV === "production" ? "/abmix-ligacao/" : "/",
+  // Base URL na raiz (sem subpath)
+  base: "/",
   
   plugins: [
     react(),

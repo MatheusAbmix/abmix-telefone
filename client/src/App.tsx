@@ -10,26 +10,12 @@ import VoIPNumbersPage from "@/pages/VoIPNumbersPage";
 import NotFound from "@/pages/not-found";
 import { SetupModal } from "@/components/SetupModal";
 
-// Função para detectar a base URL do roteamento
-function getRouterBase(): string {
-  const currentPath = window.location.pathname;
-  
-  // Se estamos em um subpath (ex: /abmix-ligacao/), usar esse subpath
-  if (currentPath.startsWith('/abmix-ligacao/')) {
-    return '/abmix-ligacao';
-  }
-  
-  // Caso contrário, usar raiz
-  return '';
-}
-
 function Router() {
-  const baseUrl = getRouterBase();
-  
-  console.log(`[ROUTER] Base URL: ${baseUrl}`); // Debug
+  console.log(`[ROUTER] Base URL: /`); // Debug
   
   return (
-    <WouterRouter base={baseUrl}>
+    <WouterRouter base="">
+
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/meus-numeros" component={VoIPNumbersPage} />

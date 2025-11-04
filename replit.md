@@ -17,7 +17,7 @@ The client-side is a React with TypeScript application utilizing modern UI patte
 The system is built as an ESM (ECMAScript Modules) project.
 - **Frontend**: React with TypeScript, Zustand for state management, TanStack Query for server state, Wouter for routing, and WebSocket for real-time communication.
 - **Backend**: Express.js with TypeScript, providing a REST API and WebSocket support. It features a provider pattern for telephony services and modular service organization.
-- **Telephony Integration**: Full SIP protocol implementation for FaleVono, including Digest authentication, RFC-compliant dialogs (REGISTER, INVITE, ACK, BYE, CANCEL), and proper network addressing. The system is configured to use port 8080 by default for deployment, and SIP uses network mode `host` for UDP communication.
+- **Telephony Integration**: Full SIP protocol implementation for FaleVono, including Digest authentication, RFC-compliant dialogs (REGISTER, INVITE, ACK, BYE, CANCEL), and proper network addressing. The system uses port 5000 for web interface and port 6060 for SIP client (configurable via FALEVONO_SIP_PORT). SIP uses network mode `host` for UDP communication.
 - **Data Storage**: SQLite for local persistence of VoIP numbers, calls, recordings, and favorites. Drizzle ORM is configured for PostgreSQL with schema definitions for calls, transcripts, and prompts. Sensitive credentials are stored exclusively in environment variables.
 - **Real-time Communication**: WebSocket integration enables bi-directional communication for call state updates, live transcription streaming, AI agent status changes, latency monitoring, and error notifications.
 

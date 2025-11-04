@@ -1,0 +1,63 @@
+PowerShell 7.5.4
+PS C:\Users\felip> import Database from 'better-sqlite3';
+import: The term 'import' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\felip> const db = new Database('data/app.db');
+const: The term 'const' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\felip> console.log('📋 Números atuais:');
+console.log: The term 'console.log' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\felip> console.table(db.prepare('SELECT id, name, number, sip_username FROM voip_numbers').all());
+InvalidOperation: Method invocation failed because [System.String] does not contain a method named 'all'.
+PS C:\Users\felip> console.log('\n🗑️ Removendo username incorreto...');
+console.log: The term 'console.log' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\felip> db.prepare("DELETE FROM voip_numbers WHERE sip_username = 'Fe120784!'").run();
+InvalidOperation: Method invocation failed because [System.String] does not contain a method named 'run'.
+PS C:\Users\felip> console.log('\n🔧 Corrigindo username...');
+console.log: The term 'console.log' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\felip> db.prepare("UPDATE voip_numbers SET sip_username = 'Felipe_Manieri', name = 'FaleVono - SP' WHERE number = '+5511920838833' AND sip_username != 'Felipe_Manieri'").run();
+InvalidOperation: Method invocation failed because [System.String] does not contain a method named 'run'.
+PS C:\Users\felip> console.log('\n📋 Após correção:');
+console.log: The term 'console.log' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\felip> console.table(db.prepare('SELECT id, name, number, sip_username FROM voip_numbers').all());
+InvalidOperation: Method invocation failed because [System.String] does not contain a method named 'all'.
+PS C:\Users\felip> db.close();
+ParserError:
+Line |
+   1 |  db.close();
+     |           ~
+     | An expression was expected after '('.
+PS C:\Users\felip> console.log('✅ Concluído!');# Conectar no VPS
+console.log: The term 'console.log' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\felip> ssh root@72.60.149.107
+The authenticity of host '72.60.149.107 (72.60.149.107)' can't be established.
+ED25519 key fingerprint is SHA256:IMqfFr6l05PdeuCTuhVR0chV31jl9wFfyKEdGCGNwOc.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+Host key verification failed.
+PS C:\Users\felip>
+PS C:\Users\felip> # Copiar script para dentro do container
+PS C:\Users\felip> docker cp fix-easypanel-sqlite.js projeto-abmix-tech_abmix-telefone.1.oy173vonhph0hvvgp5l73nzma:/app/
+
+docker: The term 'docker' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\felip>
+PS C:\Users\felip> # Executar o script
+PS C:\Users\felip> docker exec projeto-abmix-tech_abmix-telefone.1.oy173vonhph0hvvgp5l73nzma node /app/fix-easypanel-sqlite.js
+docker: The term 'docker' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\felip>
+PS C:\Users\felip> # Fazer rebuild (forçar novo build)
+PS C:\Users\felip> cd /path/to/easypanel
+Set-Location: Cannot find path 'C:\path\to\easypanel' because it does not exist.
+PS C:\Users\felip> docker service update --force projeto-abmix-tech_abmix-telefone
+docker: The term 'docker' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS C:\Users\felip>
+PS C:\Users\felip> # Ver logs em tempo real
+PS C:\Users\felip> docker logs -f projeto-abmix-tech_abmix-telefone.1.oy173vonhph0hvvgp5l73nzma

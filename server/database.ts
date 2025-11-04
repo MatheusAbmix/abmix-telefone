@@ -84,7 +84,7 @@ export function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       number TEXT NOT NULL UNIQUE,
-      provider TEXT NOT NULL CHECK(provider IN ('twilio', 'sobreip', 'falevono')),
+      provider TEXT NOT NULL CHECK(provider IN ('falevono')),
       sip_username TEXT,
       sip_password TEXT,
       sip_server TEXT,

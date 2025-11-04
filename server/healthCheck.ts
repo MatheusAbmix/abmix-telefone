@@ -21,12 +21,7 @@ export function setupHealthCheck(app: any) {
       'FALEVONO_PASSWORD'
     ];
 
-    const optionalEnvVars = [
-      'SOBREIP_PASSWORD',
-      'TWILIO_ACCOUNT_SID', 
-      'TWILIO_AUTH_TOKEN',
-      'TWILIO_NUMBER'
-    ];
+    const optionalEnvVars: string[] = [];
 
     const envStatus: { [key: string]: boolean } = {};
     const missingRequired: string[] = [];
@@ -84,29 +79,6 @@ export function setupHealthCheck(app: any) {
       };
     }
 
-    // Teste Twilio
-    try {
-      const twilioSid = process.env.TWILIO_ACCOUNT_SID;
-      const twilioToken = process.env.TWILIO_AUTH_TOKEN;
-      
-      if (!twilioSid || !twilioToken) {
-        results.twilio = { valid: false, error: 'Credentials not found' };
-      } else {
-        const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString('base64');
-        const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${twilioSid}.json`, {
-          headers: { 'Authorization': `Basic ${auth}` }
-        });
-        results.twilio = { 
-          valid: response.ok,
-          error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`
-        };
-      }
-    } catch (error) {
-      results.twilio = { 
-        valid: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
-      };
-    }
 
     // Teste Deepgram
     try {

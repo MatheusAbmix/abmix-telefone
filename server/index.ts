@@ -12,9 +12,9 @@ import { setupVite, serveStatic, log } from "./vite";
 
 // Debug: verificar se as variáveis foram carregadas
 console.log('[ENV] Debug das variáveis de ambiente:');
-console.log(`[ENV] TWILIO_NUMBER: ${process.env.TWILIO_NUMBER ? `${process.env.TWILIO_NUMBER} ✅` : '❌ NÃO DEFINIDA'}`);
-console.log(`[ENV] TWILIO_ACCOUNT_SID: ${process.env.TWILIO_ACCOUNT_SID ? `${process.env.TWILIO_ACCOUNT_SID.substring(0, 10)}... ✅` : '❌ NÃO DEFINIDA'}`);
+console.log(`[ENV] FALEVONO_PASSWORD: ${process.env.FALEVONO_PASSWORD ? '✅ CONFIGURADA' : '❌ NÃO DEFINIDA'}`);
 console.log(`[ENV] ELEVENLABS_API_KEY: ${process.env.ELEVENLABS_API_KEY ? `${process.env.ELEVENLABS_API_KEY.substring(0, 10)}... ✅` : '❌ NÃO DEFINIDA'}`);
+console.log(`[ENV] DEEPGRAM_API_KEY: ${process.env.DEEPGRAM_API_KEY ? '✅ CONFIGURADA' : '❌ NÃO DEFINIDA'}`);
 
 const app = express();
 

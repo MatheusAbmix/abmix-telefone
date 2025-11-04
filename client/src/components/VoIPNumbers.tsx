@@ -29,9 +29,9 @@ export function VoIPNumbers() {
   const [formData, setFormData] = useState({
     name: '',
     number: '',
-    provider: 'sobreip',
+    provider: 'falevono',
     sipUsername: '',
-    sipServer: 'voz.sobreip.com.br',
+    sipServer: 'vono2.me',
     isDefault: false
     // sipPassword removed - must be configured as environment variable on server
   });
@@ -99,9 +99,9 @@ export function VoIPNumbers() {
     setFormData({
       name: '',
       number: '',
-      provider: 'sobreip',
+      provider: 'falevono',
       sipUsername: '',
-      sipServer: 'voz.sobreip.com.br',
+      sipServer: 'vono2.me',
       isDefault: false
     });
   };
@@ -179,20 +179,14 @@ export function VoIPNumbers() {
                         Padrão
                       </span>
                     )}
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${
-                      number.provider === 'sobreip' 
-                        ? 'bg-blue-500/20 text-blue-400' 
-                        : 'bg-purple-500/20 text-purple-400'
-                    }`}>
-                      {number.provider === 'sobreip' ? 'SobreIP' : 'Twilio'}
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-abmix-green/20 text-abmix-green">
+                      FaleVono
                     </span>
                   </div>
                   <p className="text-sm text-gray-400 font-mono">{number.number}</p>
-                  {number.provider === 'sobreip' && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      Servidor: {number.sip_server}
-                    </p>
-                  )}
+                  <p className="text-xs text-gray-500 mt-1">
+                    Servidor: {number.sip_server}
+                  </p>
                 </div>
                 <div className="flex items-center gap-2">
                   {!number.is_default && (
@@ -266,43 +260,38 @@ export function VoIPNumbers() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="sobreip">SobreIP (VoIP Brasil)</SelectItem>
-                    <SelectItem value="twilio">Twilio</SelectItem>
+                    <SelectItem value="falevono">FaleVono (VoIP Brasil)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {formData.provider === 'sobreip' && (
-                <>
-                  <div className="bg-card border border-border rounded-lg p-3 mb-4">
-                    <p className="text-sm text-muted-foreground">
-                      <strong>🔒 Segurança:</strong> A senha SobreIP deve ser configurada como variável de ambiente <code className="bg-muted px-1 rounded">SOBREIP_PASSWORD</code> nos secrets do Replit.
-                    </p>
-                  </div>
+              <div className="bg-card border border-border rounded-lg p-3 mb-4">
+                <p className="text-sm text-muted-foreground">
+                  <strong>🔒 Segurança:</strong> A senha FaleVono deve ser configurada como variável de ambiente <code className="bg-muted px-1 rounded">FALEVONO_PASSWORD</code> nos secrets do Replit.
+                </p>
+              </div>
 
-                  <div className="grid gap-2">
-                    <Label htmlFor="sipUsername">Login SIP</Label>
-                    <Input
-                      id="sipUsername"
-                      placeholder="Ex: 1151944022"
-                      value={formData.sipUsername}
-                      onChange={(e) => setFormData({ ...formData, sipUsername: e.target.value })}
-                      data-testid="input-sip-username"
-                    />
-                  </div>
+              <div className="grid gap-2">
+                <Label htmlFor="sipUsername">Login SIP</Label>
+                <Input
+                  id="sipUsername"
+                  placeholder="Ex: Felipe_Manieri"
+                  value={formData.sipUsername}
+                  onChange={(e) => setFormData({ ...formData, sipUsername: e.target.value })}
+                  data-testid="input-sip-username"
+                />
+              </div>
 
-                  <div className="grid gap-2">
-                    <Label htmlFor="sipServer">Servidor SIP</Label>
-                    <Input
-                      id="sipServer"
-                      placeholder="voz.sobreip.com.br"
-                      value={formData.sipServer}
-                      onChange={(e) => setFormData({ ...formData, sipServer: e.target.value })}
-                      data-testid="input-sip-server"
-                    />
-                  </div>
-                </>
-              )}
+              <div className="grid gap-2">
+                <Label htmlFor="sipServer">Servidor SIP</Label>
+                <Input
+                  id="sipServer"
+                  placeholder="vono2.me"
+                  value={formData.sipServer}
+                  onChange={(e) => setFormData({ ...formData, sipServer: e.target.value })}
+                  data-testid="input-sip-server"
+                />
+              </div>
 
               <div className="flex items-center space-x-2">
                 <input

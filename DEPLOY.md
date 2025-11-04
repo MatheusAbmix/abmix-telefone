@@ -193,16 +193,10 @@ Para cada variável abaixo, faça:
 | Nome | Valor | Onde Obter |
 |------|-------|------------|
 | `NODE_ENV` | `production` | Digite exatamente assim |
-| `PORT` | `5000` | Digite exatamente assim |
+| `PORT` | `8080` | Digite exatamente assim |
 | `FALEVONO_PASSWORD` | Sua senha FaleVono | Sua conta vono2.me |
 | `ELEVENLABS_API_KEY` | Sua chave ElevenLabs | Ver seção 4.4 |
 | `DEEPGRAM_API_KEY` | Sua chave Deepgram | Ver seção 4.5 |
-
-#### ⚪ Variáveis Opcionais
-
-| Nome | Valor | Quando Usar |
-|------|-------|-------------|
-| `SOBREIP_PASSWORD` | Sua senha SobreIP | Se usar provedor alternativo |
 
 ### 4.4 - Como Obter API Key do ElevenLabs
 

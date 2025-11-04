@@ -2,9 +2,48 @@
 
 ## Overview
 
-Abmix is an AI-powered telephony system for intelligent voice calls, offering real-time transcription, AI agent control, and advanced call management. It provides a unified interface for outbound calls, AI conversation flow management, live prompt injection, and real-time Portuguese transcription. The system integrates FaleVono for telephony, ElevenLabs for voice synthesis, and Deepgram for speech-to-text, forming a complete conversational AI telephony solution with a modern web application.
+Abmix is an AI-powered telephony system for intelligent voice calls, offering real-time transcription, AI agent control, and advanced call management. It provides a unified interface for outbound calls, AI conversation flow management, live prompt injection, and real-time Portuguese transcription. The system integrates **FaleVono** as the sole telephony provider via SIP protocol, ElevenLabs for voice synthesis, and Deepgram for speech-to-text, forming a complete conversational AI telephony solution with a modern web application.
 
-**Deployment Port:** 8080 (configured for EasyPanel VPS deployment)
+**Deployment Port:** 8080 (configured for EasyPanel VPS deployment)  
+**Telephony Provider:** FaleVono (vono2.me:5060) - SIP only
+
+## Recent Changes (November 04, 2025 - 19:35) 🧹 LIMPEZA COMPLETA TWILIO/SOBREIP
+
+### SISTEMA 100% FALEVONO - CÓDIGO LIMPO ✅
+- ✅ **Pacote Twilio Removido**: `npm uninstall twilio` - dependência completamente removida
+- ✅ **Providers Eliminados**: Deletados `sobreipProvider.ts` e toda lógica Twilio
+- ✅ **Backend Limpo**: `providerFactory.ts` aceita apenas 'falevono'
+- ✅ **Frontend Simplificado**: VoIPNumbers.tsx mostra apenas opção FaleVono
+- ✅ **Banco de Dados**: CHECK constraint atualizado para `provider IN ('falevono')`
+- ✅ **Health Check**: Removidas checagens Twilio/SobreIP
+- ✅ **Routes Limpo**: Validação FALEVONO_PASSWORD, rotas SobreIP removidas
+- ✅ **Telephony.ts Limpo**: Imports, rotas e callbacks Twilio removidos
+- ✅ **Variáveis de Ambiente**: `.env.example`, `docker-compose.yml`, `DEPLOY.md` limpos
+- ✅ **Porta 8080 Confirmada**: DEPLOY.md atualizado com porta correta
+- ✅ **Build Validado**: ESM (90.5kb) sem erros, servidor rodando perfeitamente
+
+### Arquivos Modificados:
+- `package.json` - Twilio removido das dependências
+- `server/providers/providerFactory.ts` - Apenas FaleVono
+- `server/routes.ts` - Validação FALEVONO_PASSWORD
+- `server/healthCheck.ts` - Sem checagens alternativas
+- `server/database.ts` - CHECK (`provider` IN ('falevono'))
+- `server/telephony.ts` - Imports e rotas Twilio removidos
+- `server/index.ts` - Logs de debug Twilio removidos
+- `client/src/components/VoIPNumbers.tsx` - Apenas FaleVono no dropdown
+- `.env.example` - Apenas FALEVONO_PASSWORD
+- `docker-compose.yml` - Apenas FALEVONO_PASSWORD
+- `DEPLOY.md` - Porta 8080, sem referências SobreIP
+- **Deletado**: `server/providers/sobreipProvider.ts`
+
+### Sistema Pronto Para Deploy:
+```bash
+npm run build   # ✅ 90.5kb ESM - OK
+npm run dev     # ✅ Running na porta 5000 (dev) - OK
+# Production: porta 8080 automática via ENV
+```
+
+---
 
 ## Recent Changes (November 04, 2025 - 19:00) 🎯 CONFIGURAÇÃO FINAL ESM + PORTA 8080
 

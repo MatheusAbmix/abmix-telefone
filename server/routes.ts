@@ -2,7 +2,6 @@ import type { Express } from "express";
 import { createServer } from "http";
 import { queries } from "./database";
 import { initDatabase } from "./database";
-import twilio from "twilio";
 import express from "express";
 import fetch from "node-fetch";
 import multer from "multer";
@@ -12,28 +11,12 @@ import { ProviderFactory } from "./providers/providerFactory";
 
 // Environment variables
 const {
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
-  TWILIO_NUMBER,
   ELEVENLABS_API_KEY
 } = process.env;
 
 export async function registerRoutes(app: Express) {
   // Initialize database
   initDatabase();
-  
-  // TwiML e rotas de telefonia são fornecidas por setupTelephony em server/index.ts
-
-  // Twilio callback routes
-  app.post('/twilio/recording-status',(req,res)=>{
-    console.log('[recording-status]', req.body || {});
-    res.sendStatus(200);
-  });
-
-  app.post("/twilio/call-status", (req, res) => {
-    console.log('[call-status]', req.body || {});
-    res.sendStatus(200);
-  });
 
   // Health check endpoint
   app.get('/api/health', (req, res) => {
@@ -41,164 +24,16 @@ export async function registerRoutes(app: Express) {
       status: 'ok',
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
-      port: process.env.PORT || 5000,
+      port: process.env.PORT || 8080,
       services: {
         database: 'ok',
         elevenlabs: process.env.ELEVENLABS_API_KEY ? 'configured' : 'not_configured',
-        twilio: process.env.TWILIO_ACCOUNT_SID ? 'configured' : 'not_configured'
+        falevono: process.env.FALEVONO_PASSWORD ? 'configured' : 'not_configured'
       }
     });
   });
 
   // Discagem é tratada por server/telephony.ts
-  
-  // === SETUP/VALIDATION ROUTES ===
-
-  // Get current API keys status
-  app.get("/api/setup/keys", async (req, res) => {
-    try {
-      const hasElevenLabs = !!(process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_API_KEY.length > 10);
-      const hasTwilio = !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_NUMBER);
-      
-      res.json({
-        success: true,
-        configured: {
-          elevenlabs: hasElevenLabs,
-          twilio: hasTwilio,
-          complete: hasElevenLabs && hasTwilio
-        },
-        keys: {
-          ELEVENLABS_API_KEY: hasElevenLabs ? `${process.env.ELEVENLABS_API_KEY?.substring(0, 8)}...` : null,
-          TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID ? `${process.env.TWILIO_ACCOUNT_SID?.substring(0, 10)}...` : null,
-          TWILIO_NUMBER: process.env.TWILIO_NUMBER || null
-        }
-      });
-    } catch (error) {
-      console.error('[SETUP] Error checking keys status:', error);
-      res.status(500).json({ 
-        success: false, 
-        message: 'Erro ao verificar status das chaves' 
-      });
-    }
-  });
-
-  // Setup API keys validation endpoint
-  app.post("/api/setup/keys", async (req, res) => {
-    try {
-      const { ELEVENLABS_API_KEY, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_NUMBER } = req.body;
-      
-      console.log('[SETUP] Validating API keys...');
-      
-      // Basic format validation first
-      if (!ELEVENLABS_API_KEY || ELEVENLABS_API_KEY.length < 32) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Chave ElevenLabs inválida'
-        });
-      }
-      
-      if (!TWILIO_ACCOUNT_SID || !TWILIO_ACCOUNT_SID.startsWith('AC')) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Twilio Account SID inválido. Deve começar com "AC"'
-        });
-      }
-      
-      if (!TWILIO_AUTH_TOKEN || TWILIO_AUTH_TOKEN.length < 32) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Twilio Auth Token inválido. Deve ter pelo menos 32 caracteres'
-        });
-      }
-      
-      if (!TWILIO_NUMBER || !TWILIO_NUMBER.startsWith('+')) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Número Twilio inválido. Deve começar com "+"'
-        });
-      }
-
-      // Test ElevenLabs API
-      try {
-        const elevenResponse = await fetch('https://api.elevenlabs.io/v1/voices', {
-          headers: { 'xi-api-key': ELEVENLABS_API_KEY }
-        });
-        
-        if (!elevenResponse.ok) {
-          return res.status(400).json({ 
-            success: false, 
-            message: 'Chave ElevenLabs inválida - falha na autenticação'
-          });
-        }
-      } catch (error) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Erro ao validar chave ElevenLabs'
-        });
-      }
-
-      // Test Twilio API  
-      try {
-        const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-        await client.api.accounts(TWILIO_ACCOUNT_SID).fetch();
-      } catch (error) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Credenciais Twilio inválidas'
-        });
-      }
-
-      console.log('[SETUP] All API keys validated successfully');
-      res.json({ success: true, message: 'Todas as chaves foram validadas com sucesso!' });
-    } catch (error) {
-      console.error('[SETUP] Error validating keys:', error);
-      res.status(500).json({ 
-        success: false, 
-        message: 'Erro interno do servidor'
-      });
-    }
-  });
-
-  // Validate single key endpoint
-  app.post("/api/validate-keys", async (req, res) => {
-    try {
-      const keys = req.body;
-      const results = {
-        elevenlabs: false,
-        twilio: false,
-        overall: false
-      };
-
-      // Validate ElevenLabs
-      if (keys.ELEVENLABS_API_KEY) {
-        try {
-          const response = await fetch('https://api.elevenlabs.io/v1/voices', {
-            headers: { 'xi-api-key': keys.ELEVENLABS_API_KEY }
-          });
-          results.elevenlabs = response.ok;
-        } catch (error) {
-          console.error('ElevenLabs validation error:', error);
-        }
-      }
-
-      // Validate Twilio
-      if (keys.TWILIO_ACCOUNT_SID && keys.TWILIO_AUTH_TOKEN) {
-        try {
-          const client = twilio(keys.TWILIO_ACCOUNT_SID, keys.TWILIO_AUTH_TOKEN);
-          await client.api.accounts(keys.TWILIO_ACCOUNT_SID).fetch();
-          results.twilio = true;
-        } catch (error) {
-          console.error('Twilio validation error:', error);
-        }
-      }
-
-      results.overall = results.elevenlabs && results.twilio;
-      res.json(results);
-    } catch (error) {
-      console.error('Key validation error:', error);
-      res.status(500).json({ error: 'Failed to validate keys' });
-    }
-  });
 
   // === CALL CONTROL ROUTES ===
 
@@ -395,12 +230,12 @@ export async function registerRoutes(app: Express) {
 
       // SECURITY: Never store passwords in database
       // Passwords must be configured as environment variables
-      // For SobreIP: use SOBREIP_PASSWORD environment variable
+      // For FaleVono: use FALEVONO_PASSWORD environment variable
       
-      if (provider.toLowerCase() === 'sobreip') {
-        if (!process.env.SOBREIP_PASSWORD) {
+      if (provider.toLowerCase() === 'falevono') {
+        if (!process.env.FALEVONO_PASSWORD) {
           return res.status(400).json({ 
-            error: "SobreIP password must be configured in SOBREIP_PASSWORD environment variable" 
+            error: "FaleVono password must be configured in FALEVONO_PASSWORD environment variable" 
           });
         }
       }
@@ -768,39 +603,6 @@ export async function registerRoutes(app: Express) {
     } catch (error) {
       console.error('[VOICES] Error getting recommended voices:', error);
       res.status(500).json({ message: "Failed to get recommended voices" });
-    }
-  });
-
-  // SobreIP webhook endpoint for call events
-  app.post('/events', (req, res) => {
-    try {
-      const event = req.body;
-      console.log('[SOBREIP_EVENTS] Call event received:', JSON.stringify(event, null, 2));
-      
-      // Process call events from SobreIP
-      if (event.event) {
-        switch (event.event) {
-          case 'call.initiated':
-            console.log('[SOBREIP_EVENTS] Call initiated:', event.call_id);
-            break;
-          case 'call.ringing':
-            console.log('[SOBREIP_EVENTS] Call ringing:', event.call_id);
-            break;
-          case 'call.answered':
-            console.log('[SOBREIP_EVENTS] Call answered:', event.call_id);
-            break;
-          case 'call.ended':
-            console.log('[SOBREIP_EVENTS] Call ended:', event.call_id, 'Duration:', event.duration);
-            break;
-          default:
-            console.log('[SOBREIP_EVENTS] Unknown event:', event.event);
-        }
-      }
-      
-      res.status(200).json({ success: true, message: 'Event received' });
-    } catch (error) {
-      console.error('[SOBREIP_EVENTS] Error processing event:', error);
-      res.status(500).json({ success: false, message: 'Failed to process event' });
     }
   });
 

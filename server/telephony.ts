@@ -5,24 +5,12 @@ config();
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer } from "ws";
-import twilio from "twilio";
 import { elevenLabsService } from "./elevenlabs";
 import { voiceConversionService } from "./voiceConversionService";
 import { realtimeVoiceService } from "./realtimeVoiceService";
 import { queries } from "./database";
 import { writeFileSync, statSync } from "fs";
 import { join } from "path";
-
-// Environment variables - com debug
-const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
-const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
-const TWILIO_NUMBER = process.env.TWILIO_NUMBER;
-
-// Debug das variáveis no módulo telephony
-console.log('[TELEPHONY] Debug das variáveis:');
-console.log(`[TELEPHONY] TWILIO_NUMBER: ${TWILIO_NUMBER || '❌ UNDEFINED'}`);
-console.log(`[TELEPHONY] TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID ? `${TWILIO_ACCOUNT_SID.substring(0, 10)}...` : '❌ UNDEFINED'}`);
-console.log(`[TELEPHONY] TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN ? `${TWILIO_AUTH_TOKEN.substring(0, 10)}...` : '❌ UNDEFINED'}`);
 
 function resolvePublicBaseUrl(req?: any): string {
   const configured = process.env.PUBLIC_BASE_URL || process.env.PUBLIC_URL || process.env.NGROK_URL;
@@ -75,9 +63,6 @@ const buildWsPath = (suffix: string) => {
   const normalizedSuffix = suffix.startsWith('/') ? suffix : `/${suffix}`;
   return WS_BASE_PATH ? `${WS_BASE_PATH}${normalizedSuffix}` : normalizedSuffix;
 };
-
-// Initialize Twilio client
-const twilioClient = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 // Active calls and sessions tracking
 const activeCalls = new Map();
@@ -132,70 +117,11 @@ export function setupTelephony(app: Express, httpServer: Server) {
     verifyClient: (info) => {
       console.log('[MEDIA_WS] Connection attempt from:', info.origin);
       console.log('[MEDIA_WS] Headers:', info.req.headers);
-      return true; // Aceitar todas as conexões, incluindo do Twilio
+      return true; // Accept all connections
     }
   });
 
   console.log(`[TELEPHONY] WebSocket servers initialized on ${captionsPath} and ${mediaPath}`);
-
-  // === TELEPHONY ROUTES ===
-  
-  // NOTA: Rota /api/call/dial movida para routes.ts para usar FaleVono SIP
-  // Este arquivo agora só gerencia WebSockets para Twilio (se configurado)
-
-  // NOTA: Rota /api/call/hangup movida para routes.ts para usar FaleVono SIP
-  
-  // Manter apenas rotas específicas do Twilio WebSocket abaixo (se necessário)
-  
-  // Legacy Twilio routes (desabilitadas - agora usando FaleVono SIP em routes.ts)
-  /*
-  app.post("/api/call/hangup", async (req, res) => {
-    try {
-      const { callSid } = req.body;
-      
-      if (!callSid) {
-        return res.status(400).json({ message: "callSid is required" });
-      }
-
-      console.log(`[CALL] Hanging up call: ${callSid}`);
-
-      await twilioClient.calls(callSid).update({ status: 'completed' });
-      
-      // Clean up session
-      activeCalls.delete(callSid);
-
-      console.log(`[CALL] Call ${callSid} hung up successfully`);
-
-      res.json({ message: "Call ended successfully", callSid });
-    } catch (error) {
-      console.error('[CALL] Error hanging up call:', error);
-      res.status(500).json({ message: "Failed to hangup call", error: error instanceof Error ? error.message : String(error) });
-    }
-  });
-  */
-
-  // TwiML endpoint with recording
-  app.all("/twiml", (req, res) => {
-    console.log(`[TWIML] Serving TwiML response`);
-
-    const base = resolvePublicBaseUrl(req) || '';
-    const proto = base.startsWith('https://') ? 'wss' : 'ws';
-    const twiml = `<?xml version="1.0" encoding="UTF-8"?>
-<Response>
-  <Start>
-    <Recording trim="do-not-trim"
-              recordingStatusCallback="${base}/twilio/recording-status"
-              recordingStatusCallbackEvent="completed failed"
-              recordingTrack="both"
-              playBeep="false"/>
-  </Start>
-  <Connect>
-    <Stream url="${proto}://${base.replace(/^https?:\/\//, '')}/media"/>
-  </Connect>
-</Response>`;
-
-    res.type('text/xml').send(twiml);
-  });
 
   // === WEBSOCKET HANDLERS ===
 
@@ -585,20 +511,6 @@ export function setupTelephony(app: Express, httpServer: Server) {
       console.error('[FAVORITES] Error removing favorite:', error);
       res.status(500).json({ message: "Failed to remove favorite", error: error instanceof Error ? error.message : String(error) });
     }
-  });
-
-  // === TWILIO CALLBACK ROUTES ===
-
-  // Twilio recording status callback
-  app.post("/twilio/recording-status", (req, res) => {
-    console.log('[TWILIO] Recording status callback:', req.body);
-    res.status(200).send('OK');
-  });
-
-  // Twilio call status callback
-  app.post("/twilio/call-status", (req, res) => {
-    console.log('[TWILIO] Call status callback:', req.body);
-    res.status(200).send('OK');
   });
 
   console.log(`[TELEPHONY] WebSocket servers initialized on ${captionsPath} and ${mediaPath}`);

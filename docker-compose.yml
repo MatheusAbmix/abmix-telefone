@@ -28,9 +28,6 @@ services:
       - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
       - DEEPGRAM_API_KEY=${DEEPGRAM_API_KEY}
       
-      # SobreIP Credentials (OPCIONAL)
-      - SOBREIP_PASSWORD=${SOBREIP_PASSWORD}
-      
     volumes:
       # Persistir banco de dados SQLite
       - ./data:/app/data

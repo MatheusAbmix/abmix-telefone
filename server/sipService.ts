@@ -42,7 +42,7 @@ export class SIPService {
   private fromNumber: string;
   private authSession: any = {};
   private registered: boolean = false;
-  private clientPort: number = 7060;
+  private clientPort: number = 6060;
 
   constructor(
     sipUsername: string,
@@ -82,8 +82,8 @@ export class SIPService {
       console.log(`[SIP_SERVICE] Server: ${this.sipServer}:${this.sipPort}`);
       console.log(`[SIP_SERVICE] Username: ${this.sipUsername}`);
       
-      // Get SIP client port from environment variable (default: 7060)
-      this.clientPort = parseInt(process.env.FALEVONO_SIP_PORT || '7060', 10);
+      // Get SIP client port from environment variable (default: 6060)
+      this.clientPort = parseInt(process.env.FALEVONO_SIP_PORT || '6060', 10);
       
       // Start SIP stack only once (singleton pattern)
       if (!globalSipStarted) {

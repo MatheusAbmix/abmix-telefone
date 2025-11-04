@@ -11,6 +11,7 @@ import { realtimeVoiceService } from "./realtimeVoiceService";
 import { queries } from "./database";
 import { writeFileSync, statSync } from "fs";
 import { join } from "path";
+import { ProviderFactory } from "./providers/providerFactory";
 
 function resolvePublicBaseUrl(req?: any): string {
   const configured = process.env.PUBLIC_BASE_URL || process.env.PUBLIC_URL || process.env.NGROK_URL;
@@ -97,7 +98,40 @@ function processUserAudio(callSid: string, audioPayload: string, streamSid: stri
   }
 }
 
+// Global SIP provider instance (singleton)
+let globalSipProvider: any = null;
+
+// Initialize SIP provider on startup
+async function initializeSipProvider() {
+  try {
+    console.log('[TELEPHONY] Initializing SIP provider on startup...');
+    
+    // Get default VoIP number
+    const defaultNumber = ProviderFactory.getDefaultNumber();
+    
+    if (!defaultNumber) {
+      console.log('[TELEPHONY] No default VoIP number configured, skipping SIP initialization');
+      return;
+    }
+    
+    console.log(`[TELEPHONY] Using default number: ${defaultNumber.name} (${defaultNumber.number})`);
+    
+    // Create and store provider
+    globalSipProvider = ProviderFactory.createProvider(defaultNumber);
+    
+    console.log('[TELEPHONY] ✅ SIP provider initialized successfully');
+  } catch (error) {
+    console.error('[TELEPHONY] ❌ Failed to initialize SIP provider:', error);
+    console.error('[TELEPHONY] SIP calls will be unavailable until this is fixed');
+  }
+}
+
 export function setupTelephony(app: Express, httpServer: Server) {
+  // Initialize SIP provider asynchronously (don't block server startup)
+  initializeSipProvider().catch(err => {
+    console.error('[TELEPHONY] SIP initialization error:', err);
+  });
+  
   // WebSocket servers - escutar nos paths que o nginx vai fazer proxy
   const captionsPath = buildWsPath('/captions');
   const mediaPath = buildWsPath('/media');

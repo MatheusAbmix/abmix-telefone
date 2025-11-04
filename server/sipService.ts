@@ -43,6 +43,9 @@ export class SIPService {
   private authSession: any = {};
   private registered: boolean = false;
   private clientPort: number = 6060;
+  private registrationPromise: Promise<void> | null = null;
+  private registrationResolve: (() => void) | null = null;
+  private registrationReject: ((error: Error) => void) | null = null;
 
   constructor(
     sipUsername: string,
@@ -119,6 +122,19 @@ export class SIPService {
       this.initialized = true;
       console.log('[SIP_SERVICE] ✅ SIP stack initialized successfully');
       
+      // Create registration promise
+      this.registrationPromise = new Promise((resolve, reject) => {
+        this.registrationResolve = resolve;
+        this.registrationReject = reject;
+        
+        // Set timeout for registration (10 seconds)
+        setTimeout(() => {
+          if (!this.registered) {
+            reject(new Error('SIP registration timeout after 10 seconds'));
+          }
+        }, 10000);
+      });
+      
       // Register with server
       await this.register();
     } catch (error) {
@@ -186,8 +202,15 @@ export class SIPService {
       await this.initialize();
     }
 
+    // Wait for registration to complete (with timeout)
     if (!this.registered) {
-      throw new Error('SIP not registered - wait for registration to complete');
+      console.log('[SIP_SERVICE] Waiting for SIP registration to complete...');
+      try {
+        await this.registrationPromise;
+        console.log('[SIP_SERVICE] Registration completed, proceeding with call');
+      } catch (error) {
+        throw new Error(`Cannot make call: ${error instanceof Error ? error.message : 'Registration failed'}`);
+      }
     }
 
     const callId = randomUUID();
@@ -462,8 +485,20 @@ export class SIPService {
         } else if (message.status === 200) {
           console.log('[SIP_SERVICE] ✅ Registration successful!');
           this.registered = true;
+          // Resolve registration promise
+          if (this.registrationResolve) {
+            this.registrationResolve();
+            this.registrationResolve = null;
+            this.registrationReject = null;
+          }
         } else {
           console.error(`[SIP_SERVICE] ❌ Registration failed with status ${message.status}`);
+          // Reject registration promise
+          if (this.registrationReject) {
+            this.registrationReject(new Error(`Registration failed with status ${message.status}`));
+            this.registrationResolve = null;
+            this.registrationReject = null;
+          }
         }
         return;
       }

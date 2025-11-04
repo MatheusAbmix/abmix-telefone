@@ -1,26 +1,11 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
-// Função para obter a base URL da API baseada no local atual
-function getApiBaseUrl(): string {
-  const currentPath = window.location.pathname;
-  
-  // Se estamos em um subpath (ex: /abmix-ligacao/), usar esse subpath
-  if (currentPath.startsWith('/abmix-ligacao/')) {
-    return '/abmix-ligacao';
-  }
-  
-  // Caso contrário, usar raiz
-  return '';
-}
-
 // Função para construir URL completa da API
 function buildApiUrl(endpoint: string): string {
-  const baseUrl = getApiBaseUrl();
-  
   // Garantir que o endpoint comece com /
   const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   
-  return `${baseUrl}${normalizedEndpoint}`;
+  return normalizedEndpoint;
 }
 
 async function throwIfResNotOk(res: Response) {

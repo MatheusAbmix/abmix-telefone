@@ -7,5 +7,6 @@ vite.config.ts.*
 .env
 *.env
 *.env.*
+!.env.example
 production.env
 juliocamara.dev

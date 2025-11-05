@@ -60,6 +60,7 @@ export class SIPService {
   private localIP: string;
   private fromNumber: string;
   private authSession: any = {};
+  private authChallengeResponse: any = null; // Store 401 response for digest signing
   private registered: boolean = false;
   private clientPort: number = 6060;
   private transport: 'TCP' | 'UDP' = 'UDP'; // Store active transport protocol
@@ -252,7 +253,7 @@ export class SIPService {
       console.log(`[SIP_SERVICE] REGISTER with transport=${this.transport}, contact=${contactUri}`);
 
       // Add digest authentication if this is a re-auth attempt
-      if (isReauth) {
+      if (isReauth && this.authChallengeResponse) {
         console.log('[SIP_SERVICE] Auth session state:', JSON.stringify(this.authSession, null, 2));
         
         const credentials = {
@@ -261,7 +262,8 @@ export class SIPService {
         };
         
         try {
-          digest.signRequest(this.authSession, registerRequest, credentials);
+          // CRITICAL: signRequest needs 4 parameters: (session, request, challenge, credentials)
+          digest.signRequest(this.authSession, registerRequest, this.authChallengeResponse, credentials);
           console.log('[SIP_SERVICE] ✅ Authorization header added successfully');
         } catch (signError) {
           console.error('[SIP_SERVICE] ❌ Failed to sign request:', signError);
@@ -590,6 +592,9 @@ export class SIPService {
           console.log('[SIP_SERVICE] Auth challenge headers:', JSON.stringify(message.headers['www-authenticate'], null, 2));
           
           try {
+            // Store the challenge response for digest signing
+            this.authChallengeResponse = message;
+            
             digest.challenge(this.authSession, message);
             console.log('[SIP_SERVICE] ✅ Auth session populated successfully');
             console.log('[SIP_SERVICE] Auth session keys:', Object.keys(this.authSession));

@@ -1,0 +1,154 @@
+[SIP_SERVICE] After sip.start() - checking functions...
+[SIP_SERVICE] sip.send type: function
+[SIP_SERVICE] sip.stop type: function
+[SIP_SERVICE] All sip keys: [
+  'parseAOR',             'parseUri',
+  'stringifyUri',         'stringifyAuthHeader',
+  'stringify',            'makeResponse',
+  'copyMessage',          'makeStreamParser',
+  'parse',                'makeTransport',
+  'resolve',              'generateBranch',
+  'makeTransactionLayer', 'create',
+  'start',                'send',
+  'stop',                 'encodeFlowUri',
+  'decodeFlowUri',        'isFlowUri',
+  'hostname'
+]
+[SIP_SERVICE] ✅ SIP stack started successfully
+[SIP_SERVICE] ✅ SIP stack initialized successfully
+[SIP_SERVICE] Registering...
+[SIP_SERVICE] REGISTER with transport=UDP, contact=sip:Felipe_Manieri@172.31.70.162:6060
+[SIP_SERVICE] REGISTER request queued
+[SIP_SERVICE] Waiting for SIP registration to complete...
+[SIP_SERVICE] >>> SENT: {
+  "method": "REGISTER",
+  "uri": "sip:vono2.me:5060",
+  "headers": {
+    "to": {
+      "uri": "sip:Felipe_Manieri@vono2.me"
+    },
+    "from": {
+      "uri": "sip:Felipe_Manieri@vono2.me",
+      "params": {
+        "tag": "6b7c8b8d-f0f3-401d-8116-4ff780c83280"
+      }
+    },
+    "call-id": "984ee4c0-3337-42b2-b92f-2e7e1c24f185",
+    "cseq": {
+      "method": "REGISTER",
+      "seq": 1
+    },
+    "contact": [
+      {
+        "uri": "sip:Felipe_Manieri@172.31.70.162:6060"
+      }
+    ],
+    "exp
+[SIP_SERVICE] <<< RECEIVED: {
+  "version": "2.0",
+  "status": 401,
+  "reason": "Unauthorized",
+  "headers": {
+    "via": [
+      {
+        "version": "2.0",
+        "protocol": "UDP",
+        "host": "172.31.70.162",
+        "port": 6060,
+        "params": {
+          "received": "72.60.149.107",
+          "branch": "z9hG4bK467927",
+          "rport": "6060"
+        }
+      }
+    ],
+    "to": {
+      "uri": "sip:Felipe_Manieri@vono2.me",
+      "params": {
+        "tag": "0391.cf8b881beddde534e7f7eb6eb99d02b3"
+      }
+    }
+[SIP_SERVICE] 🔐 Received 401 auth challenge for REGISTER
+[SIP_SERVICE] Auth challenge headers: [
+  {
+    "scheme": "Digest",
+    "realm": "\"vono2.me\"",
+    "nonce": "\"690abc4800000b23355eb9f76a0cf57cdf290b48ba81a0ff\""
+  }
+]
+[SIP_SERVICE] ✅ Auth session populated successfully
+[SIP_SERVICE] Auth session keys: [
+  'callId', 'tag',
+  'cseq',   'proxy',
+  'nonce',  'nc',
+  'qop',    'algorithm'
+]
+[SIP_SERVICE] Re-registering with auth...
+[SIP_SERVICE] REGISTER with transport=UDP, contact=sip:Felipe_Manieri@172.31.70.162:6060
+[SIP_SERVICE] Auth session state: {
+  "callId": "984ee4c0-3337-42b2-b92f-2e7e1c24f185",
+  "tag": "6b7c8b8d-f0f3-401d-8116-4ff780c83280",
+  "cseq": 2,
+  "proxy": false,
+  "nonce": "deb2c6d490256f57c7172263fecab853",
+  "nc": 0,
+  "qop": "auth,auth-int",
+  "algorithm": "md5"
+}
+[SIP_SERVICE] ❌ Failed to sign request: TypeError: Cannot read properties of undefined (reading 'www-authenticate')
+    at initClientContext (/app/node_modules/sip/digest.js:182:43)
+    at exports.signRequest (/app/node_modules/sip/digest.js:212:5)
+    at _SIPService.register (file:///app/dist/index.js:1441:18)
+    at _SIPService.handleIncomingMessage (file:///app/dist/index.js:1708:18)
+    at Object.recv (file:///app/dist/index.js:1356:20)
+    at callbackAndLog (/app/node_modules/sip/sip.js:809:22)
+    at Socket.onMessage (/app/node_modules/sip/sip.js:775:7)
+    at Socket.emit (node:events:524:28)
+    at UDP.onMessage [as onmessage] (node:dgram:951:8)
+[SIP_SERVICE] ❌ Registration failed: TypeError: Cannot read properties of undefined (reading 'www-authenticate')
+    at initClientContext (/app/node_modules/sip/digest.js:182:43)
+    at exports.signRequest (/app/node_modules/sip/digest.js:212:5)
+    at _SIPService.register (file:///app/dist/index.js:1441:18)
+    at _SIPService.handleIncomingMessage (file:///app/dist/index.js:1708:18)
+    at Object.recv (file:///app/dist/index.js:1356:20)
+    at callbackAndLog (/app/node_modules/sip/sip.js:809:22)
+    at Socket.onMessage (/app/node_modules/sip/sip.js:775:7)
+    at Socket.emit (node:events:524:28)
+    at UDP.onMessage [as onmessage] (node:dgram:951:8)
+[SIP_SERVICE] ❌ Error sending REGISTER: {
+  version: '2.0',
+  status: 401,
+  reason: 'Unauthorized',
+  headers: {
+    via: [ [Object] ],
+    to: {
+      name: undefined,
+      uri: 'sip:Felipe_Manieri@vono2.me',
+      params: [Object]
+    },
+    from: {
+      name: undefined,
+      uri: 'sip:Felipe_Manieri@vono2.me',
+      params: [Object]
+    },
+    'call-id': '984ee4c0-3337-42b2-b92f-2e7e1c24f185',
+    cseq: { seq: 1, method: 'REGISTER' },
+    'www-authenticate': [ [Object], [Object] ],
+    server: 'NextRouter C4 SoftSwitch v5.3.1',
+    'content-length': 0
+  },
+  content: ''
+}
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-05T02:53:38.9…
+[express] GET /api/voip-numbers 304 in 0ms :: [{"id":1,"name":"Vono Principal","number":"…
+[express] GET /api/favorites 304 in 1ms :: []
+[express] GET /api/recordings/list 304 in 0ms :: []
+[express] GET /api/voice/conversion-voices 304 in 234ms :: [{"voice_id":"2EiwWnXFnvU5JabP…
+[FALEVONO_PROVIDER] Failed to start call: Error: Cannot make call: SIP registration timeout after 10 seconds
+    at _SIPService.makeCall (file:///app/dist/index.js:1480:15)
+    at async FaleVonoProviderImpl.startCall (file:///app/dist/index.js:1890:22)
+    at async file:///app/dist/index.js:2007:22
+[CALL] Error dialing: Error: Cannot make call: SIP registration timeout after 10 seconds
+    at _SIPService.makeCall (file:///app/dist/index.js:1480:15)
+    at async FaleVonoProviderImpl.startCall (file:///app/dist/index.js:1890:22)
+    at async file:///app/dist/index.js:2007:22

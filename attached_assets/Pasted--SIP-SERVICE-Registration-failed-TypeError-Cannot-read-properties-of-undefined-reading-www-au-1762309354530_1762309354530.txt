@@ -1,0 +1,44 @@
+[SIP_SERVICE] ❌ Registration failed: TypeError: Cannot read properties of undefined (reading 'www-authenticate')
+    at initClientContext (/app/node_modules/sip/digest.js:182:43)
+    at exports.signRequest (/app/node_modules/sip/digest.js:212:5)
+    at _SIPService.register (file:///app/dist/index.js:1440:16)
+    at _SIPService.handleIncomingMessage (file:///app/dist/index.js:1689:16)
+    at Object.recv (file:///app/dist/index.js:1356:20)
+    at callbackAndLog (/app/node_modules/sip/sip.js:809:22)
+    at Socket.onMessage (/app/node_modules/sip/sip.js:775:7)
+    at Socket.emit (node:events:524:28)
+    at UDP.onMessage [as onmessage] (node:dgram:951:8)
+[SIP_SERVICE] ❌ Error sending REGISTER: {
+  version: '2.0',
+  status: 401,
+  reason: 'Unauthorized',
+  headers: {
+    via: [ [Object] ],
+    to: {
+      name: undefined,
+      uri: 'sip:Felipe_Manieri@vono2.me',
+      params: [Object]
+    },
+    from: {
+      name: undefined,
+      uri: 'sip:Felipe_Manieri@vono2.me',
+      params: [Object]
+    },
+    'call-id': 'c3cb1a50-544a-4bab-8a3b-a49dc18955aa',
+    cseq: { seq: 1, method: 'REGISTER' },
+    'www-authenticate': [ [Object], [Object] ],
+    server: 'NextRouter C4 SoftSwitch v5.3.1',
+    'content-length': 0
+  },
+  content: ''
+}
+[FALEVONO_PROVIDER] Failed to start call: Error: Cannot make call: SIP registration timeout after 10 seconds
+    at _SIPService.makeCall (file:///app/dist/index.js:1465:15)
+    at async FaleVonoProviderImpl.startCall (file:///app/dist/index.js:1863:22)
+    at async file:///app/dist/index.js:1980:22
+[CALL] Error dialing: Error: Cannot make call: SIP registration timeout after 10 seconds
+    at _SIPService.makeCall (file:///app/dist/index.js:1465:15)
+    at async FaleVonoProviderImpl.startCall (file:///app/dist/index.js:1863:22)
+    at async file:///app/dist/index.js:1980:22
+[express] POST /api/call/dial 500 in 11518ms :: {"error":"Cannot make call: SIP registrat…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-05T02:21:41.4…

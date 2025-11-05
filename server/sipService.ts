@@ -566,8 +566,20 @@ export class SIPService {
       if (message.headers.cseq?.method === 'REGISTER') {
         if (message.status === 401 || message.status === 407) {
           console.log(`[SIP_SERVICE] 🔐 Received ${message.status} auth challenge for REGISTER`);
-          digest.challenge(this.authSession, message);
-          this.register(message);
+          console.log('[SIP_SERVICE] Auth challenge headers:', JSON.stringify(message.headers['www-authenticate'], null, 2));
+          
+          try {
+            digest.challenge(this.authSession, message);
+            console.log('[SIP_SERVICE] Auth session after challenge:', JSON.stringify(this.authSession, null, 2));
+            this.register(message);
+          } catch (error) {
+            console.error('[SIP_SERVICE] ❌ Error processing auth challenge:', error);
+            if (this.registrationReject) {
+              this.registrationReject(new Error(`Auth challenge failed: ${error}`));
+              this.registrationResolve = null;
+              this.registrationReject = null;
+            }
+          }
         } else if (message.status === 200) {
           console.log('[SIP_SERVICE] ✅ Registration successful!');
           this.registered = true;

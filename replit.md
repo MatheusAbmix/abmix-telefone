@@ -19,8 +19,9 @@ The system is built as an ESM (ECMAScript Modules) project.
 - **Backend**: Express.js with TypeScript, providing a REST API and WebSocket support. It features a provider pattern for telephony services and modular service organization.
 - **Telephony Integration**: Full SIP protocol implementation for FaleVono with CommonJS module loading (createRequire), including Digest authentication, RFC-compliant dialogs (REGISTER, INVITE, ACK, BYE, CANCEL), and proper network addressing. The system uses port 5000 for web interface, port 6060 for SIP client (configurable via FALEVONO_SIP_PORT), and **port 8000 for RTP media server**. **IMPORTANT**: SIP requires UDP communication which is **blocked in Replit development environment** - production deployment (EasyPanel/VPS) is required for full functionality. TCP fallback available via `SIP_USE_TCP=true`.
 - **RTP Media Server**: Implemented using rtp.js library to handle real-time audio streaming. Supports G.711 μ-law (PCMU) and A-law (PCMA) codecs with 8kHz sampling rate. Automatically creates RTP sessions when SIP calls connect, processes incoming audio for voice conversion, and sends converted audio back to caller. Port 8000 must be open for UDP traffic in production.
-- **Voice AI Pipeline**: Complete audio processing flow: RTP incoming audio → G.711 decode → PCM16 → ElevenLabs STT (Portuguese) → Text transcription → ElevenLabs TTS (voice conversion) → PCM16 audio → G.711 encode → RTP outgoing audio. Voice type (masculine/feminine/natural/original) fully configurable per call via UI and favorites. When "Original" (none) is selected, audio passes through without voice conversion.
-- **Data Storage**: SQLite for local persistence of VoIP numbers, calls, recordings, and favorites. Drizzle ORM is configured for PostgreSQL with schema definitions for calls, transcripts, and prompts. Sensitive credentials are stored exclusively in environment variables.
+- **Voice AI Pipeline**: Complete autonomous conversational AI flow: RTP incoming audio → G.711 decode → PCM16 → ElevenLabs STT (Portuguese) → Text transcription → **OpenAI Conversational AI** → AI Response → ElevenLabs TTS (voice conversion) → PCM16 audio → G.711 encode → RTP outgoing audio. Voice type (masculine/feminine/natural/original) fully configurable per call via UI and favorites. When "Original" (none) is selected, audio passes through without voice conversion. **AI agent auto-starts when call begins and auto-ends when call terminates**, maintaining conversation context throughout the call lifecycle.
+- **OpenAI Integration**: Fully functional conversational AI using OpenAI Chat Completion API with streaming responses. AgentOrchestrator manages per-call conversation state, system prompts, message history, and AI responses. Supports live prompt injection during calls, agent enable/disable, and speech pause/resume controls. All AI interactions are persisted in agent_sessions and agent_messages tables.
+- **Data Storage**: SQLite for local persistence of VoIP numbers, calls, recordings, favorites, agent sessions, and AI messages. Drizzle ORM is configured for PostgreSQL with schema definitions for calls, transcripts, prompts, agent_sessions, agent_messages, effect_presets, and codec_preferences. Sensitive credentials are stored exclusively in environment variables.
 - **Real-time Communication**: WebSocket integration enables bi-directional communication for call state updates, live transcription streaming, AI agent status changes, latency monitoring, and error notifications.
 
 ### Feature Specifications
@@ -44,16 +45,19 @@ The architecture emphasizes modularity, scalability, and ease of deployment. Key
 - CommonJS module loading for SIP library via createRequire (fixes "sip.send is not a function").
 - Singleton pattern for SIPService and RTserviceService to prevent multiple stack instances.
 - RTP server implementation with G.711 codec support for VoIP audio (PCMU/PCMA).
-- Event-driven architecture for audio pipeline: RTP events → STT processing → TTS conversion → RTP output.
+- Event-driven architecture for audio pipeline: RTP events → STT processing → **OpenAI conversational AI** → TTS conversion → RTP output.
+- **OpenAI Chat API** with streaming for natural conversation flow and reduced latency.
+- **AgentOrchestrator pattern** for managing AI conversation state, history, and lifecycle per call.
+- **Automatic agent lifecycle management**: AI agent auto-starts on call initiation and auto-ends on hangup.
+- Service layer separation: OpenAIService (API communication), AgentOrchestrator (business logic), Storage (persistence).
 - Containerization with Docker for consistent deployment across environments.
 - Comprehensive `DEPLOY.md` documentation for simplified setup and troubleshooting.
-- Robust error handling and state management for SIP dialogues and RTP sessions.
+- Robust error handling and state management for SIP dialogues, RTP sessions, and AI conversations.
 
 ### Known Limitations
 - **Replit Development Environment**: UDP ports are blocked, preventing SIP registration and RTP media transmission in development mode. The system will show timeout errors when attempting calls, and audio will not be transmitted. **Solution**: Deploy to production (EasyPanel, VPS, or local Docker) where UDP traffic is allowed on ports 6060 (SIP) and 8000 (RTP).
 - **Audio Quality**: Currently limited to G.711 codec (8kHz, narrowband). Future enhancement: add wideband codecs like Opus for better audio quality.
-- **AI Agent Integration**: OpenAI conversational AI is not yet integrated. AI control endpoints (`/api/agent/*`) are implemented as stubs that return success responses. Full implementation requires OpenAI API integration for live prompt injection, conversation management, and agent control.
-- **Audio Effects**: Effects processing is currently a placeholder implementation. Production deployment requires integration with ffmpeg or similar audio processing library for real-time effects.
+- **Audio Effects**: Effects processing is currently a placeholder implementation. Production deployment requires integration with ffmpeg or similar audio processing library for real-time effects (noise reduction, EQ, gain, normalization).
 
 ## External Dependencies
 
@@ -61,9 +65,8 @@ The architecture emphasizes modularity, scalability, and ease of deployment. Key
 - **FaleVono**: Primary Brazilian VoIP provider via SIP protocol.
 
 ### AI and Speech Services
-- **ElevenLabs**: Voice synthesis (TTS) for Portuguese.
-- **Deepgram**: Real-time speech-to-text (STT) transcription for Portuguese.
-- **OpenAI**: AI conversation logic and live prompt injection.
+- **ElevenLabs**: Speech-to-text (STT) and text-to-speech (TTS) for Brazilian Portuguese. Provides real-time transcription and voice synthesis with support for multiple voice types (masculine, feminine, natural).
+- **OpenAI**: Conversational AI using Chat Completion API with streaming. **Fully integrated** with OpenAIService for API communication, AgentOrchestrator for conversation management, and complete support for live prompt injection, agent control (enable/disable), and speech control (pause/resume). Auto-starts on call initiation with default Portuguese system prompt.
 
 ### Frontend Dependencies
 - **shadcn/ui**: React component library built on Radix UI.

@@ -1,0 +1,56 @@
+# Ver qual container é
+docker ps -a | grep abmix
+
+# Parar e remover TODOS os containers do abmix (órfãos e gerenciados)
+docker ps -a | grep abmix | awk '{print $1}' | xargs docker stop
+docker ps -a | grep abmix | awk '{print $1}' | xargs docker rm
+
+# Agora atualizar o serviço Swarm
+docker service update --force projeto-abmix-tech_abmix-telefone
+
+# Aguardar
+sleep 20
+
+# Verificar
+docker service ps projeto-abmix-tech_abmix-telefone | head -3
+1b528f3f3d31   easypanel/projeto-abmix-tech/abmix-telefone:latest   "docker-entrypoint.s…"   5 seconds ago    Created                                                                                                      projeto-abmix-tech_abmix-telefone.1.a4pfzofl85aka3df8n6ab6i8x
+847feaa70076   n8nio/n8n:latest                                     "tini -- /docker-ent…"   4 minutes ago    Up 4 minutes                  5678/tcp                                                                       abmix-tech-desenvolvimento_n8n.1.brlbjtdepiusq50mgo1i4f51t
+4e95b55d5cde   n8nio/n8n:latest                                     "tini -- /docker-ent…"   4 minutes ago    Up 4 minutes                  5678/tcp                                                                       projeto-abmix-tech_n8n.1.4uom1prdlrr4xqxc8npadbpq8
+64bf15560dd0   n8nio/n8n:latest                                     "tini -- /docker-ent…"   5 minutes ago    Exited (137) 4 minutes ago                                                                                   projeto-abmix-tech_n8n.1.lesrosj2iy51vxy732lpzrbh3
+b267d4bfa0e4   n8nio/n8n:latest                                     "tini -- /docker-ent…"   5 minutes ago    Exited (137) 4 minutes ago                                                                                   abmix-tech-desenvolvimento_n8n.1.w4ty9jza6ktsypjc550fygn22
+f0c58a167910   evoapicloud/evolution-api:latest                     "/bin/bash -c '. ./D…"   11 minutes ago   Up 11 minutes                 8080/tcp                                                                       projeto-abmix-tech_evolution-api.1.ol2swwu7mq09yfpxf3znhlqm7
+ea518f199eec   evoapicloud/evolution-api:latest                     "/bin/bash -c '. ./D…"   11 minutes ago   Up 11 minutes                 8080/tcp                                                                       abmix-tech-desenvolvimento_evolution-api.1.nzs18d0mfaooae1jd4p4znzmh
+863fd3b11188   n8nio/n8n:latest                                     "tini -- /docker-ent…"   11 minutes ago   Exited (137) 5 minutes ago                                                                                   abmix-tech-desenvolvimento_n8n.1.fcqnc4lyj3dxolj5cmgkbp1ld
+50439258adda   n8nio/n8n:latest                                     "tini -- /docker-ent…"   11 minutes ago   Exited (137) 5 minutes ago                                                                                   projeto-abmix-tech_n8n.1.vsy796x71ie63gc3yo1gju1kp
+6d62347d0e9e   redis:7                                              "/bin/sh -c 'redis-s…"   15 minutes ago   Up 15 minutes                 6379/tcp                                                                       abmix-tech-desenvolvimento_evolution-api-redis.1.vqbj84nxejwrsav8b2re3n9nn
+1ef717d77c0c   postgres:17                                          "docker-entrypoint.s…"   15 minutes ago   Up 15 minutes                 5432/tcp                                                                       abmix-tech-desenvolvimento_evolution-api-db.1.607arseco5anv4texpb0d9ju4
+2c371730fc2c   evoapicloud/evolution-api:latest                     "/bin/bash -c '. ./D…"   15 minutes ago   Exited (1) 11 minutes ago                                                                                    abmix-tech-desenvolvimento_evolution-api.1.zqsg73xncwznyjkm3g2rrerv5
+aafe52928e74   n8nio/n8n:latest                                     "tini -- /docker-ent…"   15 minutes ago   Exited (137) 11 minutes ago                                                                                  abmix-tech-desenvolvimento_n8n.1.zmgrkbvv6gzq7ccmn3gmdlhji
+56b5c70c5075   redis:7                                              "/bin/sh -c 'redis-s…"   15 minutes ago   Up 15 minutes                 6379/tcp                                                                       projeto-abmix-tech_evolution-api-redis.1.xgags8sp82p370ph032sh3nfz
+d0568961fbba   redis:7                                              "/bin/sh -c 'redis-s…"   15 minutes ago   Up 15 minutes                 6379/tcp                                                                       projeto-abmix-tech_typebot-redis.1.t1ngdonn034juadsadpp67zcq
+bba1dd73e1a8   postgres:17                                          "docker-entrypoint.s…"   15 minutes ago   Up 15 minutes                 5432/tcp                                                                       projeto-abmix-tech_typebot-db.1.upxu7mvfgaopd7fsanboqur0b
+5ad3a43e5ed0   n8nio/n8n:latest                                     "tini -- /docker-ent…"   15 minutes ago   Exited (137) 11 minutes ago                                                                                  projeto-abmix-tech_n8n.1.4u1kqzbruwi5mnf0g3e3cws82
+b5eaf84387a9   postgres:17                                          "docker-entrypoint.s…"   15 minutes ago   Up 15 minutes                 5432/tcp                                                                       projeto-abmix-tech_evolution-api-db.1.rpxavgvvn2rch608zcztchv5u
+ca0d24335f48   evoapicloud/evolution-api:latest                     "/bin/bash -c '. ./D…"   15 minutes ago   Exited (1) 11 minutes ago                                                                                    projeto-abmix-tech_evolution-api.1.7339ypd25qp3tochnf4yjnw1g
+2e79db33dfa7   baptistearno/typebot-builder:3.9                     "/bin/sh -c ./${SCOP…"   15 minutes ago   Up 15 minutes                 3000/tcp                                                                       projeto-abmix-tech_typebot-builder.1.2u4f1gzj9p3yr5mfj5zpegtz1
+84fd54db6f82   minio/minio:latest                                   "/bin/sh -c 'minio s…"   15 minutes ago   Up 15 minutes                 9000/tcp                                                                       projeto-abmix-tech_minio.1.824s1vxg0fs94r0fab8eprh4s
+31e4aaf0b3a3   baptistearno/typebot-viewer:3.9.0                    "/bin/sh -c ./${SCOP…"   15 minutes ago   Up 15 minutes                 3000/tcp                                                                       projeto-abmix-tech_typebot-viewer.1.jejemfw08m9abopyd2klpzz3y
+fe92766ff948   code-abmix                                           "docker-entrypoint.s…"   28 hours ago     Up 4 minutes (unhealthy)                                                                                     abmix-voip
+1b528f3f3d31
+847feaa70076
+4e95b55d5cde
+64bf15560dd0
+b267d4bfa0e4
+f0c58a167910
+ea518f199eec
+863fd3b11188
+50439258adda
+6d62347d0e9e
+1ef717d77c0c
+2c371730fc2c
+aafe52928e74
+56b5c70c5075
+d0568961fbba
+bba1dd73e1a8
+5ad3a43e5ed0
+b5eaf84387a9

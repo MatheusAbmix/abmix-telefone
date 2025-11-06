@@ -1,0 +1,146 @@
+  uri: 'sip:Felipe_Manieri@vono2.me',
+      params: [Object]
+    },
+    'call-id': '9da8d5a0-c36f-47a9-a164-a9514b1214f5',
+    cseq: { seq: 2, method: 'INVITE' },
+    server: 'NextRouter C4 SoftSwitch v5.3.1',
+    'content-length': 0
+  },
+  content: ''
+}
+      },
+      {
+        "version": "2.0",
+        "protocol": "UDP",
+        "host": "172.31.70.162",
+        "port": 6060,
+        "params": {
+         
+[SIP_SERVICE] 📞 Call 9da8d5a0-c36f-47a9-a164-a9514b1214f5: Trying...
+[SIP_SERVICE] <<< RECEIVED: {
+  "version": "2.0",
+  "status": 180,
+  "reason": "Ringing",
+  "headers": {
+    "via": [
+      {
+        "version": "2.0",
+        "protocol": "UDP",
+        "host": "172.31.70.162",
+        "port": 6060,
+        "params": {
+          "received": "72.60.149.107",
+          "rport": "6060",
+          "branch": "z9hG4bK144140"
+        }
+      },
+      {
+        "version": "2.0",
+        "protocol": "UDP",
+        "host": "172.31.70.162",
+        "port": 6060,
+        "params": {
+          "branch
+[SIP_SERVICE] 📞 Call 9da8d5a0-c36f-47a9-a164-a9514b1214f5: Ringing...
+[SIP_SERVICE] ❌ Error sending authenticated INVITE: {
+  version: '2.0',
+  status: 180,
+  reason: 'Ringing',
+  headers: {
+    via: [ [Object], [Object], [Object] ],
+    from: {
+      name: undefined,
+      uri: 'sip:Felipe_Manieri@vono2.me',
+      params: [Object]
+    },
+    to: {
+      name: undefined,
+      uri: 'sip:11945140383@vono2.me',
+      params: [Object]
+    },
+    'call-id': '9da8d5a0-c36f-47a9-a164-a9514b1214f5',
+    cseq: { seq: 2, method: 'INVITE' },
+    'user-agent': 'NextRouter C4 SoftSwitch v5.3.1',
+    contact: [ [Object] ],
+    accept: 'application/sdp',
+    allow: 'INVITE, ACK, BYE, CANCEL, OPTIONS, MESSAGE, INFO, UPDATE, REGISTER, NOTIFY',
+    supported: 'path, replaces',
+    'allow-events': 'talk, hold, conference, refer',
+    'content-length': 0,
+    'x-sessionid': '1922187913',
+    'remote-party-id': '"Outbound Call" <sip:912011945140383@vono2.me>;party=calling;privacy=off;screen=no'
+  },
+  content: ''
+}
+[SIP_SERVICE] <<< RECEIVED: {
+  "version": "2.0",
+  "status": 183,
+  "reason": "Session Progress",
+  "headers": {
+    "via": [
+      {
+        "version": "2.0",
+        "protocol": "UDP",
+        "host": "172.31.70.162",
+        "port": 6060,
+        "params": {
+          "received": "72.60.149.107",
+          "rport": "6060",
+          "branch": "z9hG4bK144140"
+        }
+      },
+      {
+        "version": "2.0",
+        "protocol": "UDP",
+        "host": "172.31.70.162",
+        "port": 6060,
+        "params": {
+        
+[SIP_SERVICE] 📞 Call 9da8d5a0-c36f-47a9-a164-a9514b1214f5: Ringing...
+[SIP_SERVICE] ❌ Error sending authenticated INVITE: {
+  version: '2.0',
+  status: 183,
+  reason: 'Session Progress',
+  headers: {
+    via: [ [Object], [Object], [Object] ],
+    from: {
+      name: undefined,
+      uri: 'sip:Felipe_Manieri@vono2.me',
+      params: [Object]
+    },
+    to: {
+      name: undefined,
+      uri: 'sip:11945140383@vono2.me',
+      params: [Object]
+    },
+    'call-id': '9da8d5a0-c36f-47a9-a164-a9514b1214f5',
+    cseq: { seq: 2, method: 'INVITE' },
+    'user-agent': 'NextRouter C4 SoftSwitch v5.3.1',
+    contact: [ [Object] ],
+    allow: 'INVITE, ACK, BYE, CANCEL, OPTIONS, MESSAGE, INFO, UPDATE, REGISTER, NOTIFY',
+    supported: 'path, replaces',
+    'allow-events': 'talk, hold, conference, refer',
+    'content-type': 'application/sdp',
+    'content-disposition': 'session',
+    'content-length': 374,
+    'x-sessionid': '1922187913',
+    'remote-party-id': '"Outbound Call" <sip:912011945140383@vono2.me>;party=calling;privacy=off;screen=no'
+  },
+  content: 'v=0\r\n' +
+    'o=BN4000 101629 101858 IN IP4 190.89.248.49\r\n' +
+    's=-\r\n' +
+    'c=IN IP4 190.89.248.49\r\n' +
+    't=0 0\r\n' +
+    'a=rtpengine:fa85949d786c\r\n' +
+    'm=audio 43346 RTP/AVP 0 101\r\n' +
+    'a=X-vrzcap:vbd Ver=0 Mode=FaxPr ModemRtpRed=0\r\n' +
+    'a=X-vrzcap:identification bin=DSR2906 Prot=mgcp App=MG\r\n' +
+    'a=nortpproxy:yes\r\n' +
+    'a=rtpmap:0 PCMU/8000\r\n' +
+    'a=rtpmap:101 telephone-event/8000\r\n' +
+    'a=fmtp:101 0-15\r\n' +
+    'a=sendrecv\r\n' +
+    'a=rtcp:43347\r\n' +
+    'a=ptime:10\r\n'
+}
+[express] GET /api/health 200 in 0ms :: {"status":"ok","timestamp":"2025-11-06T18:55:15.9…

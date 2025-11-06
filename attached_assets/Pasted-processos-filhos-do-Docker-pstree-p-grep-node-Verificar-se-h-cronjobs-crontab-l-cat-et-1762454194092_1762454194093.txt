@@ -1,0 +1,99 @@
+processos filhos do Docker
+pstree -p | grep node
+
+# Verificar se há cronjobs
+crontab -l
+cat /etc/crontab
+
+# Verificar scripts de inicialização
+ls -la /etc/init.d/ | grep -i abmix
+ls -la /etc/systemd/system/ | grep -i abmix
+root       13981  1.6  0.7 9719760 231484 ?      Sl   18:26   0:09 node dist/main
+root       13987  0.6  0.5 1258380 177164 ?      Sl   18:26   0:03 node dist/main
+root       13999  1.6  0.6 9686080 217556 ?      Sl   18:26   0:09 node dist/main
+root       25584  0.6  0.2 11194684 71288 ?      Sl   18:33   0:01 node dist/index.js
+root       25727  0.0  0.0   1056   640 ?        Ss   18:33   0:00 /sbin/docker-init -- node backend.js start
+root       25916  2.3  0.3 21397400 125484 ?     Sl   18:33   0:04 node backend.js start
+ubuntu     26021  4.9  0.6 32863012 229896 ?     Sl   18:33   0:08 node /usr/local/bin/n8n
+ubuntu     26050  4.9  0.6 32861896 228108 ?     Sl   18:33   0:08 node /usr/local/bin/n8n
+ubuntu     26059  4.9  0.6 32859768 227312 ?     Sl   18:33   0:08 node /usr/local/bin/n8n
+           |-containerd-shim(25537)-+-npm start(25561)-+-node(25584)-+-{node}(25585)
+           |                        |                  |             |-{node}(25586)
+           |                        |                  |             |-{node}(25587)
+           |                        |                  |             |-{node}(25588)
+           |                        |                  |             |-{node}(25589)
+           |                        |                  |             |-{node}(25590)
+           |                        |                  |             |-{node}(25591)
+           |                        |                  |             |-{node}(25592)
+           |                        |                  |             |-{node}(25593)
+           |                        |                  |             `-{node}(25594)
+           |-containerd-shim(25703)-+-docker-init(25727)---node(25916)-+-sh(26288)---docker(26312)-+-{docker}(26313)
+           |                        |                                  |-{node}(25919)
+           |                        |                                  |-{node}(25920)
+           |                        |                                  |-{node}(25921)
+           |                        |                                  |-{node}(25922)
+           |                        |                                  |-{node}(25923)
+           |                        |                                  |-{node}(25926)
+           |                        |                                  |-{node}(25990)
+           |                        |                                  |-{node}(25991)
+           |                        |                                  |-{node}(25992)
+           |                        |                                  |-{node}(25993)
+           |                        |                                  `-{node}(26289)
+           |-containerd-shim(25769)-+-tini(25889)---node(26050)-+-{node}(26060)
+           |                        |                           |-{node}(26061)
+           |                        |                           |-{node}(26062)
+           |                        |                           |-{node}(26063)
+           |                        |                           |-{node}(26064)
+           |                        |                           |-{node}(26075)
+           |                        |                           |-{node}(26562)
+           |                        |                           |-{node}(26563)
+           |                        |                           |-{node}(26564)
+           |                        |                           |-{node}(26565)
+           |                        |                           `-{node}(26606)
+           |-containerd-shim(25797)-+-tini(25891)---node(26021)-+-{node}(26022)
+           |                        |                           |-{node}(26024)
+           |                        |                           |-{node}(26025)
+           |                        |                           |-{node}(26026)
+           |                        |                           |-{node}(26027)
+           |                        |                           |-{node}(26033)
+           |                        |                           |-{node}(26554)
+           |                        |                           |-{node}(26555)
+           |                        |                           |-{node}(26556)
+           |                        |                           |-{node}(26557)
+           |                        |                           `-{node}(26607)
+           |-containerd-shim(25832)-+-tini(25903)---node(26059)-+-{node}(26067)
+           |                        |                           |-{node}(26068)
+           |                        |                           |-{node}(26069)
+           |                        |                           |-{node}(26070)
+           |                        |                           |-{node}(26071)
+           |                        |                           |-{node}(26077)
+           |                        |                           |-{node}(26558)
+           |                        |                           |-{node}(26559)
+           |                        |                           |-{node}(26560)
+           |                        |                           |-{node}(26561)
+           |                        |                           `-{node}(26608)
+no crontab for root
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+# You can also override PATH, but by default, newer versions inherit it from the environment
+#PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name command to be executed
+17 *    * * *   root    cd / && run-parts --report /etc/cron.hourly
+25 6    * * *   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.daily; }
+47 6    * * 7   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.weekly; }
+52 6    1 * *   root    test -x /usr/sbin/anacron || { cd / && run-parts --report /etc/cron.monthly; }
+#
+root@vps:~# 

@@ -1,0 +1,217 @@
+DB] Database initialized successfully
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[SIP_MODULE] ✅ SIP module loaded successfully
+[SIP_MODULE] sip.start: available (send/stop will be created when start() is called)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[ENV] Debug das variáveis de ambiente:
+[ENV] FALEVONO_PASSWORD: ✅ CONFIGURADA
+[ENV] ELEVENLABS_API_KEY: sk_58ab581... ✅
+[ENV] DEEPGRAM_API_KEY: ✅ CONFIGURADA
+[TELEPHONY] Telephony system ready - SIP will initialize on first call
+[TELEPHONY] WebSocket servers initialized on /captions and /media
+[TELEPHONY] WebSocket servers initialized on /captions and /media
+[DB] Initializing database at: /app/data/app.db
+[DB] Database initialized successfully
+[ROUTES] API routes configured
+[STATIC] Usando estrutura na raiz: /app/dist
+[STATIC] Servindo arquivos estáticos de: /app/dist
+[STATIC] Arquivos encontrados: [ 'assets', 'index.html', 'index.js' ]
+[express] HTTP/WS on 5000
+[express] GET /api/health 200 in 4ms :: {"status":"ok","timestamp":"2025-11-06T18:37:43.6…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-06T18:38:13.7…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-06T18:38:43.7…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-06T18:39:13.8…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-06T18:39:43.9…
+[express] GET /api/voip-numbers 200 in 1ms :: []
+[express] GET /api/favorites 304 in 1ms :: []
+[express] GET /api/recordings/list 304 in 1ms :: []
+[express] GET /api/voice/conversion-voices 304 in 292ms :: [{"voice_id":"2EiwWnXFnvU5JabP…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-06T18:40:13.9…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-06T18:40:44.0…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-06T18:41:14.1…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-06T18:41:44.1…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-06T18:42:14.2…
+[express] GET /api/voip-numbers 200 in 1ms :: [{"id":1,"name":"Vono Principal","number":"…
+[express] GET /api/favorites 304 in 1ms :: []
+[express] GET /api/recordings/list 304 in 0ms :: []
+[express] GET /api/voice/conversion-voices 304 in 426ms :: [{"voice_id":"2EiwWnXFnvU5JabP…
+[express] GET /api/health 200 in 1ms :: {"status":"ok","timestamp":"2025-11-06T18:42:44.2…
+[CALL] Initiating call to 11945223433
+[PROVIDER_FACTORY] Creating provider for Vono Principal (falevono)
+[SIP_SERVICE] Creating new global SIPService instance
+[FALEVONO_PROVIDER] Initialized with:
+[FALEVONO_PROVIDER]   Username: Felipe_Manieri
+[FALEVONO_PROVIDER]   Server: vono2.me:5060
+[FALEVONO_PROVIDER]   From Number: 11920838833
+[CALL] Using falevono provider (Vono Principal)
+[CALL] From: 11920838833 → To: 11945223433
+[FALEVONO_PROVIDER] Starting call to: 11945223433
+[SIP_SERVICE] Not initialized, initializing...
+[SIP_SERVICE] Initializing SIP stack...
+[SIP_SERVICE] Local IP: 172.31.70.162
+[SIP_SERVICE] Server: vono2.me:5060
+[SIP_SERVICE] Username: Felipe_Manieri
+[SIP_SERVICE] Starting SIP stack for the first time...
+[SIP_SERVICE] Transport: UDP 
+[SIP_SERVICE] Client Port: 6060
+[SIP_SERVICE] After sip.start() - checking functions...
+[SIP_SERVICE] sip.send type: function
+[SIP_SERVICE] sip.stop type: function
+[SIP_SERVICE] All sip keys: [
+  'parseAOR',             'parseUri',
+  'stringifyUri',         'stringifyAuthHeader',
+  'stringify',            'makeResponse',
+  'copyMessage',          'makeStreamParser',
+  'parse',                'makeTransport',
+  'resolve',              'generateBranch',
+  'makeTransactionLayer', 'create',
+  'start',                'send',
+  'stop',                 'encodeFlowUri',
+  'decodeFlowUri',        'isFlowUri',
+  'hostname'
+]
+[SIP_SERVICE] ✅ SIP stack started successfully
+[SIP_SERVICE] ✅ SIP stack initialized successfully
+[SIP_SERVICE] Registering...
+[SIP_SERVICE] REGISTER with transport=UDP, contact=sip:Felipe_Manieri@172.31.70.162:6060
+[SIP_SERVICE] REGISTER request queued
+[SIP_SERVICE] Waiting for SIP registration to complete...
+[SIP_SERVICE] >>> SENT: {
+  "method": "REGISTER",
+  "uri": "sip:vono2.me:5060",
+  "headers": {
+    "to": {
+      "uri": "sip:Felipe_Manieri@vono2.me"
+    },
+    "from": {
+      "uri": "sip:Felipe_Manieri@vono2.me",
+      "params": {
+        "tag": "9ecf8510-0c3d-4c74-bbe3-57044ebb1639"
+      }
+    },
+    "call-id": "195639c4-c18e-4f36-af4c-90a59be34d64",
+    "cseq": {
+      "method": "REGISTER",
+      "seq": 1
+    },
+    "contact": [
+      {
+        "uri": "sip:Felipe_Manieri@172.31.70.162:6060"
+      }
+    ],
+    "exp
+[SIP_SERVICE] <<< RECEIVED: {
+  "version": "2.0",
+  "status": 401,
+  "reason": "Unauthorized",
+  "headers": {
+    "via": [
+      {
+        "version": "2.0",
+        "protocol": "UDP",
+        "host": "172.31.70.162",
+        "port": 6060,
+        "params": {
+          "received": "72.60.149.107",
+          "branch": "z9hG4bK657172",
+          "rport": "6060"
+        }
+      }
+    ],
+    "to": {
+      "uri": "sip:Felipe_Manieri@vono2.me",
+      "params": {
+        "tag": "0391.144fabe9845a52f1b80c8c1911bd0453"
+      }
+    }
+[SIP_SERVICE] 🔐 Received 401 auth challenge for REGISTER
+[SIP_SERVICE] Auth challenge headers: [
+  {
+    "scheme": "Digest",
+    "realm": "\"vono2.me\"",
+    "nonce": "\"690cec580000e3551fe4f53e11211f09cc78999982ea5856\""
+  }
+]
+[SIP_SERVICE] ✅ Auth session populated successfully
+[SIP_SERVICE] Auth session keys: [
+  'callId', 'tag',
+  'cseq',   'proxy',
+  'nonce',  'nc',
+  'qop',    'algorithm'
+]
+[SIP_SERVICE] Re-registering with auth...
+[SIP_SERVICE] REGISTER with transport=UDP, contact=sip:Felipe_Manieri@172.31.70.162:6060
+[SIP_SERVICE] Auth session state: {
+  "callId": "195639c4-c18e-4f36-af4c-90a59be34d64",
+  "tag": "9ecf8510-0c3d-4c74-bbe3-57044ebb1639",
+  "cseq": 2,
+  "proxy": false,
+  "nonce": "5bc559df8ad95341a328764417c49153",
+  "nc": 0,
+  "qop": "auth,auth-int",
+  "algorithm": "md5"
+}
+[SIP_SERVICE] ✅ Authorization header added successfully
+[SIP_SERVICE] REGISTER request queued
+[SIP_SERVICE] ❌ Error sending REGISTER: {
+  version: '2.0',
+  status: 401,
+  reason: 'Unauthorized',
+  headers: {
+    via: [ [Object] ],
+    to: {
+      name: undefined,
+      uri: 'sip:Felipe_Manieri@vono2.me',
+      params: [Object]
+    },
+    from: {
+      name: undefined,
+      uri: 'sip:Felipe_Manieri@vono2.me',
+      params: [Object]
+    },
+    'call-id': '195639c4-c18e-4f36-af4c-90a59be34d64',
+    cseq: { seq: 1, method: 'REGISTER' },
+    'www-authenticate': [ [Object], [Object] ],
+    server: 'NextRouter C4 SoftSwitch v5.3.1',
+    'content-length': 0
+  },
+  content: ''
+}
+[SIP_SERVICE] >>> SENT: {
+  "method": "REGISTER",
+  "uri": "sip:vono2.me:5060",
+  "headers": {
+    "to": {
+      "uri": "sip:Felipe_Manieri@vono2.me"
+    },
+    "from": {
+      "uri": "sip:Felipe_Manieri@vono2.me",
+      "params": {
+        "tag": "9ecf8510-0c3d-4c74-bbe3-57044ebb1639"
+      }
+    },
+    "call-id": "195639c4-c18e-4f36-af4c-90a59be34d64",
+    "cseq": {
+      "method": "REGISTER",
+      "seq": 2
+    },
+    "contact": [
+      {
+        "uri": "sip:Felipe_Manieri@172.31.70.162:6060"
+      }
+    ],
+    "exp
+[SIP_SERVICE] <<< RECEIVED: {
+  "version": "2.0",
+  "status": 200,
+  "reason": "OK",
+  "headers": {
+    "via": [
+      {
+        "version": "2.0",
+        "protocol": "UDP",
+        "host": "172.31.70.162",
+        "port": 6060,
+        "params": {

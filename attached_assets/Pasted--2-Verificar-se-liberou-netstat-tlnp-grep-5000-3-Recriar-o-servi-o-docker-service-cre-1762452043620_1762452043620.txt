@@ -1,0 +1,32 @@
+
+# 2. Verificar se liberou
+netstat -tlnp | grep 5000
+
+# 3. Recriar o serviço
+docker service create \
+  --name projeto-abmix-tech_abmix-telefone \
+  --replicas 1 \
+  --network easypanel \
+  --publish published=5000,target=5000,mode=host \
+  --publish published=6060,target=6060,protocol=udp,mode=host \
+  --env FALEVONO_PASSWORD="Fe120784!" \
+  --env FALEVONO_SENHA="Fe120784!" \
+  --env SIP_PASSWORD="Fe120784!" \
+  --mount type=bind,source=/opt/easypanel/projects/projeto-abmix-tech/abmix-telefone/data,target=/app/data \
+  easypanel/projeto-abmix-tech/abmix-telefone:latest
+
+# 4. Aguardar 20 segundos
+sleep 20
+
+# 5. Ver status
+docker service ps projeto-abmix-tech_abmix-telefone
+-bash: kill: (943990) - No such process
+tcp        0      0 0.0.0.0:5000            0.0.0.0:*               LISTEN      980275/node         
+Error response from daemon: rpc error: code = AlreadyExists desc = name conflicts with an existing object: service projeto-abmix-tech_abmix-telefone already exists
+ID             NAME                                      IMAGE                                         NODE      DESIRED STATE   CURRENT STATE           ERROR                              PORTS
+ds4y79ci3wb6   projeto-abmix-tech_abmix-telefone.1       easypanel/projeto-abmix-tech/abmix-telefone   vps       Ready           Ready 2 seconds ago                                        
+r55gtrrcmqyl    \_ projeto-abmix-tech_abmix-telefone.1   easypanel/projeto-abmix-tech/abmix-telefone             Running         Pending 6 seconds ago   "no suitable node (host-mode p…"   
+lglx7omnulfb    \_ projeto-abmix-tech_abmix-telefone.1   easypanel/projeto-abmix-tech/abmix-telefone   vps       Shutdown        Failed 4 seconds ago    "starting container failed: fa…"   
+qtxht432bazn    \_ projeto-abmix-tech_abmix-telefone.1   easypanel/projeto-abmix-tech/abmix-telefone   vps       Shutdown        Failed 11 seconds ago   "starting container failed: fa…"   
+c06yfi6jftpq    \_ projeto-abmix-tech_abmix-telefone.1   easypanel/projeto-abmix-tech/abmix-telefone   vps       Shutdown        Failed 6 seconds ago    "starting container failed: fa…"   
+root@vps:~# 

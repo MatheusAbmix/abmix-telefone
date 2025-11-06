@@ -12,6 +12,7 @@ import { queries } from "./database";
 import { writeFileSync, statSync } from "fs";
 import { join } from "path";
 import { ProviderFactory } from "./providers/providerFactory";
+import { rtpService } from "./rtpService";
 
 function resolvePublicBaseUrl(req?: any): string {
   const configured = process.env.PUBLIC_BASE_URL || process.env.PUBLIC_URL || process.env.NGROK_URL;
@@ -100,6 +101,33 @@ function processUserAudio(callSid: string, audioPayload: string, streamSid: stri
 
 export function setupTelephony(app: Express, httpServer: Server) {
   console.log('[TELEPHONY] Telephony system ready - SIP will initialize on first call');
+  
+  // Initialize RTP server for SIP audio
+  rtpService.start(8000).then(() => {
+    console.log('[TELEPHONY] RTP server started on port 8000');
+  }).catch((err) => {
+    console.error('[TELEPHONY] Failed to start RTP server:', err);
+  });
+
+  // Handle RTP audio events -> send to STT
+  rtpService.on('audio', (data: any) => {
+    console.log(`[TELEPHONY] RTP audio received for call ${data.callId}`);
+    
+    // Check if voice conversion is enabled for this call
+    if (realtimeVoiceService.isConversionEnabled(data.callId)) {
+      // Convert PCM16 to base64 for STT
+      const audioBase64 = data.audioData.toString('base64');
+      realtimeVoiceService.processIncomingAudio(data.callId, audioBase64);
+    }
+  });
+
+  // Handle converted audio from TTS -> send back via RTP
+  realtimeVoiceService.on('converted-voice-audio', (callId: string, audioBuffer: Buffer) => {
+    console.log(`[TELEPHONY] Sending converted audio back via RTP for call ${callId}`);
+    
+    // Send audio via RTP (8kHz PCM16 format)
+    rtpService.sendAudio(callId, audioBuffer, 8000);
+  });
   
   // WebSocket servers - escutar nos paths que o nginx vai fazer proxy
   const captionsPath = buildWsPath('/captions');

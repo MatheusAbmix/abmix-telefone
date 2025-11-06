@@ -2,6 +2,8 @@ import { createRequire } from 'module';
 import { randomUUID } from 'crypto';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { rtpService } from './rtpService';
+import { realtimeVoiceService } from './realtimeVoiceService';
 
 const require = createRequire(import.meta.url);
 
@@ -619,6 +621,41 @@ export class SIPService {
               call.dialog.remote = message.headers.to;
               call.dialog.local = message.headers.from;
             }
+            
+            // Parse SDP from response to get remote RTP address/port
+            if (message.content) {
+              const sdp = message.content.toString();
+              const connectionMatch = sdp.match(/c=IN IP4 ([\d.]+)/);
+              const audioMatch = sdp.match(/m=audio (\d+)/);
+              
+              if (connectionMatch && audioMatch) {
+                const remoteAddress = connectionMatch[1];
+                const remotePort = parseInt(audioMatch[1]);
+                
+                console.log(`[SIP_SERVICE] 🎵 Creating RTP session for call ${callId}`);
+                console.log(`[SIP_SERVICE] 🎵 Remote RTP: ${remoteAddress}:${remotePort}`);
+                
+                // Create RTP session for audio (payload type 0 = PCMU)
+                rtpService.createSession(callId, remoteAddress, remotePort, 0);
+                
+                // Start real-time voice conversion for this call (default to 'masc' voice)
+                // TODO: Get voice type from call configuration
+                const voiceType = 'masc';
+                console.log(`[SIP_SERVICE] 🎙️ Starting voice conversion session with ${voiceType} voice`);
+                realtimeVoiceService.startRealtimeVoice(callId, voiceType).then((success) => {
+                  if (success) {
+                    console.log(`[SIP_SERVICE] ✅ Voice conversion session started for ${callId}`);
+                  } else {
+                    console.error(`[SIP_SERVICE] ❌ Failed to start voice conversion for ${callId}`);
+                  }
+                }).catch((error) => {
+                  console.error(`[SIP_SERVICE] ❌ Error starting voice conversion for ${callId}:`, error);
+                });
+              } else {
+                console.warn(`[SIP_SERVICE] ⚠️ Could not parse SDP for RTP setup`);
+              }
+            }
+            
             // Send ACK
             this.sendAck(call, message);
           }
@@ -665,6 +702,12 @@ export class SIPService {
         console.log(`[SIP_SERVICE] 📴 Remote party hung up call ${callId}`);
         call.status = 'ended';
         call.endTime = new Date();
+        
+        // Stop voice conversion
+        realtimeVoiceService.stopRealtimeVoice(callId);
+        
+        // End RTP session
+        rtpService.endSession(callId);
       }
       
       // Send 200 OK response to BYE

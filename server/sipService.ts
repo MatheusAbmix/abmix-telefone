@@ -415,6 +415,7 @@ export class SIPService {
     }
 
     console.log(`[SIP_SERVICE] 🔐 Re-sending INVITE with digest authentication...`);
+    console.log('[SIP_SERVICE] Auth challenge response:', JSON.stringify(authResponse.headers['proxy-authenticate'] || authResponse.headers['www-authenticate'], null, 2));
 
     try {
       // Create auth session for this call
@@ -422,6 +423,8 @@ export class SIPService {
       
       // Process the auth challenge
       digest.challenge(callAuthSession, authResponse);
+      console.log('[SIP_SERVICE] ✅ Call auth session populated successfully');
+      console.log('[SIP_SERVICE] Call auth session keys:', Object.keys(callAuthSession));
       
       // Clone the original INVITE request
       const reInviteRequest: any = JSON.parse(JSON.stringify(call.dialog.inviteRequest));
@@ -436,7 +439,9 @@ export class SIPService {
         password: this.sipPassword
       };
       
-      digest.signRequest(callAuthSession, reInviteRequest, credentials);
+      // CRITICAL: signRequest needs 4 parameters: (session, request, challenge, credentials)
+      digest.signRequest(callAuthSession, reInviteRequest, authResponse, credentials);
+      console.log('[SIP_SERVICE] ✅ Authorization header added to INVITE successfully');
       
       // Update dialog state
       call.dialog.inviteRequest = reInviteRequest;

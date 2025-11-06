@@ -80,6 +80,56 @@ export const voipNumbers = pgTable("voip_numbers", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const agentSessions = pgTable("agent_sessions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  callId: varchar("call_id").references(() => calls.id).notNull(),
+  systemPrompt: text("system_prompt").notNull(),
+  temperature: integer("temperature").default(70),
+  isActive: boolean("is_active").default(true),
+  isPaused: boolean("is_paused").default(false),
+  startedAt: timestamp("started_at").defaultNow(),
+  endedAt: timestamp("ended_at"),
+  metadata: jsonb("metadata"),
+});
+
+export const agentMessages = pgTable("agent_messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  sessionId: varchar("session_id").references(() => agentSessions.id).notNull(),
+  role: text("role").notNull(),
+  content: text("content").notNull(),
+  timestamp: timestamp("timestamp").defaultNow(),
+  metadata: jsonb("metadata"),
+});
+
+export const effectPresets = pgTable("effect_presets", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull().unique(),
+  description: text("description"),
+  noiseReduction: boolean("noise_reduction").default(false),
+  noiseReductionLevel: integer("noise_reduction_level").default(50),
+  equalization: boolean("equalization").default(false),
+  eqPreset: text("eq_preset"),
+  amplification: boolean("amplification").default(false),
+  amplificationGain: integer("amplification_gain").default(0),
+  normalization: boolean("normalization").default(false),
+  normalizationTarget: integer("normalization_target").default(-3),
+  isDefault: boolean("is_default").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const codecPreferences = pgTable("codec_preferences", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  voipNumberId: integer("voip_number_id").references(() => voipNumbers.id),
+  codecOrder: text("codec_order").array().notNull(),
+  preferredCodec: text("preferred_codec").notNull().default('opus'),
+  fallbackCodec: text("fallback_codec").notNull().default('pcmu'),
+  allowG711: boolean("allow_g711").default(true),
+  allowOpus: boolean("allow_opus").default(true),
+  opusBitrate: integer("opus_bitrate").default(24000),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export const insertFavoriteSchema = createInsertSchema(favorites).omit({
   id: true,
   createdAt: true,
@@ -121,6 +171,28 @@ export const insertVoipNumberSchema = createInsertSchema(voipNumbers).omit({
   updatedAt: true,
 });
 
+export const insertAgentSessionSchema = createInsertSchema(agentSessions).omit({
+  id: true,
+  startedAt: true,
+  endedAt: true,
+});
+
+export const insertAgentMessageSchema = createInsertSchema(agentMessages).omit({
+  id: true,
+  timestamp: true,
+});
+
+export const insertEffectPresetSchema = createInsertSchema(effectPresets).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertCodecPreferenceSchema = createInsertSchema(codecPreferences).omit({
+  id: true,
+  updatedAt: true,
+});
+
 export type InsertFavorite = z.infer<typeof insertFavoriteSchema>;
 export type InsertCall = z.infer<typeof insertCallSchema>;
 export type InsertRecording = z.infer<typeof insertRecordingSchema>;
@@ -128,6 +200,10 @@ export type InsertTranscript = z.infer<typeof insertTranscriptSchema>;
 export type InsertPrompt = z.infer<typeof insertPromptSchema>;
 export type InsertSetting = z.infer<typeof insertSettingSchema>;
 export type InsertVoipNumber = z.infer<typeof insertVoipNumberSchema>;
+export type InsertAgentSession = z.infer<typeof insertAgentSessionSchema>;
+export type InsertAgentMessage = z.infer<typeof insertAgentMessageSchema>;
+export type InsertEffectPreset = z.infer<typeof insertEffectPresetSchema>;
+export type InsertCodecPreference = z.infer<typeof insertCodecPreferenceSchema>;
 
 export type Favorite = typeof favorites.$inferSelect;
 export type Call = typeof calls.$inferSelect;
@@ -136,6 +212,10 @@ export type Transcript = typeof transcripts.$inferSelect;
 export type Prompt = typeof prompts.$inferSelect;
 export type Setting = typeof settings.$inferSelect;
 export type VoipNumber = typeof voipNumbers.$inferSelect;
+export type AgentSession = typeof agentSessions.$inferSelect;
+export type AgentMessage = typeof agentMessages.$inferSelect;
+export type EffectPreset = typeof effectPresets.$inferSelect;
+export type CodecPreference = typeof codecPreferences.$inferSelect;
 
 // Validation schemas
 export const phoneNumberSchema = z.string().regex(/^\+[1-9]\d{1,14}$/, "Invalid E.164 format");

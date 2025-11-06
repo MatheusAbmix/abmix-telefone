@@ -1,4 +1,13 @@
-import { type Favorite, type InsertFavorite, type Call, type InsertCall, type Transcript, type InsertTranscript, type Prompt, type InsertPrompt } from "@shared/schema";
+import { 
+  type Favorite, type InsertFavorite, 
+  type Call, type InsertCall, 
+  type Transcript, type InsertTranscript, 
+  type Prompt, type InsertPrompt,
+  type AgentSession, type InsertAgentSession,
+  type AgentMessage, type InsertAgentMessage,
+  type EffectPreset, type InsertEffectPreset,
+  type CodecPreference, type InsertCodecPreference
+} from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -23,6 +32,28 @@ export interface IStorage {
   getPrompts(callId: string): Promise<Prompt[]>;
   createPrompt(prompt: InsertPrompt): Promise<Prompt>;
   updatePrompt(id: string, prompt: Partial<Prompt>): Promise<Prompt | undefined>;
+
+  // Agent Sessions
+  getAgentSession(callId: string): Promise<AgentSession | undefined>;
+  createAgentSession(session: InsertAgentSession): Promise<AgentSession>;
+  updateAgentSession(id: string, session: Partial<AgentSession>): Promise<AgentSession | undefined>;
+
+  // Agent Messages
+  getAgentMessages(sessionId: string): Promise<AgentMessage[]>;
+  createAgentMessage(message: InsertAgentMessage): Promise<AgentMessage>;
+
+  // Effect Presets
+  getEffectPresets(): Promise<EffectPreset[]>;
+  getEffectPreset(id: string): Promise<EffectPreset | undefined>;
+  getDefaultEffectPreset(): Promise<EffectPreset | undefined>;
+  createEffectPreset(preset: InsertEffectPreset): Promise<EffectPreset>;
+  updateEffectPreset(id: string, preset: Partial<EffectPreset>): Promise<EffectPreset | undefined>;
+  deleteEffectPreset(id: string): Promise<boolean>;
+
+  // Codec Preferences
+  getCodecPreference(voipNumberId: number): Promise<CodecPreference | undefined>;
+  createCodecPreference(preference: InsertCodecPreference): Promise<CodecPreference>;
+  updateCodecPreference(id: string, preference: Partial<CodecPreference>): Promise<CodecPreference | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -30,12 +61,42 @@ export class MemStorage implements IStorage {
   private calls: Map<string, Call>;
   private transcripts: Map<string, Transcript>;
   private prompts: Map<string, Prompt>;
+  private agentSessions: Map<string, AgentSession>;
+  private agentMessages: Map<string, AgentMessage>;
+  private effectPresets: Map<string, EffectPreset>;
+  private codecPreferences: Map<string, CodecPreference>;
 
   constructor() {
     this.favorites = new Map();
     this.calls = new Map();
     this.transcripts = new Map();
     this.prompts = new Map();
+    this.agentSessions = new Map();
+    this.agentMessages = new Map();
+    this.effectPresets = new Map();
+    this.codecPreferences = new Map();
+    
+    this.initializeDefaults();
+  }
+
+  private initializeDefaults() {
+    const defaultPreset: EffectPreset = {
+      id: randomUUID(),
+      name: 'Default',
+      description: 'Default audio processing preset',
+      noiseReduction: true,
+      noiseReductionLevel: 50,
+      equalization: false,
+      eqPreset: null,
+      amplification: false,
+      amplificationGain: 0,
+      normalization: true,
+      normalizationTarget: -3,
+      isDefault: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.effectPresets.set(defaultPreset.id, defaultPreset);
   }
 
   // Favorites
@@ -152,6 +213,116 @@ export class MemStorage implements IStorage {
 
     const updated: Prompt = { ...existing, ...updateData };
     this.prompts.set(id, updated);
+    return updated;
+  }
+
+  // Agent Sessions
+  async getAgentSession(callId: string): Promise<AgentSession | undefined> {
+    return Array.from(this.agentSessions.values()).find(s => s.callId === callId);
+  }
+
+  async createAgentSession(insertSession: InsertAgentSession): Promise<AgentSession> {
+    const id = randomUUID();
+    const session: AgentSession = {
+      ...insertSession,
+      id,
+      startedAt: new Date(),
+      endedAt: null,
+      metadata: insertSession.metadata || null,
+    };
+    this.agentSessions.set(id, session);
+    return session;
+  }
+
+  async updateAgentSession(id: string, updateData: Partial<AgentSession>): Promise<AgentSession | undefined> {
+    const existing = this.agentSessions.get(id);
+    if (!existing) return undefined;
+
+    const updated: AgentSession = { ...existing, ...updateData };
+    this.agentSessions.set(id, updated);
+    return updated;
+  }
+
+  // Agent Messages
+  async getAgentMessages(sessionId: string): Promise<AgentMessage[]> {
+    return Array.from(this.agentMessages.values()).filter(m => m.sessionId === sessionId);
+  }
+
+  async createAgentMessage(insertMessage: InsertAgentMessage): Promise<AgentMessage> {
+    const id = randomUUID();
+    const message: AgentMessage = {
+      ...insertMessage,
+      id,
+      timestamp: new Date(),
+      metadata: insertMessage.metadata || null,
+    };
+    this.agentMessages.set(id, message);
+    return message;
+  }
+
+  // Effect Presets
+  async getEffectPresets(): Promise<EffectPreset[]> {
+    return Array.from(this.effectPresets.values());
+  }
+
+  async getEffectPreset(id: string): Promise<EffectPreset | undefined> {
+    return this.effectPresets.get(id);
+  }
+
+  async getDefaultEffectPreset(): Promise<EffectPreset | undefined> {
+    return Array.from(this.effectPresets.values()).find(p => p.isDefault);
+  }
+
+  async createEffectPreset(insertPreset: InsertEffectPreset): Promise<EffectPreset> {
+    const id = randomUUID();
+    const preset: EffectPreset = {
+      ...insertPreset,
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      description: insertPreset.description || null,
+      eqPreset: insertPreset.eqPreset || null,
+    };
+    this.effectPresets.set(id, preset);
+    return preset;
+  }
+
+  async updateEffectPreset(id: string, updateData: Partial<EffectPreset>): Promise<EffectPreset | undefined> {
+    const existing = this.effectPresets.get(id);
+    if (!existing) return undefined;
+
+    const updated: EffectPreset = { ...existing, ...updateData, updatedAt: new Date() };
+    this.effectPresets.set(id, updated);
+    return updated;
+  }
+
+  async deleteEffectPreset(id: string): Promise<boolean> {
+    return this.effectPresets.delete(id);
+  }
+
+  // Codec Preferences
+  async getCodecPreference(voipNumberId: number): Promise<CodecPreference | undefined> {
+    return Array.from(this.codecPreferences.values()).find(c => c.voipNumberId === voipNumberId);
+  }
+
+  async createCodecPreference(insertPreference: InsertCodecPreference): Promise<CodecPreference> {
+    const id = randomUUID();
+    const preference: CodecPreference = {
+      ...insertPreference,
+      id,
+      updatedAt: new Date(),
+      voipNumberId: insertPreference.voipNumberId || null,
+    };
+    this.codecPreferences.set(id, preference);
+    return preference;
+  }
+
+  async updateCodecPreference(id: string, updateData: Partial<CodecPreference>): Promise<CodecPreference | undefined> {
+    const existing = this.codecPreferences.get(id);
+    if (!existing) return undefined;
+
+    const updated: CodecPreference = { ...existing, ...updateData, updatedAt: new Date() };
+    this.codecPreferences.set(id, updated);
     return updated;
   }
 }

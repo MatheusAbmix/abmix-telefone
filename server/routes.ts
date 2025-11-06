@@ -33,6 +33,24 @@ export async function registerRoutes(app: Express) {
     });
   });
 
+  // Metrics endpoint - latency monitoring
+  app.get('/api/metrics', async (req, res) => {
+    try {
+      // Dynamic import to avoid circular dependencies
+      const { elevenLabsService } = await import('./elevenlabs');
+      const latency = elevenLabsService.getAverageLatency();
+      
+      res.json({
+        latency,
+        timestamp: Date.now(),
+        status: latency < 100 ? 'excellent' : latency < 300 ? 'good' : 'high'
+      });
+    } catch (error) {
+      console.error('[METRICS] Error fetching latency:', error);
+      res.json({ latency: 0, timestamp: Date.now(), status: 'unknown' });
+    }
+  });
+
   // Discagem é tratada por server/telephony.ts
 
   // === CALL CONTROL ROUTES ===

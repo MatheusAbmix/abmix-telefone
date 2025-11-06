@@ -6,7 +6,7 @@ interface CallState {
   callState: 'IDLE' | 'RINGING' | 'CONNECTED' | 'ENDED';
   currentCallId: string | null;
   recordingSid: string | null;
-  voiceType: string;
+  voiceType: 'masc' | 'fem' | 'natural';
   aiActive: boolean;
   latency: number;
   audioLevel: number;
@@ -28,7 +28,7 @@ interface CallState {
   setCallState: (state: 'IDLE' | 'RINGING' | 'CONNECTED' | 'ENDED') => void;
   setCurrentCallId: (callId: string | null) => void;
   setRecordingSid: (sid: string | null) => void;
-  setVoiceType: (type: string) => void;
+  setVoiceType: (type: 'masc' | 'fem' | 'natural') => void;
   setAiActive: (active: boolean) => void;
   setLatency: (latency: number) => void;
   setAudioLevel: (level: number) => void;

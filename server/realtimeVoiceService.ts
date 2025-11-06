@@ -10,7 +10,7 @@ const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 
 interface RealtimeVoiceSession {
   callSid: string;
-  voiceType: 'masc' | 'fem';
+  voiceType: 'masc' | 'fem' | 'natural';
   sttWs: WebSocket | null;  // Speech-to-Text WebSocket
   ttsWs: WebSocket | null;  // Text-to-Speech WebSocket
   isConnected: boolean;
@@ -28,20 +28,22 @@ class RealtimeVoiceService extends EventEmitter {
   }
 
   // Get voice configuration
-  private getVoiceConfig(voiceType: 'masc' | 'fem') {
-    const voiceIdKey = voiceType === 'masc' ? 'VOZ_MASC_ID' : 'VOZ_FEM_ID';
+  private getVoiceConfig(voiceType: 'masc' | 'fem' | 'natural') {
+    const voiceIdKey = voiceType === 'masc' ? 'VOZ_MASC_ID' : 
+                        voiceType === 'fem' ? 'VOZ_FEM_ID' : 'VOZ_NATURAL_ID';
     const voiceIdResult = queries.getSetting.get(voiceIdKey) as { value: string } | undefined;
     
     const defaultVoices = {
-      masc: 'pNInz6obpgDQGcFmaJgB', // Adam - voz masculina natural
-      fem: 'EXAVITQu4vr4xnSDxMaL'   // Bella - voz feminina natural
+      masc: 'pNInz6obpgDQGcFmaJgB',  // Adam - voz masculina natural
+      fem: 'EXAVITQu4vr4xnSDxMaL',    // Bella - voz feminina natural
+      natural: 'onwK4e9ZLuTAKqWW03F9' // Daniel - voz neutra natural
     };
     
     return voiceIdResult?.value || defaultVoices[voiceType];
   }
 
   // Start real-time voice conversion session
-  async startRealtimeVoice(callSid: string, voiceType: 'masc' | 'fem'): Promise<boolean> {
+  async startRealtimeVoice(callSid: string, voiceType: 'masc' | 'fem' | 'natural'): Promise<boolean> {
     try {
       const targetVoiceId = this.getVoiceConfig(voiceType);
       

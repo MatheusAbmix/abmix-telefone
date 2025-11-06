@@ -27,22 +27,24 @@ class VoiceConversionService extends EventEmitter {
   }
 
   // Get voice configuration from database
-  private getTargetVoiceConfig(voiceType: 'masc' | 'fem') {
-    const voiceIdKey = voiceType === 'masc' ? 'VOZ_MASC_ID' : 'VOZ_FEM_ID';
+  private getTargetVoiceConfig(voiceType: 'masc' | 'fem' | 'natural') {
+    const voiceIdKey = voiceType === 'masc' ? 'VOZ_MASC_ID' : 
+                        voiceType === 'fem' ? 'VOZ_FEM_ID' : 'VOZ_NATURAL_ID';
     
     const voiceIdResult = queries.getSetting.get(voiceIdKey) as { value: string } | undefined;
     
     // Default voice IDs for voice conversion (natural sounding voices)
     const defaultVoices = {
-      masc: 'pNInz6obpgDQGcFmaJgB', // Adam - voz masculina natural
-      fem: 'EXAVITQu4vr4xnSDxMaL'   // Bella - voz feminina natural
+      masc: 'pNInz6obpgDQGcFmaJgB',  // Adam - voz masculina natural
+      fem: 'EXAVITQu4vr4xnSDxMaL',    // Bella - voz feminina natural
+      natural: 'onwK4e9ZLuTAKqWW03F9' // Daniel - voz neutra natural
     };
     
     return voiceIdResult?.value || defaultVoices[voiceType];
   }
 
   // Start voice conversion session
-  async startVoiceConversion(sessionId: string, targetVoiceType: 'masc' | 'fem'): Promise<boolean> {
+  async startVoiceConversion(sessionId: string, targetVoiceType: 'masc' | 'fem' | 'natural'): Promise<boolean> {
     try {
       const targetVoiceId = this.getTargetVoiceConfig(targetVoiceType);
       

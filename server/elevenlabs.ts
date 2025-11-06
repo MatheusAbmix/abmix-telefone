@@ -24,21 +24,28 @@ class ElevenLabsService extends EventEmitter {
   }
 
   // Get voice configuration from database
-  private getVoiceConfig(voiceType: 'masc' | 'fem') {
-    const voiceIdKey = voiceType === 'masc' ? 'VOZ_MASC_ID' : 'VOZ_FEM_ID';
+  private getVoiceConfig(voiceType: 'masc' | 'fem' | 'natural') {
+    const voiceIdKey = voiceType === 'masc' ? 'VOZ_MASC_ID' : 
+                        voiceType === 'fem' ? 'VOZ_FEM_ID' : 'VOZ_NATURAL_ID';
     const modelKey = 'MODELO';
     
     const voiceIdResult = queries.getSetting.get(voiceIdKey) as { value: string } | undefined;
     const modelResult = queries.getSetting.get(modelKey) as { value: string } | undefined;
     
-    const voiceId = voiceIdResult?.value || 'pNInz6obpgDQGcFmaJgB';
+    const defaultVoices = {
+      masc: 'pNInz6obpgDQGcFmaJgB',
+      fem: 'EXAVITQu4vr4xnSDxMaL',
+      natural: 'onwK4e9ZLuTAKqWW03F9' // Daniel - neutral natural voice
+    };
+    
+    const voiceId = voiceIdResult?.value || defaultVoices[voiceType];
     const model = modelResult?.value || 'eleven_multilingual_v2'; // Modelo mais natural
     
     return { voiceId, model };
   }
 
   // Start TTS session
-  async startTTSSession(sessionId: string, voiceType: 'masc' | 'fem'): Promise<boolean> {
+  async startTTSSession(sessionId: string, voiceType: 'masc' | 'fem' | 'natural'): Promise<boolean> {
     try {
       const { voiceId, model } = this.getVoiceConfig(voiceType);
       

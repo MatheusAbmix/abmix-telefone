@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,6 +9,8 @@ import { useCallStore } from '@/stores/useCallStore';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Volume2, VolumeX } from 'lucide-react';
+import { VolumeMeters } from './VolumeMeters';
+import { LatencyMonitor } from './LatencyMonitor';
 
 export function Settings() {
   const { toast } = useToast();
@@ -28,6 +30,15 @@ export function Settings() {
   });
   
   const [isMuted, setIsMuted] = useState(false);
+  const audioContextRef = useRef<AudioContext>();
+  
+  // Initialize AudioContext
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      (window as any).audioContext = audioContextRef.current;
+    }
+  }, []);
 
   // Fetch available voices from ElevenLabs
   const { data: voices, isLoading: voicesLoading } = useQuery({
@@ -507,6 +518,18 @@ export function Settings() {
           </p>
         </div>
 
+        {/* Latency Monitor - Real-time latency tracking */}
+        <LatencyMonitor />
+
+        {/* Volume Meters - Real-time audio level indicators */}
+        <div className="p-4 bg-muted/30 rounded-lg border border-border">
+          <h4 className="text-sm font-medium mb-4">Indicadores de Volume em Tempo Real</h4>
+          <VolumeMeters audioContext={audioContextRef.current} />
+          <p className="text-xs text-muted-foreground mt-3">
+            Barras verdes indicam nível de áudio. Verde: normal, Amarelo: alto, Vermelho: muito alto (clipping).
+          </p>
+        </div>
+
         {/* Switches */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -516,7 +539,11 @@ export function Settings() {
             <Switch
               id="auto-record"
               checked={settings.autoRecord}
-              onCheckedChange={(checked) => handleSettingChange('autoRecord', checked)}
+              onCheckedChange={(checked) => {
+                handleSettingChange('autoRecord', checked);
+                updateSettingsMutation.mutate({ AUTO_RECORD: checked ? 'true' : 'false' });
+              }}
+              data-testid="auto-record-switch"
             />
           </div>
 

@@ -37,7 +37,7 @@ export function DialerCard() {
     selectedProvider 
   } = useCallStore();
 
-  const [selectedVoice, setSelectedVoice] = useState<'masc' | 'fem'>(voiceType as 'masc' | 'fem');
+  const [selectedVoice, setSelectedVoice] = useState<'masc' | 'fem' | 'natural'>(voiceType as 'masc' | 'fem' | 'natural');
   const [selectedVoIPNumberId, setSelectedVoIPNumberId] = useState<string>('');
 
   // Fetch VoIP numbers
@@ -318,7 +318,7 @@ export function DialerCard() {
       {/* Voice Selection */}
       <div className="mb-4">
         <Label className="block text-sm text-muted-foreground mb-2">Tipo de Voz</Label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <Button
             onClick={() => {
               setSelectedVoice('masc');
@@ -349,6 +349,22 @@ export function DialerCard() {
           >
             <i className="fas fa-female text-sm"></i>
             Feminina
+          </Button>
+          
+          <Button
+            onClick={() => {
+              setSelectedVoice('natural');
+              toast({ title: "Voz selecionada", description: "Voz natural ativada" });
+            }}
+            className={`py-2 px-3 rounded-lg transition-colors flex flex-col items-center justify-center text-xs gap-1 ${
+              selectedVoice === 'natural' 
+                ? 'bg-abmix-green text-black' 
+                : 'bg-background border border-border text-foreground hover:bg-muted'
+            }`}
+            data-testid="natural-voice-button"
+          >
+            <i className="fas fa-user text-sm"></i>
+            Natural
           </Button>
         </div>
       </div>

@@ -52,7 +52,7 @@ export function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       phone_e164 TEXT NOT NULL,
-      voice_type TEXT DEFAULT 'masc' CHECK(voice_type IN ('masc', 'fem')),
+      voice_type TEXT DEFAULT 'masc' CHECK(voice_type IN ('masc', 'fem', 'natural')),
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       UNIQUE(phone_e164)
     )
@@ -101,6 +101,7 @@ export function initDatabase() {
   const defaultSettings = [
     { key: 'VOZ_MASC_ID', value: 'pNInz6obpgDQGcFmaJgB' }, // Default ElevenLabs voice
     { key: 'VOZ_FEM_ID', value: 'EXAVITQu4vr4xnSDxMaL' }, // Default ElevenLabs voice
+    { key: 'VOZ_NATURAL_ID', value: 'onwK4e9ZLuTAKqWW03F9' }, // Natural voice - Daniel (neutral, clear)
     { key: 'MODELO', value: 'eleven_multilingual_v2' }, // Modelo mais natural
     { key: 'VELOCIDADE', value: '1.0' },
     { key: 'ESTILO', value: 'neutro' },

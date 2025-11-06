@@ -97,6 +97,56 @@ export function initDatabase() {
     )
   `);
 
+  // Agent Sessions table for AI conversation sessions
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS agent_sessions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      call_id TEXT NOT NULL UNIQUE,
+      system_prompt TEXT NOT NULL,
+      temperature REAL DEFAULT 0.7,
+      max_tokens INTEGER DEFAULT 150,
+      status TEXT DEFAULT 'active' CHECK(status IN ('active', 'paused', 'ended')),
+      started_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      ended_at DATETIME
+    )
+  `);
+
+  // Agent Messages table for conversation history
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS agent_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      session_id INTEGER NOT NULL,
+      role TEXT NOT NULL CHECK(role IN ('system', 'user', 'assistant')),
+      content TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (session_id) REFERENCES agent_sessions(id) ON DELETE CASCADE
+    )
+  `);
+
+  // Effect Presets table for audio effects
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS effect_presets (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL UNIQUE,
+      noise_reduction BOOLEAN DEFAULT false,
+      equalization TEXT,
+      gain REAL DEFAULT 1.0,
+      normalization BOOLEAN DEFAULT false,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Codec Preferences table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS codec_preferences (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      codec_name TEXT NOT NULL UNIQUE,
+      priority INTEGER NOT NULL,
+      enabled BOOLEAN DEFAULT true,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
   // Insert default settings if they don't exist
   const defaultSettings = [
     { key: 'VOZ_MASC_ID', value: 'pNInz6obpgDQGcFmaJgB' }, // Default ElevenLabs voice
@@ -118,6 +168,33 @@ export function initDatabase() {
   
   for (const setting of defaultSettings) {
     insertSetting.run(setting.key, setting.value);
+  }
+
+  // Insert default FaleVono number from environment variables if configured
+  const faleVonoPassword = process.env.FALEVONO_PASSWORD;
+  if (faleVonoPassword) {
+    const insertVoipNumber = db.prepare(`
+      INSERT OR IGNORE INTO voip_numbers 
+      (name, number, provider, sip_username, sip_password, sip_server, is_default, status) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    
+    try {
+      insertVoipNumber.run(
+        'FaleVono - SP',
+        '+5511920838833',
+        'falevono',
+        'Felipe_Manieri',
+        faleVonoPassword,
+        'vono2.me',
+        true,
+        'active'
+      );
+      console.log('[DB] Default FaleVono number inserted successfully');
+    } catch (error) {
+      // Number already exists, ignore error
+      console.log('[DB] FaleVono number already exists');
+    }
   }
 
   console.log('[DB] Database initialized successfully');
@@ -164,5 +241,23 @@ export const queries = {
   addVoipNumber: db.prepare('INSERT INTO voip_numbers (name, number, provider, sip_username, sip_password, sip_server, is_default, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'),
   updateVoipNumber: db.prepare('UPDATE voip_numbers SET name = ?, number = ?, provider = ?, sip_username = ?, sip_password = ?, sip_server = ?, status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?'),
   setDefaultVoipNumber: db.prepare('UPDATE voip_numbers SET is_default = CASE WHEN id = ? THEN true ELSE false END'),
-  deleteVoipNumber: db.prepare('DELETE FROM voip_numbers WHERE id = ?')
+  deleteVoipNumber: db.prepare('DELETE FROM voip_numbers WHERE id = ?'),
+
+  // Agent Sessions
+  createAgentSession: db.prepare('INSERT INTO agent_sessions (call_id, system_prompt, temperature, max_tokens, status) VALUES (?, ?, ?, ?, ?)'),
+  getAgentSessionByCallId: db.prepare('SELECT * FROM agent_sessions WHERE call_id = ?'),
+  updateAgentSessionStatus: db.prepare('UPDATE agent_sessions SET status = ?, ended_at = CURRENT_TIMESTAMP WHERE call_id = ?'),
+  updateAgentSessionPrompt: db.prepare('UPDATE agent_sessions SET system_prompt = ? WHERE call_id = ?'),
+
+  // Agent Messages
+  addAgentMessage: db.prepare('INSERT INTO agent_messages (session_id, role, content) VALUES (?, ?, ?)'),
+  getAgentMessagesBySessionId: db.prepare('SELECT * FROM agent_messages WHERE session_id = ? ORDER BY created_at ASC'),
+  
+  // Effect Presets
+  getAllEffectPresets: db.prepare('SELECT * FROM effect_presets ORDER BY name ASC'),
+  addEffectPreset: db.prepare('INSERT INTO effect_presets (name, noise_reduction, equalization, gain, normalization) VALUES (?, ?, ?, ?, ?)'),
+  
+  // Codec Preferences
+  getAllCodecPreferences: db.prepare('SELECT * FROM codec_preferences ORDER BY priority ASC'),
+  addCodecPreference: db.prepare('INSERT INTO codec_preferences (codec_name, priority, enabled) VALUES (?, ?, ?)')
 };

@@ -20,7 +20,7 @@ export function Favorites() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => api.deleteFavorite(id),
+    mutationFn: (id: string) => api.removeFavorite(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/favorites'] });
       toast({
@@ -38,17 +38,17 @@ export function Favorites() {
 
   const handleDialFavorite = (favorite: Favorite) => {
     // Set the number in the dialer component
-    setPhoneNumber(favorite.number);
+    setPhoneNumber(favorite.phoneE164);
     
     // Also trigger the dialer to update its local state
     const event = new CustomEvent('setDialerNumber', { 
-      detail: { number: favorite.number } 
+      detail: { number: favorite.phoneE164 } 
     });
     window.dispatchEvent(event);
     
     toast({
       title: "Número preenchido",
-      description: `${favorite.name}: ${favorite.number}`,
+      description: `${favorite.name}: ${favorite.phoneE164}`,
     });
   };
 
@@ -113,10 +113,8 @@ export function Favorites() {
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-semibold">{favorite.name}</h4>
-                  <p className="text-sm text-gray-400 font-mono">{favorite.number}</p>
-                  {favorite.notes && (
-                    <p className="text-xs text-gray-500 mt-1">{favorite.notes}</p>
-                  )}
+                  <p className="text-sm text-gray-400 font-mono">{favorite.phoneE164}</p>
+                  <p className="text-xs text-gray-500 mt-1">Voz: {favorite.voiceType === 'masc' ? 'Masculina' : 'Feminina'}</p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Button

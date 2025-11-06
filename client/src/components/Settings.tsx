@@ -3,10 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
 import { useCallStore } from '@/stores/useCallStore';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Volume2, VolumeX } from 'lucide-react';
 
 export function Settings() {
   const { toast } = useToast();
@@ -24,6 +26,8 @@ export function Settings() {
     mascVoiceId: 'pNInz6obpgDQGcFmaJgB', // Default male voice
     femVoiceId: '21m00Tcm4TlvDq8ikWAM', // Default female voice
   });
+  
+  const [isMuted, setIsMuted] = useState(false);
 
   // Fetch available voices from ElevenLabs
   const { data: voices, isLoading: voicesLoading } = useQuery({
@@ -89,6 +93,41 @@ export function Settings() {
       }));
     }
   }, [serverSettings]);
+
+  // Control real audio volume
+  const handleVolumeChange = (value: number[]) => {
+    const newVolume = value[0];
+    setSettings(prev => ({ ...prev, volume: newVolume }));
+    
+    // Apply to all audio elements
+    const audioElements = document.querySelectorAll('audio');
+    audioElements.forEach(audio => {
+      audio.volume = newVolume / 100;
+    });
+    
+    // Update global audio context if available
+    if (typeof window !== 'undefined' && (window as any).audioContext) {
+      const audioContext = (window as any).audioContext;
+      if (audioContext.gainNode) {
+        audioContext.gainNode.gain.value = newVolume / 100;
+      }
+    }
+  };
+  
+  const toggleMute = () => {
+    const newMuteState = !isMuted;
+    setIsMuted(newMuteState);
+    
+    const audioElements = document.querySelectorAll('audio');
+    audioElements.forEach(audio => {
+      audio.muted = newMuteState;
+    });
+    
+    toast({
+      title: newMuteState ? "Áudio Silenciado" : "Áudio Ativado",
+      description: newMuteState ? "Volume do microfone/alto-falante desligado" : "Volume restaurado",
+    });
+  };
 
   const handleSettingChange = (key: string, value: any) => {
     setSettings(prev => ({
@@ -422,20 +461,50 @@ export function Settings() {
           />
         </div>
 
-        {/* Volume */}
-        <div>
-          <Label htmlFor="volume" className="text-sm font-medium mb-2 block">
-            Volume ({settings.volume}%)
-          </Label>
-          <Input
-            id="volume"
-            type="range"
-            min="0"
-            max="100"
-            value={settings.volume}
-            onChange={(e) => handleSettingChange('volume', parseInt(e.target.value))}
-            className="bg-background border-border"
+        {/* Volume Control with Mute */}
+        <div className="space-y-3 p-4 bg-muted/30 rounded-lg border border-border">
+          <div className="flex items-center justify-between">
+            <Label className="text-sm font-medium flex items-center gap-2">
+              {isMuted ? <VolumeX className="h-4 w-4 text-red-500" /> : <Volume2 className="h-4 w-4 text-abmix-green" />}
+              Volume do Sistema
+            </Label>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground font-mono">
+                {isMuted ? '0%' : `${settings.volume}%`}
+              </span>
+              <Button
+                size="sm"
+                variant={isMuted ? "destructive" : "outline"}
+                className={isMuted ? "" : "border-border text-foreground hover:bg-muted"}
+                onClick={toggleMute}
+                data-testid="mute-toggle-button"
+              >
+                {isMuted ? (
+                  <>
+                    <VolumeX className="h-4 w-4 mr-1" />
+                    Desmutar
+                  </>
+                ) : (
+                  <>
+                    <Volume2 className="h-4 w-4 mr-1" />
+                    Mutar
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+          <Slider
+            value={[settings.volume]}
+            onValueChange={handleVolumeChange}
+            max={100}
+            step={1}
+            disabled={isMuted}
+            className="w-full"
+            data-testid="volume-slider"
           />
+          <p className="text-xs text-muted-foreground">
+            Controla o volume geral do áudio (microfone e alto-falante durante chamadas)
+          </p>
         </div>
 
         {/* Switches */}

@@ -47,7 +47,7 @@ docker logs $CONTAINER --tail 50 | grep -E "SIP_MODULE|Username|Registration"
 **❌ Se ainda aparecer:**
 ```
 sip.send is not a function
-Username: Fe120784!
+Username: [senha_incorreta]
 ```
 
 Rode o comando novamente ou me avise.

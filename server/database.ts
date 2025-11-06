@@ -170,8 +170,11 @@ export function initDatabase() {
     insertSetting.run(setting.key, setting.value);
   }
 
-  // Insert default FaleVono number from environment variables if configured
+  // Insert default FaleVono number from environment variables
   const faleVonoPassword = process.env.FALEVONO_PASSWORD;
+  const sipUsername = process.env.SIP_USERNAME || 'Felipe_Manieri';
+  const voipNumber = process.env.VOIP_NUMBER || '+5511920838833';
+  
   if (faleVonoPassword) {
     const insertVoipNumber = db.prepare(`
       INSERT OR IGNORE INTO voip_numbers 
@@ -182,17 +185,16 @@ export function initDatabase() {
     try {
       insertVoipNumber.run(
         'FaleVono - SP',
-        '+5511920838833',
+        voipNumber,
         'falevono',
-        'Felipe_Manieri',
+        sipUsername,
         faleVonoPassword,
         'vono2.me',
         true,
         'active'
       );
-      console.log('[DB] Default FaleVono number inserted successfully');
+      console.log('[DB] FaleVono number configured');
     } catch (error) {
-      // Number already exists, ignore error
       console.log('[DB] FaleVono number already exists');
     }
   }

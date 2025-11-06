@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface VoiceSelectorProps {
-  value: 'masc' | 'fem';
-  onChange: (value: 'masc' | 'fem') => void;
+  value: 'masc' | 'fem' | 'natural';
+  onChange: (value: 'masc' | 'fem' | 'natural') => void;
 }
 
 export function VoiceSelector({ value, onChange }: VoiceSelectorProps) {
@@ -23,6 +23,9 @@ export function VoiceSelector({ value, onChange }: VoiceSelectorProps) {
           </SelectItem>
           <SelectItem value="fem" data-testid="voice-fem">
             Feminina
+          </SelectItem>
+          <SelectItem value="natural" data-testid="voice-natural">
+            Natural
           </SelectItem>
         </SelectContent>
       </Select>

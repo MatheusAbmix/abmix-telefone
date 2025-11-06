@@ -47,32 +47,6 @@ export function Sidebar() {
           <i className="fas fa-volume-up w-4"></i>
           <span className={activeView === 'vozes' ? 'font-medium' : ''}>Vozes & TTS</span>
         </button>
-
-        <button 
-          onClick={() => handleNavClick('enhancer')}
-          className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-            activeView === 'enhancer' 
-              ? 'bg-abmix-green/10 text-abmix-green' 
-              : 'hover:bg-muted text-muted-foreground'
-          }`}
-          data-testid="nav-enhancer"
-        >
-          <i className="fas fa-magic w-4"></i>
-          <span className={activeView === 'enhancer' ? 'font-medium' : ''}>Voz Natural</span>
-        </button>
-        
-        <button 
-          onClick={() => handleNavClick('audio')}
-          className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-            activeView === 'audio' 
-              ? 'bg-abmix-green/10 text-abmix-green' 
-              : 'hover:bg-muted text-muted-foreground'
-          }`}
-          data-testid="nav-audio"
-        >
-          <i className="fas fa-music w-4"></i>
-          <span className={activeView === 'audio' ? 'font-medium' : ''}>Áudio & Efeitos</span>
-        </button>
         
         <button 
           onClick={() => handleNavClick('chamadas')}

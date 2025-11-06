@@ -23,7 +23,7 @@ interface CallState {
   isRecording: boolean;
   livePrompt: string;
   selectedProvider: string;
-  activeView: 'discagem' | 'vozes' | 'enhancer' | 'audio' | 'chamadas' | 'favoritos' | 'gravacoes' | 'configuracoes' | 'numeros';
+  activeView: 'discagem' | 'vozes' | 'chamadas' | 'favoritos' | 'gravacoes' | 'configuracoes' | 'numeros';
   
   // Actions
   setCallState: (state: 'IDLE' | 'RINGING' | 'CONNECTED' | 'ENDED') => void;
@@ -44,7 +44,7 @@ interface CallState {
   setIsRecording: (recording: boolean) => void;
   setLivePrompt: (prompt: string) => void;
   setSelectedProvider: (provider: string) => void;
-  setActiveView: (view: 'discagem' | 'vozes' | 'enhancer' | 'audio' | 'chamadas' | 'favoritos' | 'gravacoes' | 'configuracoes' | 'numeros') => void;
+  setActiveView: (view: 'discagem' | 'vozes' | 'chamadas' | 'favoritos' | 'gravacoes' | 'configuracoes' | 'numeros') => void;
 }
 
 export const useCallStore = create<CallState>((set, get) => ({

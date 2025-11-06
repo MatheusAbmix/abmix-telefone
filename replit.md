@@ -29,6 +29,13 @@ The system is built as an ESM (ECMAScript Modules) project.
 - **AI Agent Control**: Management of AI conversation agents.
 - **Live Prompt Injection**: Dynamic modification of AI prompts during calls.
 - **Call Management**: Unified interface for outbound calls and call control.
+- **VoicesHub**: Centralized voice management interface consolidating all voice-related features:
+  - Voice Configuration: Configure masculine, feminine, and natural voice IDs
+  - Voice Library: Browse and test all available ElevenLabs voices
+  - Voice Testing: Real-time text-to-speech preview with custom text
+  - Voice Cloning: Convert audio files to different voices using ElevenLabs Speech-to-Speech API
+  - Audio Effects: Apply effects like noise reduction, equalization, amplification, and normalization
+  - Advanced Settings: Adjust stability, similarity, style, speaker boost, and AI model selection
 
 ### System Design Choices
 The architecture emphasizes modularity, scalability, and ease of deployment. Key decisions include:
@@ -46,6 +53,7 @@ The architecture emphasizes modularity, scalability, and ease of deployment. Key
 - **Replit Development Environment**: UDP ports are blocked, preventing SIP registration and RTP media transmission in development mode. The system will show timeout errors when attempting calls, and audio will not be transmitted. **Solution**: Deploy to production (EasyPanel, VPS, or local Docker) where UDP traffic is allowed on ports 6060 (SIP) and 8000 (RTP).
 - **Audio Quality**: Currently limited to G.711 codec (8kHz, narrowband). Future enhancement: add wideband codecs like Opus for better audio quality.
 - **Voice Type Selection**: Currently defaults to masculine voice for all SIP calls. TODO: Add voice type configuration per VoIP number or call.
+- **Audio Effects**: Effects processing is currently a placeholder implementation. Production deployment requires integration with ffmpeg or similar audio processing library for real-time effects.
 
 ## External Dependencies
 

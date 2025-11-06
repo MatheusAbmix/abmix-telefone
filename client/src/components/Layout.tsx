@@ -10,12 +10,9 @@ import {
   Transcripts,
   Settings
 } from '.';
-import { VoiceTester } from './VoiceTester';
-import { VoiceCloning } from './VoiceCloning';
-import { AudioEffects } from './AudioEffects';
+import { VoicesHub } from './VoicesHub';
 import { DubbingTranslation } from './DubbingTranslation';
 import { CallManager } from './CallManager';
-import { VoiceEnhancer } from './VoiceEnhancer';
 import { VoIPNumbers } from './VoIPNumbers';
 import { useCallStore } from '@/stores/useCallStore';
 import { AudioMonitor } from './AudioMonitor';
@@ -61,28 +58,8 @@ export function Layout() {
         
       case 'vozes':
         return (
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <VoiceTester />
-              <VoiceCloning />
-            </div>
-          </div>
-        );
-
-      case 'enhancer':
-        return (
-          <div className="max-w-4xl mx-auto">
-            <VoiceEnhancer />
-          </div>
-        );
-
-      case 'audio':
-        return (
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <AudioEffects />
-              <DubbingTranslation />
-            </div>
+          <div className="max-w-7xl mx-auto">
+            <VoicesHub />
           </div>
         );
 

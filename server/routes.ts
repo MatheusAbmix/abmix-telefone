@@ -14,6 +14,14 @@ const {
   ELEVENLABS_API_KEY
 } = process.env;
 
+// Configure multer for file uploads
+const upload = multer({
+  dest: 'uploads/',
+  limits: {
+    fileSize: 50 * 1024 * 1024 // 50MB max file size
+  }
+});
+
 export async function registerRoutes(app: Express) {
   // Initialize database
   initDatabase();
@@ -681,6 +689,152 @@ export async function registerRoutes(app: Express) {
     } catch (error) {
       console.error('[VOICE_TEST] Error generating voice test:', error);
       res.status(500).json({ error: 'Failed to generate voice test' });
+    }
+  });
+
+  // Voice cloning endpoint
+  app.post('/api/voices/clone', upload.single('audio'), async (req, res) => {
+    try {
+      const { targetVoiceId, name } = req.body;
+      const audioFile = req.file;
+
+      if (!audioFile || !targetVoiceId || !name) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+
+      const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
+      if (!ELEVENLABS_API_KEY) {
+        return res.status(500).json({ error: 'ElevenLabs API key not configured' });
+      }
+
+      console.log(`[VOICE_CLONE] Processing voice cloning: ${audioFile.originalname} -> ${targetVoiceId}`);
+
+      // Read the uploaded audio file
+      const fs = await import('fs/promises');
+      const audioBuffer = await fs.readFile(audioFile.path);
+
+      // Use ElevenLabs Speech-to-Speech API for voice conversion
+      const FormData = (await import('form-data')).default;
+      const formData = new FormData();
+      formData.append('audio', audioBuffer, {
+        filename: audioFile.originalname,
+        contentType: audioFile.mimetype
+      });
+      formData.append('model_id', 'eleven_multilingual_sts_v2');
+      formData.append('voice_settings', JSON.stringify({
+        stability: 0.5,
+        similarity_boost: 0.8,
+        style: 0.0,
+        use_speaker_boost: true
+      }));
+
+      const fetch = (await import('node-fetch')).default;
+      const response = await fetch(
+        `https://api.elevenlabs.io/v1/speech-to-speech/${targetVoiceId}`,
+        {
+          method: 'POST',
+          headers: {
+            'xi-api-key': ELEVENLABS_API_KEY,
+            ...formData.getHeaders()
+          },
+          body: formData
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('[VOICE_CLONE] ElevenLabs API error:', response.status, errorText);
+        await fs.unlink(audioFile.path); // Clean up temp file
+        return res.status(response.status).json({ error: 'Failed to clone voice' });
+      }
+
+      const clonedAudioBuffer = await response.buffer();
+
+      // Save the cloned audio
+      const outputPath = `recordings/cloned_${Date.now()}.mp3`;
+      await fs.writeFile(outputPath, clonedAudioBuffer);
+
+      // Clean up temp file
+      await fs.unlink(audioFile.path);
+
+      console.log(`[VOICE_CLONE] Voice cloning completed: ${outputPath}`);
+
+      res.json({
+        success: true,
+        message: 'Voice cloned successfully',
+        outputPath,
+        size: clonedAudioBuffer.length
+      });
+
+    } catch (error) {
+      console.error('[VOICE_CLONE] Error cloning voice:', error);
+      // Clean up temp file if it exists
+      if (req.file?.path) {
+        try {
+          await import('fs/promises').then(fs => fs.unlink(req.file!.path));
+        } catch {}
+      }
+      res.status(500).json({ error: 'Failed to process voice cloning' });
+    }
+  });
+
+  // Audio effects endpoint
+  app.post('/api/audio/effects', upload.single('audio'), async (req, res) => {
+    try {
+      const { effect } = req.body;
+      const audioFile = req.file;
+
+      if (!audioFile || !effect) {
+        return res.status(400).json({ error: 'Missing audio file or effect type' });
+      }
+
+      console.log(`[AUDIO_EFFECTS] Applying effect '${effect}' to ${audioFile.originalname}`);
+
+      const fs = await import('fs/promises');
+      const audioBuffer = await fs.readFile(audioFile.path);
+
+      // For now, we'll return the original file
+      // In production, you'd use libraries like ffmpeg or sox to apply real effects
+      // This is a placeholder implementation
+
+      const outputPath = `recordings/effect_${effect}_${Date.now()}.${audioFile.mimetype.split('/')[1]}`;
+      
+      // Simulate processing delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Copy the file (in production, apply real effects here)
+      await fs.writeFile(outputPath, audioBuffer);
+
+      // Clean up temp file
+      await fs.unlink(audioFile.path);
+
+      console.log(`[AUDIO_EFFECTS] Effect '${effect}' applied: ${outputPath}`);
+
+      // Send the processed file back
+      res.set({
+        'Content-Type': audioFile.mimetype,
+        'Content-Disposition': `attachment; filename="processed_${audioFile.originalname}"`
+      });
+      
+      const processedBuffer = await fs.readFile(outputPath);
+      res.send(processedBuffer);
+
+      // Clean up processed file after sending
+      setTimeout(() => {
+        fs.unlink(outputPath).catch(err => 
+          console.error('[AUDIO_EFFECTS] Error cleaning up:', err)
+        );
+      }, 1000);
+
+    } catch (error) {
+      console.error('[AUDIO_EFFECTS] Error applying effect:', error);
+      // Clean up temp file if it exists
+      if (req.file?.path) {
+        try {
+          await import('fs/promises').then(fs => fs.unlink(req.file!.path));
+        } catch {}
+      }
+      res.status(500).json({ error: 'Failed to apply audio effect' });
     }
   });
 

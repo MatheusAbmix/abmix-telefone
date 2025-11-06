@@ -1,0 +1,89 @@
+ocumentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Nov  6 22:26:13 UTC 2025
+
+  System load:  0.03               Processes:             279
+  Usage of /:   6.2% of 386.42GB   Users logged in:       0
+  Memory usage: 8%                 IPv4 address for eth0: 72.60.149.107
+  Swap usage:   0%                 IPv6 address for eth0: 2a02:4780:66:8d5b::1
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+28 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+1 updates could not be installed automatically. For more details,
+see /var/log/unattended-upgrades/unattended-upgrades.log
+
+Last login: Thu Nov  6 22:19:29 2025 from 169.254.0.1
+root@vps:~# # 1. Entrar na pasta do projeto
+cd abmix
+
+# 2. Parar o servidor
+pm2 stop abmix
+# OU se for Docker:
+docker-compose down
+
+# 3. PUXAR ATUALIZAÇÕES DO GIT
+git pull origin main
+
+# 4. Reinstalar dependências (caso tenha mudado)
+npm install
+
+# 5. Rebuild
+npm run build
+
+# 6. Reiniciar
+pm2 restart abmix
+# OU Docker:
+docker-compose up -d --build
+-bash: cd: abmix: No such file or directory
+Command 'pm2' not found, did you mean:
+  command 'pom2' from deb libpod-pom-perl (2.01-4)
+  command 'pmc' from deb linuxptp (4.0-1ubuntu1.1)
+  command 'wm2' from deb wm2 (4+svn20090216-4build1)
+  command 'pms' from deb pms (0.42-1.1)
+  command 'tpm2' from deb tpm2-tools (5.4-1)
+  command 'gm2' from deb gm2 (4:13.2.0-2ubuntu1)
+  command 'pmw' from deb pmw (1:5.22-1)
+  command 'pmg' from deb python3-pymatgen (2023.06.23+dfsg1-2build1)
+  command 'pm' from deb powerman (2.3.27-4)
+Try: apt install <deb name>
+Command 'docker-compose' not found, but can be installed with:
+snap install docker          # version 28.4.0, or
+snap install docker          # version 28.1.1+1
+apt  install docker-compose  # version 1.29.2-6
+See 'snap info <snapname>' for additional versions.
+fatal: not a git repository (or any of the parent directories): .git
+Command 'npm' not found, but can be installed with:
+apt install npm
+Command 'npm' not found, but can be installed with:
+apt install npm
+Command 'pm2' not found, did you mean:
+  command 'pom2' from deb libpod-pom-perl (2.01-4)
+  command 'tpm2' from deb tpm2-tools (5.4-1)
+  command 'pms' from deb pms (0.42-1.1)
+  command 'gm2' from deb gm2 (4:13.2.0-2ubuntu1)
+  command 'pmc' from deb linuxptp (4.0-1ubuntu1.1)
+  command 'pmw' from deb pmw (1:5.22-1)
+  command 'pmg' from deb python3-pymatgen (2023.06.23+dfsg1-2build1)
+  command 'pm' from deb powerman (2.3.27-4)
+  command 'wm2' from deb wm2 (4+svn20090216-4build1)
+Try: apt install <deb name>
+Command 'docker-compose' not found, but can be installed with:
+snap install docker          # version 28.4.0, or
+snap install docker          # version 28.1.1+1
+apt  install docker-compose  # version 1.29.2-6
+See 'snap info <snapname>' for additional versions.
+root@vps:~# 

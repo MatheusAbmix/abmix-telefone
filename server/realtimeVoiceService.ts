@@ -5,6 +5,7 @@ config();
 import { EventEmitter } from 'events';
 import WebSocket from 'ws';
 import { queries } from './database';
+import { agentOrchestrator } from './agentOrchestrator';
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 
@@ -85,15 +86,30 @@ class RealtimeVoiceService extends EventEmitter {
         }));
       });
 
-      sttWs.on('message', (data) => {
+      sttWs.on('message', async (data) => {
         try {
           const result = JSON.parse(data.toString());
           
           if (result.text && result.is_final && session.enabled) {
             console.log(`[REALTIME_VOICE] STT Result: "${result.text}"`);
             
-            // Send transcribed text to TTS for voice conversion
-            this.convertTextToTargetVoice(callSid, result.text);
+            // Check if AI agent is active for this call
+            const isAgentActive = agentOrchestrator.isAgentActive(callSid);
+            
+            if (isAgentActive) {
+              // Send to OpenAI for AI response
+              console.log(`[REALTIME_VOICE] Sending to AI agent: "${result.text}"`);
+              const aiResponse = await agentOrchestrator.processUserInput(callSid, result.text);
+              
+              if (aiResponse) {
+                console.log(`[REALTIME_VOICE] AI Response: "${aiResponse}"`);
+                // Convert AI response to target voice and send to caller
+                this.convertTextToTargetVoice(callSid, aiResponse);
+              }
+            } else {
+              // No AI agent, just do voice conversion
+              this.convertTextToTargetVoice(callSid, result.text);
+            }
           }
         } catch (error) {
           console.error('[REALTIME_VOICE] STT parse error:', error);

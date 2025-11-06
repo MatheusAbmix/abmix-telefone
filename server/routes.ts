@@ -91,6 +91,25 @@ export async function registerRoutes(app: Express) {
       
       // Store the provider for this call
       activeCallProviders.set(callId, provider);
+
+      // Auto-start AI agent for this call with default prompt
+      try {
+        const defaultPrompt = `Você é um assistente virtual inteligente em português brasileiro. 
+Seja educado, profissional e prestativo nas conversas telefônicas. 
+Mantenha respostas concisas e diretas ao ponto.`;
+        
+        await agentOrchestrator.startAgent({
+          callId,
+          systemPrompt: defaultPrompt,
+          temperature: 0.7,
+          autoStart: true
+        });
+        
+        console.log(`[CALL] AI agent auto-started for call ${callId}`);
+      } catch (error) {
+        console.error('[CALL] Error auto-starting AI agent:', error);
+        // Continue even if AI agent fails to start
+      }
       
       res.json({
         success: true,
@@ -132,6 +151,15 @@ export async function registerRoutes(app: Express) {
       } else {
         await provider.hangup(callSid);
         activeCallProviders.delete(callSid);
+      }
+
+      // Auto-end AI agent for this call
+      try {
+        await agentOrchestrator.endAgent(callSid);
+        console.log(`[CALL] AI agent auto-ended for call ${callSid}`);
+      } catch (error) {
+        console.error('[CALL] Error auto-ending AI agent:', error);
+        // Continue even if AI agent cleanup fails
       }
       
       res.json({

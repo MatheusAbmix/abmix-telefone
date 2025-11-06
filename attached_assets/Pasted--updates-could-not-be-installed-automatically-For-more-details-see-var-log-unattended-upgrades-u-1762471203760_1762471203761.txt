@@ -1,0 +1,66 @@
+ updates could not be installed automatically. For more details,
+see /var/log/unattended-upgrades/unattended-upgrades.log
+
+Last login: Thu Nov  6 23:11:08 2025 from 169.254.0.1
+root@vps:~# cd /root/abmix && git pull && npm install && npm run build && pm2 restart abmix
+remote: Enumerating objects: 19, done.
+remote: Counting objects: 100% (19/19), done.
+remote: Compressing objects: 100% (5/5), done.
+remote: Total 11 (delta 3), reused 11 (delta 3), pack-reused 0 (from 0)
+Unpacking objects: 100% (11/11), 158.95 KiB | 11.35 MiB/s, done.
+From https://github.com/Abmix-tech-Programacao/abmix-telefone
+   041266e..7833368  main       -> origin/main
+Updating 041266e..7833368
+Fast-forward
+ .local/state/replit/agent/.agent_state_main.bin                                           | Bin 146543 -> 154775 bytes
+ .local/state/replit/agent/repl_state.bin                                                  | Bin 5525 -> 5525 bytes
+ ...ot-4096-Nov-6-23-13-drwx-12-root-root-4096-Nov-6-23-13-1762470924899_1762470924899.txt |  39 ++++++++++++++++++++++++++++++++
+ attached_assets/Pasted-root-vps-abmix-pm2-list--1762471014768_1762471014768.txt           |  53 ++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 92 insertions(+)
+ create mode 100644 attached_assets/Pasted-al-660-drwxr-xr-x-13-root-root-4096-Nov-6-23-13-drwx-12-root-root-4096-Nov-6-23-13-1762470924899_1762470924899.txt
+ create mode 100644 attached_assets/Pasted-root-vps-abmix-pm2-list--1762471014768_1762471014768.txt
+
+up to date, audited 804 packages in 3s
+
+97 packages are looking for funding
+  run `npm fund` for details
+
+11 vulnerabilities (3 low, 7 moderate, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --external:vite --external:./vite.js --bundle --format=esm --outdir=dist && npm run build:clean
+
+vite v5.4.19 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 13 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2057 modules transformed.
+../dist/index.html                   1.08 kB │ gzip:   0.62 kB
+../dist/assets/index-CqYlBUYm.css   64.12 kB │ gzip:  11.49 kB
+../dist/assets/index-hnSWGvYX.js   470.74 kB │ gzip: 141.15 kB
+✓ built in 4.15s
+
+  dist/index.js  140.6kb
+
+⚡ Done in 13ms
+
+> rest-express@1.0.0 build:clean
+> node -e "import fs from 'fs'; const p='dist/public'; if(fs.existsSync(p)){fs.rmSync(p,{recursive:true});}"
+
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [abmix](ids: [ 0 ])
+[PM2] [abmix](0) ✓
+┌────┬──────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name     │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ abmix    │ default     │ N/A     │ fork    │ 67696    │ 0s     │ 45   │ online    │ 0%       │ 19.0mb   │ root     │ disabled │
+└────┴──────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@vps:~/abmix# 

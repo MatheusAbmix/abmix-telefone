@@ -1,0 +1,210 @@
+API de Speech to Text
+
+Acesso à API de fala para texto
+
+Horas incluídas
+
+Preço por hora incluída
+
+Preço por hora adicional
+
+Plataforma de Agentes
+
+Acesso à Plataforma de Agentes
+
+Minutos de ElevenLabs Agents
+
+Custo de minutos extras
+
+Imagem & Vídeo
+
+Custo de geração de imagem
+
+Custo de geração de vídeo
+
+Custo de LipSync
+
+Custo de upscaling
+
+Imagens incluídas
+
+Vídeos incluídos
+
+Upscaling incluído
+
+LipSync incluído
+
+Eleven Music
+
+Minutos por mês
+
+Preço por minuto adicional
+
+Uso comercial
+
+Audio Native
+
+Acesso ao Audio Native
+
+Número máximo de projetos
+
+Dublagem Automática
+
+Acesso à Dublagem Automática
+
+Minutos de vídeo (com marca d'água)
+
+Minutos de vídeo (sem marca d'água)
+
+Dubbing Studio
+
+Acesso ao Dubbing Studio
+
+Minutos de vídeo (com marca d'água)
+
+Minutos de vídeo (sem marca d'água)
+
+Efeitos sonoros
+
+Text to Sound Effects
+
+Segundos de Text to Sound Effects
+
+Voice Isolator
+
+Voice Isolator
+
+Minutos de isolamento de voz
+
+Licenciamento e análise
+
+Licença comercial
+
+Sem exigência de atribuição
+
+Análise de uso
+
+Qualidade e formatos
+
+Qualidade do áudio
+
+Formatos de API
+
+Free
+
+$ 0/para sempre
+
+Para quem deseja experimentar o áudio com IA mais avançado
+
+Assinado
+10.000
+
+10.000 créditos (~10 mín)
+
+20.000 créditos (~20 mín)
+
+2
+
+3
+
+10 mín
+
+3 vozes
+
+0 PVCs
+
+3
+
+12 minutos
+
+2 horas e 30 minutos
+
+15 mín
+
+Indisponível
+
+250-2.650 créditos por imagem
+
+Até 40 imagens
+
+11 mín
+
+5
+
+250
+
+10 mín
+
+128 kbps, 44.1kHz
+
+16kHz PCM, 128 kbps MP3, uLaw
+
+Starter
+
+$ 5/mês
+
+Para entusiastas criando projetos com áudio criado com IA
+
+Assinado
+30.000
+
+30.000 créditos (~30 mín)
+
+60.000 créditos (~60 mín)
+
+3
+
+4
+
+30 mín
+
+10 vozes
+
+0 PVCs
+
+20
+
+1 hora
+
+12 horas e 30 minutos
+
+$ 0,40
+
+50 mín
+
+Indisponível
+
+250-2.650 créditos por imagem
+
+234-5.000 créditos por segundo
+
+A partir de 250 créditos por Imagem
+A partir de 1.000 créditos por Vídeo
+
+A partir de 67 créditos
+
+Até 120 imagens
+
+Até 128 segundos
+
+120 imagens
+30 segundos de vídeo
+
+Até 450 segundos
+
+11 22 mín
+
+with restrictions
+
+15
+
+6
+
+750
+
+30 mín
+
+128 kbps, 44.1kHz
+
+22.05kHz PCM, 128 kbps MP3, uLaw
+

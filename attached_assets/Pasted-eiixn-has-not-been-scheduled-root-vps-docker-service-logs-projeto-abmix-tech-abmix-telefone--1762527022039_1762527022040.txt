@@ -1,0 +1,103 @@
+eiixn has not been scheduled
+
+root@vps:~# docker service logs projeto-abmix-tech_abmix-telefone --tail 500 2>&1 | grep -v "health" | head -100
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "tag": "aU7v84Ucyge0c"
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       }
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     },
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     "from": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       "uri": "sip:Felipe_Manieri@vono2.me",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       "params": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "tag": "9557d8ef-c921-4e82-8f64-4f6dde78e278"
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       }
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     },
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     "call-id": "b41aa955-fd0c-4ef8-8931-3a285c693011",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     "cseq": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       "method": "ACK",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       "seq": 2
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     },
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     "via": [
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |        
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [SIP_SERVICE] ✅ ACK sent to sip:X.nr-node0.ce81.a2708d81@190.89.248.47:5060
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [SIP_SERVICE] ✅ Voice conversion session started for b41aa955-fd0c-4ef8-8931-3a285c693011
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [REALTIME_VOICE] TTS connected for b41aa955-fd0c-4ef8-8931-3a285c693011
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [REALTIME_VOICE] STT error for b41aa955-fd0c-4ef8-8931-3a285c693011: Error: Unexpected server response: 403
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     at ClientRequest.<anonymous> (/app/node_modules/ws/lib/websocket.js:913:7)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     at ClientRequest.emit (node:events:524:28)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     at HTTPParser.parserOnIncomingClient (node:_http_client:702:27)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     at HTTPParser.parserOnHeadersComplete (node:_http_common:118:17)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     at TLSSocket.socketOnData (node:_http_client:544:22)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     at TLSSocket.emit (node:events:524:28)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     at addChunk (node:internal/streams/readable:561:12)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     at Readable.push (node:internal/streams/readable:392:5)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     at TLSWrap.onStreamRead (node:internal/stream_base_commons:191:23)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [REALTIME_VOICE] Session b41aa955-fd0c-4ef8-8931-3a285c693011 closed
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [CALL] Hanging up call b41aa955-fd0c-4ef8-8931-3a285c693011
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [FALEVONO_PROVIDER] Hanging up call: b41aa955-fd0c-4ef8-8931-3a285c693011
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [SIP_SERVICE] 📴 Hanging up call b41aa955-fd0c-4ef8-8931-3a285c693011 (status: answered)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [SIP_SERVICE] >>> SENT: {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |   "method": "BYE",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |   "uri": "sip:X.nr-node0.ce81.a2708d81@190.89.248.47:5060",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |   "headers": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     "to": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       "uri": "sip:11945140383@vono2.me",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       "params": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "tag": "aU7v84Ucyge0c"
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       }
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     },
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     "from": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       "uri": "sip:Felipe_Manieri@vono2.me",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       "params": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "tag": "9557d8ef-c921-4e82-8f64-4f6dde78e278"
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       }
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     },
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     "call-id": "b41aa955-fd0c-4ef8-8931-3a285c693011",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     "cseq": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       "method": "BYE",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       "seq": 3
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     },
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     "via": [
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |        
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [FALEVONO_PROVIDER] Hangup successful
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [OPENAI] Conversation ended for call b41aa955-fd0c-4ef8-8931-3a285c693011
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [AGENT_ORCHESTRATOR] Agent ended for call b41aa955-fd0c-4ef8-8931-3a285c693011
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [CALL] AI agent auto-ended for call b41aa955-fd0c-4ef8-8931-3a285c693011
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [express] POST /api/call/hangup 200 in 3ms :: {"success":true,"message":"Call ended","sta…
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [SIP_SERVICE] <<< RECEIVED: {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |   "version": "2.0",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |   "status": 200,
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |   "reason": "OK",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |   "headers": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |     "via": [
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "version": "2.0",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "protocol": "UDP",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "host": "172.31.70.162",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "port": 6060,
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "params": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |           "received": "72.60.149.107",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |           "rport": "6060",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |           "branch": "z9hG4bK801290"
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         }
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       },
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |       {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "version": "2.0",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "protocol": "UDP",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "host": "172.31.70.162",
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "port": 6060,
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |         "params": {
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    |           "branch": "z
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [REALTIME_VOICE] Session b41aa955-fd0c-4ef8-8931-3a285c693011 closed
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [CALL] Initiating call to 11993834919
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [PROVIDER_FACTORY] Creating provider for Felipe Manieri (falevono)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [SIP_SERVICE] Reusing existing global SIPService instance
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [FALEVONO_PROVIDER] Initialized with:
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [FALEVONO_PROVIDER]   Username: Felipe_Manieri
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [FALEVONO_PROVIDER]   Server: vono2.me:5060
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [FALEVONO_PROVIDER]   From Number: 11995879984
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [CALL] Using falevono provider (Felipe Manieri)
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [CALL] From: 11995879984 → To: 11993834919
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [CALL] Voice type: fem
+projeto-abmix-tech_abmix-telefone.1.tbyep7cxb950@vps    | [FALEVONO_PROVIDER] Starting call to: 11993834919 with voice: fem

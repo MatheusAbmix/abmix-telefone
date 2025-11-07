@@ -1,0 +1,22 @@
+
+=== RECUPERAÇÃO CONCLUÍDA! ===
+Aguarde 1-2 minutos para todas as aplicações reconectarem aos bancos.
+root@vps:~# docker service ls | grep projeto-abmix-tech
+wvf17bsvmbo9   projeto-abmix-tech_abmix-telefone                       replicated   1/1        easypanel/projeto-abmix-tech/abmix-telefone   
+ucqoghfxowv9   projeto-abmix-tech_evolution-api                        replicated   1/1        evoapicloud/evolution-api:latest              
+pu8pkswr322m   projeto-abmix-tech_evolution-api-db                     replicated   1/1        postgres:17                                   
+066rl3lzigfk   projeto-abmix-tech_evolution-api-db_dbgate              replicated   1/1        dbgate/dbgate:6.0.0                           
+qjnud22y4rwt   projeto-abmix-tech_evolution-api-db_pgweb               replicated   1/1        sosedoff/pgweb:0.16.2                         
+wcnmplge4488   projeto-abmix-tech_evolution-api-redis                  replicated   1/1        redis:7                                       
+z06pexoq3cgz   projeto-abmix-tech_evolution-api-redis_dbgate           replicated   1/1        dbgate/dbgate:6.0.0                           
+tqu32flglam5   projeto-abmix-tech_evolution-api-redis_rediscommander   replicated   1/1        ghcr.io/joeferner/redis-commander:0.9.0       
+xl95gru5rmj9   projeto-abmix-tech_minio                                replicated   1/1        minio/minio:latest                            
+gvcjzt3tmk1g   projeto-abmix-tech_n8n                                  replicated   1/1        n8nio/n8n:latest                              
+x887wou6owjh   projeto-abmix-tech_typebot-builder                      replicated   1/1        baptistearno/typebot-builder:3.9              
+62zj92f45oqv   projeto-abmix-tech_typebot-db                           replicated   1/1        postgres:17                                   
+jbswuqecqcjn   projeto-abmix-tech_typebot-db_dbgate                    replicated   1/1        dbgate/dbgate:6.0.0                           
+y96fk57hyses   projeto-abmix-tech_typebot-db_pgweb                     replicated   1/1        sosedoff/pgweb:0.16.2                         
+xchb0wb0dh9p   projeto-abmix-tech_typebot-redis                        replicated   1/1        redis:7                                       
+h3nz2ik8kzxe   projeto-abmix-tech_typebot-redis_dbgate                 replicated   1/1        dbgate/dbgate:6.0.0                           
+5ghothi16fyg   projeto-abmix-tech_typebot-redis_rediscommander         replicated   1/1        ghcr.io/joeferner/redis-commander:0.9.0       
+ek09dodk1tex   projeto-abmix-tech_typebot-viewer                       replicated   1/1        baptistearno/typebot-viewer:3.9.0             

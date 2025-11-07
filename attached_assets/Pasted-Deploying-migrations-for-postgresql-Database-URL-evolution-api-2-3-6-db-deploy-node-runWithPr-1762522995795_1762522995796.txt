@@ -1,0 +1,118 @@
+Deploying migrations for postgresql
+Database URL: 
+
+> evolution-api@2.3.6 db:deploy
+> node runWithProvider.js "rm -rf ./prisma/migrations && cp -r ./prisma/DATABASE_PROVIDER-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/DATABASE_PROVIDER-schema.prisma"
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/postgresql-schema.prisma
+Datasource "db": PostgreSQL database "projeto-abmix-tech", schema "public" at "projeto-abmix-tech_evolution-api-db:5432"
+
+Error: P1001: Can't reach database server at `projeto-abmix-tech_evolution-api-db:5432`
+
+Please make sure your database server is running at `projeto-abmix-tech_evolution-api-db:5432`.
+Error executing command: rm -rf ./prisma/migrations && cp -r ./prisma/postgresql-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/postgresql-schema.prisma
+npm notice
+npm notice New patch version of npm available! 11.6.1 -> 11.6.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+npm notice To update run: npm install -g npm@11.6.2
+npm notice
+Migration failed
+Deploying migrations for postgresql
+Database URL: 
+
+> evolution-api@2.3.6 db:deploy
+> node runWithProvider.js "rm -rf ./prisma/migrations && cp -r ./prisma/DATABASE_PROVIDER-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/DATABASE_PROVIDER-schema.prisma"
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/postgresql-schema.prisma
+Datasource "db": PostgreSQL database "projeto-abmix-tech", schema "public" at "projeto-abmix-tech_evolution-api-db:5432"
+
+Error: P1001: Can't reach database server at `projeto-abmix-tech_evolution-api-db:5432`
+
+Please make sure your database server is running at `projeto-abmix-tech_evolution-api-db:5432`.
+Error executing command: rm -rf ./prisma/migrations && cp -r ./prisma/postgresql-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/postgresql-schema.prisma
+npm notice
+npm notice New patch version of npm available! 11.6.1 -> 11.6.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+npm notice To update run: npm install -g npm@11.6.2
+npm notice
+Migration failed
+Deploying migrations for postgresql
+Database URL: 
+
+> evolution-api@2.3.6 db:deploy
+> node runWithProvider.js "rm -rf ./prisma/migrations && cp -r ./prisma/DATABASE_PROVIDER-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/DATABASE_PROVIDER-schema.prisma"
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/postgresql-schema.prisma
+Datasource "db": PostgreSQL database "projeto-abmix-tech", schema "public" at "projeto-abmix-tech_evolution-api-db:5432"
+
+Error: P1001: Can't reach database server at `projeto-abmix-tech_evolution-api-db:5432`
+
+Please make sure your database server is running at `projeto-abmix-tech_evolution-api-db:5432`.
+Error executing command: rm -rf ./prisma/migrations && cp -r ./prisma/postgresql-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/postgresql-schema.prisma
+npm notice
+npm notice New patch version of npm available! 11.6.1 -> 11.6.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+npm notice To update run: npm install -g npm@11.6.2
+npm notice
+Migration failed
+Deploying migrations for postgresql
+Database URL: 
+
+> evolution-api@2.3.6 db:deploy
+> node runWithProvider.js "rm -rf ./prisma/migrations && cp -r ./prisma/DATABASE_PROVIDER-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/DATABASE_PROVIDER-schema.prisma"
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/postgresql-schema.prisma
+Datasource "db": PostgreSQL database "projeto-abmix-tech", schema "public" at "projeto-abmix-tech_evolution-api-db:5432"
+
+Error: P1001: Can't reach database server at `projeto-abmix-tech_evolution-api-db:5432`
+
+Please make sure your database server is running at `projeto-abmix-tech_evolution-api-db:5432`.
+Error executing command: rm -rf ./prisma/migrations && cp -r ./prisma/postgresql-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/postgresql-schema.prisma
+npm notice
+npm notice New patch version of npm available! 11.6.1 -> 11.6.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+npm notice To update run: npm install -g npm@11.6.2
+npm notice
+Migration failed
+Deploying migrations for postgresql
+Database URL: 
+
+> evolution-api@2.3.6 db:deploy
+> node runWithProvider.js "rm -rf ./prisma/migrations && cp -r ./prisma/DATABASE_PROVIDER-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/DATABASE_PROVIDER-schema.prisma"
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/postgresql-schema.prisma
+Datasource "db": PostgreSQL database "projeto-abmix-tech", schema "public" at "projeto-abmix-tech_evolution-api-db:5432"
+
+Error: P1001: Can't reach database server at `projeto-abmix-tech_evolution-api-db:5432`
+
+Please make sure your database server is running at `projeto-abmix-tech_evolution-api-db:5432`.
+Error executing command: rm -rf ./prisma/migrations && cp -r ./prisma/postgresql-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/postgresql-schema.prisma
+npm notice
+npm notice New patch version of npm available! 11.6.1 -> 11.6.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+npm notice To update run: npm install -g npm@11.6.2
+npm notice
+Migration failed
+
+> evolution-api@2.3.6 db:deploy
+> node runWithProvider.js "rm -rf ./prisma/migrations && cp -r ./prisma/DATABASE_PROVIDER-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/DATABASE_PROVIDER-schema.prisma"
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/postgresql-schema.prisma
+Datasource "db": PostgreSQL database "projeto-abmix-tech", schema "public" at "projeto-abmix-tech_evolution-api-db:5432"
+
+Error: P1001: Can't reach database server at `projeto-abmix-tech_evolution-api-db:5432`
+
+Please make sure your database server is running at `projeto-abmix-tech_evolution-api-db:5432`.
+Error executing command: rm -rf ./prisma/migrations && cp -r ./prisma/postgresql-migrations ./prisma/migrations && npx prisma migrate deploy --schema ./prisma/postgresql-schema.prisma
+npm notice
+npm notice New patch version of npm available! 11.6.1 -> 11.6.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+npm notice To update run: npm install -g npm@11.6.2
+npm notice
+Migration failed

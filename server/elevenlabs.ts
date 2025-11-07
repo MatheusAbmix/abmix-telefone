@@ -182,14 +182,45 @@ class ElevenLabsService extends EventEmitter {
     }
   }
 
+  // Generate ElevenLabs WebSocket token
+  private async generateElevenLabsToken(): Promise<string | null> {
+    try {
+      const response = await fetch('https://api.elevenlabs.io/v1/convai/conversation/token', {
+        method: 'POST',
+        headers: {
+          'xi-api-key': ELEVENLABS_API_KEY!,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        console.error(`[ELEVENLABS] Failed to generate token: ${response.status}`);
+        return null;
+      }
+
+      const data: any = await response.json();
+      return data.token;
+    } catch (error) {
+      console.error('[ELEVENLABS] Error generating ElevenLabs token:', error);
+      return null;
+    }
+  }
+
   // Start STT session for captions
   async startSTTSession(): Promise<WebSocket | null> {
     try {
       console.log('[ELEVENLABS] Starting STT session for captions');
       
+      // Generate token for STT authentication
+      const sttToken = await this.generateElevenLabsToken();
+      if (!sttToken) {
+        console.error('[ELEVENLABS] Failed to get STT token');
+        return null;
+      }
+      
       const sttWs = new WebSocket('wss://api.elevenlabs.io/v1/speech-to-text/stream', {
         headers: {
-          'xi-api-key': ELEVENLABS_API_KEY
+          'Authorization': `Bearer ${sttToken}`
         }
       });
 

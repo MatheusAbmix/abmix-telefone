@@ -1,0 +1,119 @@
+s could not be installed automatically. For more details,
+see /var/log/unattended-upgrades/unattended-upgrades.log
+
+Last login: Fri Nov  7 13:56:57 2025 from 169.254.0.1
+root@vps:~# ls -la /etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/
+total 12
+drwxr-xr-x  3 root root 4096 Oct 20 20:32 .
+drwxr-xr-x 13 root root 4096 Nov  7 13:43 ..
+drwx------ 19  999 root 4096 Nov  7 00:11 data
+root@vps:~# find /etc/easypanel/projects/projeto-abmix-tech/evolution-api-db -type f 2>/dev/null | head -20
+find /etc/easypanel/projects/projeto-abmix-tech/typebot-db -type f 2>/dev/null | head -20
+find /etc/easypanel/projects/projeto-abmix-tech -name "*.json" -o -name "*.yml" -o -name "*.yaml" 2>/dev/null
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/pg_multixact/offsets/0000
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/pg_multixact/members/0000
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/pg_subtrans/0000
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/2753
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/2836_fsm
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/113
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/3119
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/2224
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/2660
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/2608_fsm
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/3455
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/3597
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/2602
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/828
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/3379
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/3394_vm
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/2693
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/4155
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/4144
+/etc/easypanel/projects/projeto-abmix-tech/evolution-api-db/data/base/5/6112
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/pg_multixact/offsets/0000
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/pg_multixact/members/0000
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/pg_subtrans/0000
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/2753
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/2836_fsm
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/113
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/3119
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/2224
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/2660
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/2608_fsm
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/3455
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/3597
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/2602
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/828
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/3379
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/3394_vm
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/2693
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/4155
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/4144
+/etc/easypanel/projects/projeto-abmix-tech/typebot-db/data/base/5/6112
+/etc/easypanel/projects/projeto-abmix-tech/minio/volumes/data/.minio.sys/format.json
+/etc/easypanel/projects/projeto-abmix-tech/minio/volumes/data/.minio.sys/buckets/.usage.json
+/etc/easypanel/projects/projeto-abmix-tech/minio/volumes/data/.minio.sys/config/config.json
+/etc/easypanel/projects/projeto-abmix-tech/minio/volumes/data/.minio.sys/config/iam/format.json
+/etc/easypanel/projects/projeto-abmix-tech/minio/volumes/data/.minio.sys/config/iam/service-accounts/FFJS4RXSXJ7TBDPS1MDZ/identity.json
+/etc/easypanel/projects/projeto-abmix-tech/abmix-telefone/code/package-lock.json
+/etc/easypanel/projects/projeto-abmix-tech/abmix-telefone/code/components.json
+/etc/easypanel/projects/projeto-abmix-tech/abmix-telefone/code/.local/state/replit/agent/.latest.json
+/etc/easypanel/projects/projeto-abmix-tech/abmix-telefone/code/.local/state/replit/agent/filesystem/filesystem_state.json
+/etc/easypanel/projects/projeto-abmix-tech/abmix-telefone/code/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/abmix-telefone/code/docker-compose.yml
+/etc/easypanel/projects/projeto-abmix-tech/abmix-telefone/code/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/dist/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/dist/nodes/EvolutionApi/EvolutionApi.node.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/.package-lock.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/hasown/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/hasown/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/hasown/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-define-property/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-define-property/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-define-property/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/delayed-stream/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/has-symbols/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/has-symbols/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/has-symbols/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-set-tostringtag/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-set-tostringtag/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/mime-db/db.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/mime-db/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/get-intrinsic/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/get-intrinsic/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/function-bind/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/function-bind/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/gopd/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/gopd/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/gopd/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/combined-stream/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/mime-types/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/has-tostringtag/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/has-tostringtag/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/has-tostringtag/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/proxy-from-env/.travis.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/proxy-from-env/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/get-proto/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/get-proto/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/get-proto/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-errors/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-errors/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-errors/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/follow-redirects/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/dunder-proto/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/dunder-proto/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/dunder-proto/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/call-bind-apply-helpers/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/call-bind-apply-helpers/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/call-bind-apply-helpers/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/form-data/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/math-intrinsics/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/math-intrinsics/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/math-intrinsics/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/asynckit/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-object-atoms/.github/FUNDING.yml
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-object-atoms/tsconfig.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/node_modules/es-object-atoms/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/node_modules/axios/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/node_modules/n8n-nodes-evolution-api/package.json
+/etc/easypanel/projects/projeto-abmix-tech/n8n/volumes/data/nodes/package.json

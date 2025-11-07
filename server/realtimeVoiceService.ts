@@ -43,6 +43,31 @@ class RealtimeVoiceService extends EventEmitter {
     return voiceIdResult?.value || defaultVoices[voiceType];
   }
 
+  // Generate ElevenLabs WebSocket token
+  private async generateElevenLabsToken(): Promise<string | null> {
+    try {
+      const fetch = (await import('node-fetch')).default;
+      const response = await fetch('https://api.elevenlabs.io/v1/convai/conversation/token', {
+        method: 'POST',
+        headers: {
+          'xi-api-key': ELEVENLABS_API_KEY!,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        console.error(`[REALTIME_VOICE] Failed to generate token: ${response.status}`);
+        return null;
+      }
+
+      const data: any = await response.json();
+      return data.token;
+    } catch (error) {
+      console.error('[REALTIME_VOICE] Error generating ElevenLabs token:', error);
+      return null;
+    }
+  }
+
   // Start real-time voice conversion session
   async startRealtimeVoice(callSid: string, voiceType: 'masc' | 'fem' | 'natural'): Promise<boolean> {
     try {
@@ -50,10 +75,17 @@ class RealtimeVoiceService extends EventEmitter {
       
       console.log(`[REALTIME_VOICE] Starting session ${callSid} with voice ${targetVoiceId}`);
 
+      // Generate token for STT authentication
+      const sttToken = await this.generateElevenLabsToken();
+      if (!sttToken) {
+        console.error('[REALTIME_VOICE] Failed to get STT token');
+        return false;
+      }
+
       // Start STT session for incoming audio
       const sttWs = new WebSocket('wss://api.elevenlabs.io/v1/speech-to-text/stream', {
         headers: {
-          'xi-api-key': ELEVENLABS_API_KEY
+          'Authorization': `Bearer ${sttToken}`
         }
       });
 

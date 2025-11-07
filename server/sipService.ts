@@ -83,8 +83,8 @@ export class SIPService {
     this.sipServer = sipServer;
     this.sipPort = sipPort;
     this.fromNumber = fromNumber;
-    // Use PUBLIC_IP env var for production, will be auto-detected in initialize()
-    this.localIP = process.env.PUBLIC_IP || '72.60.149.107'; // VPS public IP
+    // PUBLIC_IP is REQUIRED - will be validated in initialize()
+    this.localIP = '0.0.0.0'; // Placeholder, will be set in initialize()
   }
 
   // Singleton getInstance method
@@ -111,20 +111,64 @@ export class SIPService {
     }
 
     try {
-      // Detect local IP only if PUBLIC_IP env var is not set
-      if (!process.env.PUBLIC_IP) {
-        try {
-          const { stdout } = await execAsync("hostname -I | awk '{print $1}'");
-          const detectedIP = stdout.trim();
-          if (detectedIP && detectedIP !== '127.0.0.1') {
-            this.localIP = detectedIP;
-          }
-        } catch (err) {
-          console.warn('[SIP_SERVICE] Could not detect IP, using default:', this.localIP);
-        }
-      } else {
-        console.log('[SIP_SERVICE] Using PUBLIC_IP from environment:', this.localIP);
+      // PUBLIC_IP is MANDATORY for production RTP audio to work
+      if (!process.env.PUBLIC_IP || process.env.PUBLIC_IP.trim() === '') {
+        throw new Error(
+          '❌ PUBLIC_IP environment variable is REQUIRED!\n' +
+          'The system needs your VPS public IP address for RTP audio to work.\n' +
+          'Add PUBLIC_IP to your environment variables (e.g., PUBLIC_IP=72.60.149.107)\n' +
+          'See DEPLOY.md section 4.4 for instructions on how to find your public IP.'
+        );
       }
+      
+      const publicIP = process.env.PUBLIC_IP.trim();
+      
+      // Validate IP format (IPv4 only)
+      const ipv4Regex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+      const match = publicIP.match(ipv4Regex);
+      
+      if (!match) {
+        throw new Error(
+          `❌ PUBLIC_IP "${publicIP}" is not a valid IPv4 address!\n` +
+          'Expected format: xxx.xxx.xxx.xxx (e.g., 72.60.149.107)\n' +
+          'See DEPLOY.md section 4.4 for instructions on how to find your public IP.'
+        );
+      }
+      
+      // Validate octets are in valid range (0-255)
+      const octets = [
+        parseInt(match[1]),
+        parseInt(match[2]),
+        parseInt(match[3]),
+        parseInt(match[4])
+      ];
+      
+      if (octets.some(octet => octet < 0 || octet > 255)) {
+        throw new Error(
+          `❌ PUBLIC_IP "${publicIP}" contains invalid octets!\n` +
+          'Each number must be between 0 and 255.\n' +
+          'See DEPLOY.md section 4.4 for instructions on how to find your public IP.'
+        );
+      }
+      
+      // Reject private IP ranges (RFC1918) and loopback
+      const isPrivate = 
+        octets[0] === 10 || // 10.0.0.0/8
+        (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31) || // 172.16.0.0/12
+        (octets[0] === 192 && octets[1] === 168) || // 192.168.0.0/16
+        octets[0] === 127; // 127.0.0.0/8 (loopback)
+      
+      if (isPrivate) {
+        throw new Error(
+          `❌ PUBLIC_IP "${publicIP}" is a PRIVATE IP address!\n` +
+          'You must use your VPS PUBLIC (external) IP address, not a private/internal IP.\n' +
+          'Private ranges: 10.x.x.x, 172.16-31.x.x, 192.168.x.x, 127.x.x.x\n' +
+          'See DEPLOY.md section 4.4 for instructions on how to find your PUBLIC IP.'
+        );
+      }
+      
+      this.localIP = publicIP;
+      console.log('[SIP_SERVICE] ✅ Using validated PUBLIC_IP:', this.localIP);
 
       console.log('[SIP_SERVICE] Initializing SIP stack...');
       console.log(`[SIP_SERVICE] Local IP: ${this.localIP}`);

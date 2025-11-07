@@ -224,9 +224,10 @@ Para cada variável abaixo, faça:
 |------|-------|------------|
 | `NODE_ENV` | `production` | Digite exatamente assim |
 | `PORT` | `5000` | Digite exatamente assim |
+| `PUBLIC_IP` | **SEU IP PÚBLICO DO VPS** | Ver seção 4.4 |
 | `FALEVONO_PASSWORD` | Sua senha FaleVono | Sua conta vono2.me |
-| `ELEVENLABS_API_KEY` | Sua chave ElevenLabs | Ver seção 4.4 |
-| `DEEPGRAM_API_KEY` | Sua chave Deepgram | Ver seção 4.5 |
+| `ELEVENLABS_API_KEY` | Sua chave ElevenLabs | Ver seção 4.5 |
+| `DEEPGRAM_API_KEY` | Sua chave Deepgram | Ver seção 4.6 |
 
 #### ⚙️ Variáveis Opcionais (Configuração Avançada)
 
@@ -236,7 +237,32 @@ Para cada variável abaixo, faça:
 
 > 💡 **Nota sobre Porta SIP:** A porta 6060 é usada para comunicação SIP cliente. Se você tem outra aplicação de telefonia rodando no mesmo servidor que usa a porta 6060, configure esta variável para uma porta diferente (exemplo: `7060`, `8060`, etc).
 
-### 4.4 - Como Obter API Key do ElevenLabs
+### 4.4 - Como Obter o IP Público do VPS
+
+⚠️ **CRÍTICO:** O sistema precisa do IP público do seu VPS para que o áudio das chamadas funcione corretamente!
+
+**Opção 1: Ver no Painel do EasyPanel**
+1. No painel do EasyPanel, procure por **"Server IP"** ou **"IP Address"**
+2. Copie o endereço IP (exemplo: `72.60.149.107`)
+
+**Opção 2: Ver no Provedor do VPS**
+1. Acesse o painel da DigitalOcean, Hetzner, Vultr, etc.
+2. Encontre seu VPS/Droplet na lista
+3. Copie o **IP público** mostrado
+
+**Opção 3: Via Terminal (SSH)**
+```bash
+curl ifconfig.me
+```
+
+**Formato esperado:**
+```
+72.60.149.107
+```
+
+> 💡 **Por que preciso disso?** O IP público é usado no protocolo SDP para informar ao provedor de telefonia (FaleVono) onde enviar o áudio das chamadas. Se usar IP privado (como 172.x.x.x ou 192.168.x.x), o áudio não chegará ao servidor!
+
+### 4.5 - Como Obter API Key do ElevenLabs
 
 1. Acesse: https://elevenlabs.io/app/settings/api-keys
 2. Faça login na sua conta ElevenLabs
@@ -249,7 +275,7 @@ Para cada variável abaixo, faça:
 sk_abc123xyz456...
 ```
 
-### 4.5 - Como Obter API Key do Deepgram
+### 4.6 - Como Obter API Key do Deepgram
 
 1. Acesse: https://console.deepgram.com/
 2. Faça login na sua conta Deepgram
@@ -698,6 +724,7 @@ Antes de considerar o deploy **100% completo**, marque todos os itens:
 ### Variáveis de Ambiente
 - [ ] `NODE_ENV=production`
 - [ ] `PORT=5000`
+- [ ] `PUBLIC_IP` (IP público do VPS - CRÍTICO para RTP!)
 - [ ] `FALEVONO_PASSWORD` (senha correta)
 - [ ] `ELEVENLABS_API_KEY` (chave válida)
 - [ ] `DEEPGRAM_API_KEY` (chave válida)

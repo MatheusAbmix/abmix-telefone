@@ -59,6 +59,10 @@ The architecture emphasizes modularity, scalability, and ease of deployment. Key
 - **Audio Quality**: Currently limited to G.711 codec (8kHz, narrowband). Future enhancement: add wideband codecs like Opus for better audio quality.
 - **Audio Effects**: Effects processing is currently a placeholder implementation. Production deployment requires integration with ffmpeg or similar audio processing library for real-time effects (noise reduction, EQ, gain, normalization).
 
+### Recent Critical Fixes (November 2025)
+- **SDP IP Configuration (CRITICAL)**: Fixed hardcoded private IP (172.31.70.162) in SIP Service. Now **requires** `PUBLIC_IP` environment variable with strict validation (rejects private/loopback ranges, validates IPv4 format). System will abort initialization with clear error if PUBLIC_IP is missing or invalid. This ensures FaleVono can send RTP audio back to the server correctly.
+- **Environment Variable**: Added **mandatory** `PUBLIC_IP` variable to deployment configuration with comprehensive validation for proper RTP media routing in production. No fallbacks - prevents accidental use of private IPs.
+
 ## External Dependencies
 
 ### Telephony Providers

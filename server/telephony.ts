@@ -103,8 +103,8 @@ export function setupTelephony(app: Express, httpServer: Server) {
   console.log('[TELEPHONY] Telephony system ready - SIP will initialize on first call');
   
   // Initialize RTP server for SIP audio
-  rtpService.start(8000).then(() => {
-    console.log('[TELEPHONY] RTP server started on port 8000');
+  rtpService.start(10000).then(() => {
+    console.log('[TELEPHONY] RTP server started on port 10000');
   }).catch((err) => {
     console.error('[TELEPHONY] Failed to start RTP server:', err);
   });

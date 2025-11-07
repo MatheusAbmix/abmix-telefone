@@ -16,10 +16,14 @@ services:
     # ports:
     #   - "5000:5000"       # HTTP/WebSocket
     #   - "6060:6060/udp"   # SIP client (padrão, veja FALEVONO_SIP_PORT)
+    #   - "10000-10100:10000-10100/udp"  # RTP media ports
     
     environment:
       - NODE_ENV=production
       - PORT=5000
+      
+      # Public IP for RTP (CRÍTICO para áudio funcionar)
+      - PUBLIC_IP=${PUBLIC_IP}
       
       # FaleVono Credentials (OBRIGATÓRIO)
       - FALEVONO_PASSWORD=${FALEVONO_PASSWORD}

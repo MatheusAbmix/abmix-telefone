@@ -10,6 +10,7 @@ import { api } from '@/services/api';
 import { connectCaptions, disconnectCaptions } from '@/services/captions';
 import { validateE164, formatPhoneNumber, isDTMFTone } from '@/utils/validation';
 import { VoiceConversionControl } from './VoiceConversionControl';
+import { useDTMF } from '@/hooks/useDTMF';
 
 interface VoIPNumber {
   id: number;
@@ -39,6 +40,9 @@ export function DialerCard() {
 
   const [selectedVoice, setSelectedVoice] = useState<'masc' | 'fem' | 'natural' | 'none'>(voiceType);
   const [selectedVoIPNumberId, setSelectedVoIPNumberId] = useState<string>('');
+
+  // DTMF sounds hook
+  const { enabled: dtmfSoundsEnabled, playTone, toggleEnabled: toggleDTMFSounds } = useDTMF();
 
   // Fetch VoIP numbers
   const { data: voipNumbers = [], isLoading: isLoadingNumbers } = useQuery<VoIPNumber[]>({
@@ -234,6 +238,9 @@ export function DialerCard() {
   
   // Unified keypad handler - works for both dialing and DTMF
   const handleKeypadPress = (digit: string) => {
+    // Play DTMF sound first (if enabled)
+    playTone(digit);
+    
     if (callState === 'IDLE') {
       // During dialing - add digit to phone number
       if (digit === '*') {
@@ -442,9 +449,22 @@ export function DialerCard() {
 
       {/* Unified Keypad - Works for both dialing and DTMF */}
       <div className="mt-6 pt-4 border-t border-border">
-        <Label className="block text-sm text-muted-foreground mb-3">
-          {callState === 'IDLE' ? 'Teclado Numérico - Discagem' : 'Teclado DTMF - Durante Chamada'}
-        </Label>
+        <div className="flex items-center justify-between mb-3">
+          <Label className="text-sm text-muted-foreground">
+            {callState === 'IDLE' ? 'Teclado Numérico - Discagem' : 'Teclado DTMF - Durante Chamada'}
+          </Label>
+          <Button
+            onClick={toggleDTMFSounds}
+            variant="ghost"
+            size="sm"
+            className="h-8 px-2 text-xs hover:bg-muted"
+            title={dtmfSoundsEnabled ? "Desativar sons do teclado" : "Ativar sons do teclado"}
+            data-testid="toggle-dtmf-sounds"
+          >
+            <i className={`fas ${dtmfSoundsEnabled ? 'fa-volume-up' : 'fa-volume-mute'} mr-1`}></i>
+            {dtmfSoundsEnabled ? 'Sons On' : 'Sons Off'}
+          </Button>
+        </div>
         <div className="grid grid-cols-3 gap-2">
           {dtmfTones.map((tone) => (
             <Button

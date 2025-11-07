@@ -33,7 +33,7 @@ class RTPService extends EventEmitter {
   /**
    * Start RTP server
    */
-  async start(port: number = 8000): Promise<void> {
+  async start(port: number = 10000): Promise<void> {
     if (this.isRunning) {
       console.log('[RTP] Server already running');
       return;

@@ -685,6 +685,7 @@ export class SIPService {
                 
                 console.log(`[SIP_SERVICE] 🎵 Creating RTP session for call ${callId}`);
                 console.log(`[SIP_SERVICE] 🎵 Remote RTP: ${remoteAddress}:${remotePort}`);
+                console.log(`[SIP_SERVICE] 🎵 Local RTP: ${this.localIP}:10000`);
                 
                 // Create RTP session for audio (payload type 0 = PCMU)
                 rtpService.createSession(callId, remoteAddress, remotePort, 0);
@@ -806,18 +807,32 @@ export class SIPService {
     const sessionId = Date.now();
     const version = 1;
     
+    // Use dynamic RTP port range for better compatibility
+    const rtpPort = this.getAvailableRTPPort();
+    
     return [
       `v=0`,
       `o=- ${sessionId} ${version} IN IP4 ${this.localIP}`,
       `s=Abmix Call`,
       `c=IN IP4 ${this.localIP}`,
       `t=0 0`,
-      `m=audio 8000 RTP/AVP 0 8 101`,
+      `m=audio ${rtpPort} RTP/AVP 0 8 101`,
       `a=rtpmap:0 PCMU/8000`,
-      `a=rtpmap:8 PCMA/8000`,
+      `a=rtpmap:8 PCMA/8000`, 
       `a=rtpmap:101 telephone-event/8000`,
-      `a=sendrecv`
+      `a=fmtp:101 0-15`,
+      `a=sendrecv`,
+      `a=ptime:20`
     ].join('\r\n') + '\r\n';
+  }
+
+  /**
+   * Get available RTP port for media
+   */
+  private getAvailableRTPPort(): number {
+    // Use port range 10000-20000 for RTP (standard range)
+    // For now, use fixed port but this should be dynamic in production
+    return 10000;
   }
 
   async shutdown(): Promise<void> {

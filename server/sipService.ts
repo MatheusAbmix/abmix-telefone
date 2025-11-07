@@ -83,7 +83,8 @@ export class SIPService {
     this.sipServer = sipServer;
     this.sipPort = sipPort;
     this.fromNumber = fromNumber;
-    this.localIP = '172.31.70.162'; // Replit server IP
+    // Use PUBLIC_IP env var for production, will be auto-detected in initialize()
+    this.localIP = process.env.PUBLIC_IP || '72.60.149.107'; // VPS public IP
   }
 
   // Singleton getInstance method
@@ -110,15 +111,19 @@ export class SIPService {
     }
 
     try {
-      // Detect local IP if needed
-      try {
-        const { stdout } = await execAsync("hostname -I | awk '{print $1}'");
-        const detectedIP = stdout.trim();
-        if (detectedIP && detectedIP !== '127.0.0.1') {
-          this.localIP = detectedIP;
+      // Detect local IP only if PUBLIC_IP env var is not set
+      if (!process.env.PUBLIC_IP) {
+        try {
+          const { stdout } = await execAsync("hostname -I | awk '{print $1}'");
+          const detectedIP = stdout.trim();
+          if (detectedIP && detectedIP !== '127.0.0.1') {
+            this.localIP = detectedIP;
+          }
+        } catch (err) {
+          console.warn('[SIP_SERVICE] Could not detect IP, using default:', this.localIP);
         }
-      } catch (err) {
-        console.warn('[SIP_SERVICE] Could not detect IP, using default:', this.localIP);
+      } else {
+        console.log('[SIP_SERVICE] Using PUBLIC_IP from environment:', this.localIP);
       }
 
       console.log('[SIP_SERVICE] Initializing SIP stack...');

@@ -19,6 +19,8 @@ COPY package*.json ./
 RUN npm install --omit=dev
 COPY --from=build /app/dist ./dist
 EXPOSE 5000
+EXPOSE 10000/udp
+EXPOSE 6060/udp
 
 # Healthcheck with more lenient settings
 HEALTHCHECK --interval=30s --timeout=15s --start-period=60s --retries=5 \

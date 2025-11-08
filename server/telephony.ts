@@ -109,7 +109,7 @@ export function setupTelephony(app: Express, httpServer: Server) {
     console.error('[TELEPHONY] Failed to start RTP server:', err);
   });
 
-  // Handle RTP audio events -> send to STT
+  // Handle RTP audio events -> send to STT AND browser
   rtpService.on('audio', (data: any) => {
     console.log(`[TELEPHONY] RTP audio received for call ${data.callId}`);
     
@@ -118,6 +118,27 @@ export function setupTelephony(app: Express, httpServer: Server) {
       // Convert PCM16 to base64 for STT
       const audioBase64 = data.audioData.toString('base64');
       realtimeVoiceService.processIncomingAudio(data.callId, audioBase64);
+    } else {
+      // CORREÇÃO OPENAI: Pass-through quando conversão OFF - enviar áudio para navegador
+      console.log(`[TELEPHONY] 🔊 Enviando áudio RTP para navegador (call ${data.callId})`);
+      
+      // Enviar áudio para todos os clientes WebSocket conectados
+      mediaWss.clients.forEach((client) => {
+        if (client.readyState === client.OPEN) {
+          try {
+            const audioBase64 = data.audioData.toString('base64');
+            client.send(JSON.stringify({
+              event: 'rtp-audio',
+              callId: data.callId,
+              audioData: audioBase64,
+              sampleRate: 8000,
+              format: 'pcm16'
+            }));
+          } catch (error) {
+            console.error('[TELEPHONY] ❌ Erro enviando áudio para navegador:', error);
+          }
+        }
+      });
     }
   });
 
@@ -220,8 +241,25 @@ export function setupTelephony(app: Express, httpServer: Server) {
             });
           }
           
+        } else if (data.event === 'microphone-audio') {
+          // CORREÇÃO OPENAI: Áudio do microfone para enviar via RTP
+          if (data.callId && data.audioData) {
+            console.log(`[MEDIA] 🎤 Recebido áudio do microfone para call ${data.callId}`);
+            
+            // Converter base64 para buffer
+            const audioBuffer = Buffer.from(data.audioData, 'base64');
+            
+            // Enviar via RTP para a pessoa
+            const success = rtpService.sendAudio(data.callId, audioBuffer, data.sampleRate || 8000);
+            
+            if (success) {
+              console.log(`[MEDIA] ✅ Áudio do microfone enviado via RTP (call ${data.callId})`);
+            } else {
+              console.log(`[MEDIA] ❌ Falha ao enviar áudio via RTP (call ${data.callId})`);
+            }
+          }
         } else if (data.event === 'media') {
-          // Process incoming audio from caller (user's voice)
+          // Process incoming audio from caller (user's voice) - Twilio legacy
           if (data.media && data.media.payload && callSid && streamSid) {
             console.log(`[MEDIA] Processing audio chunk for call: ${callSid}`);
             processUserAudio(callSid, data.media.payload, streamSid, ws);

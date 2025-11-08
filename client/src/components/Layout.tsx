@@ -16,6 +16,9 @@ import { CallManager } from './CallManager';
 import { VoIPNumbers } from './VoIPNumbers';
 import { useCallStore } from '@/stores/useCallStore';
 import { AudioMonitor } from './AudioMonitor';
+import { Ringtone } from './Ringtone';
+import { AudioPlayer } from './AudioPlayer';
+import { MicrophoneCapture } from './MicrophoneCapture';
 
 export function Layout() {
   const { activeView } = useCallStore();
@@ -110,6 +113,15 @@ export function Layout() {
     <div className="min-h-screen bg-background text-foreground font-inter">
       {/* Monitor de áudio global - invisível mas sempre ativo */}
       <AudioMonitor />
+      
+      {/* Ringtone para som de chamando */}
+      <Ringtone />
+      
+      {/* Player de áudio RTP (você ouve a pessoa) */}
+      <AudioPlayer />
+      
+      {/* Captura de microfone (pessoa te ouve) */}
+      <MicrophoneCapture />
       
       <div className="flex min-h-screen">
         <Sidebar />

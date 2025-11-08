@@ -129,6 +129,30 @@ Mantenha respostas concisas e diretas ao ponto.`;
     }
   });
 
+  // Call status endpoint (SIMPLES)
+  app.get("/api/call/status/:callId", async (req, res) => {
+    try {
+      const { callId } = req.params;
+      
+      // Get provider for this call
+      const provider = activeCallProviders.get(callId);
+      
+      if (!provider) {
+        return res.status(404).json({ error: "Call not found" });
+      }
+
+      // Return simple status based on SIP state
+      res.json({
+        callId,
+        status: 'connected', // Assume connected when call exists
+        message: 'Call active'
+      });
+    } catch (error) {
+      console.error('[CALL] Error getting status:', error);
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
   // Hangup endpoint
   app.post("/api/call/hangup", async (req, res) => {
     try {
